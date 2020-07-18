@@ -17,9 +17,10 @@ The order in which I'm adding features is going to be mostly random depending on
 |Tag File loading/saving|❌ (Planned)|
 |NDEF Payload Format|❌ (Planned)|
 |NFC Fourm Type 1/3/4/5 Tag Emulation|🎄|
-|Bootloader for easy USB Firmware Updates|✔|
+|Bootloader for easy USB Firmware Updates|✔*|
 
-🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
+🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.  
+\* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader)
 
 
 ## Current Hardware
