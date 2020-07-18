@@ -4,13 +4,9 @@
 
 ## Description
 
-**[nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit)** is a versatile IoT prototyping platform, including the [nRF52840 M.2 Module](https://store.makerdiary.com/products/nrf52840-m2-module) and [M.2 Dock](https://wiki.makerdiary.com/m2-dock). You can use the developer kit to prototype your IoT products and then scale to production faster using the nRF52840 M.2 Module combined with your custom PCB hardware.
+PowerOverwhelmiing is a learning project as I explore the nRF52840 platform, as well as the nRF5 SDK as a whole. It's goal is to attempt to emulate different types of common NFC-A tags, to be a bit of a swiss army knife in that sense. I'm starting with the NTAG21X tags, as I actually have a few of them on hand, and it's easy to verify the behavior between actual tags and the emulated one. I'm using the fantastic [NFC Tools](https://apps.apple.com/us/app/nfc-tools/id1252962749) from [wak dev](https://www.wakdev.com/), as it's been able to give my device all sorts of workouts -- including some packets that I'm still not quite sure what to do with! It also displays a good amount of raw data when it does read, so I'm able to diagnose what I'm doing right and wrong. wak dev, if you're reading this, a full communication log, bit by bit would be a fantastic addon that I'd happily buy pro (again) for!
 
-The [nRF52840 M.2 Module](https://store.makerdiary.com/products/nrf52840-m2-module) is a removable M.2 E-Key form factor module based on the nRF52840 SoC, supporting Bluetooth 5, Bluetooth mesh, Thread, Zigbee, 802.15.4, ANT and 2.4 GHz proprietary stacks.
-
-The [M.2 Dock](https://wiki.makerdiary.com/m2-dock) extends the interfaces compared to the nRF52840 M.2 Module through an M.2 E-Key connector. This design also features a fully-integrated [DAPLink](https://armmbed.github.io/DAPLink/) debugger with [Power Profiling](https://wiki.makerdiary.com/nrf52840-m2-devkit/power-profiling), enabling you to program, debug and perform real-time current profiling of your applications without using external tools.
-
-[![](docs/assets/images/nrf52840-m2-devkit-hero.webp)](https://store.makerdiary.com/products/nrf52840-m2-developer-kit)
+The order in which I'm adding features is going to be mostly random depending on what I feel like working on. Feel free to open an issue if you've got an idea, question or comment!
 
 ## Key Features
 
