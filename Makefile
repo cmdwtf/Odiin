@@ -1,6 +1,7 @@
-PROJECT     := powerOverwhelmiing
-TARGETS          := nrf52840_xxaa
-OUTPUT_DIRECTORY := _build
+PROJECT				:= powerOverwhelmiing
+TARGETS				:= nrf52840_xxaa
+FIRMWARE_DIRECTORY	:= _firmware
+OUTPUT_DIRECTORY 	:= _build
 
 LIB_ROOT ?= lib
 SDK_ROOT := $(LIB_ROOT)/nrf_sdks/nRF5_SDK
@@ -12,9 +13,10 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 # Source files for application
 SRC_FILES += \
   $(wildcard $(PROJ_DIR)/*.cpp) \
-  $(wildcard $(PROJ_DIR)/**/*.cpp) \
-  $(wildcard $(PROJ_DIR)/*.c) \
-  $(wildcard $(PROJ_DIR)/**/*.c) \
+  $(wildcard $(PROJ_DIR)/app/*.cpp) \
+  $(wildcard $(PROJ_DIR)/platform/*.cpp) \
+  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/*.cpp) \
+  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/nfrx_extensions/*.cpp) \
 
 # SDK source files
 SRC_FILES += \
@@ -53,9 +55,6 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(SDK_ROOT)/components/nfc/ndef/generic/message/nfc_ndef_msg.c \
   $(SDK_ROOT)/components/nfc/ndef/generic/record/nfc_ndef_record.c \
@@ -99,7 +98,6 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/experimental_section_vars \
   $(SDK_ROOT)/integration/nrfx/legacy \
   $(SDK_ROOT)/components/libraries/delay \
-  $(SDK_ROOT)/external/segger_rtt \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd \
   $(SDK_ROOT)/components/libraries/atomic \
   $(SDK_ROOT)/components/libraries/log \
@@ -221,16 +219,16 @@ flash_all: merge
 erase:
 	pyocd erase -t nrf52840 --chip
 
-# Release the prebuilt firmware
+# Release the built firmware, copying it to the $(FIRMWARE_DIRECTORY)
 release: merge
-	@echo Copying: $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex and $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex to hex directory.
-	cp $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(PROJ_DIR)/hex/$(PROJECT).hex
-	cp $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex $(PROJ_DIR)/hex/$(PROJECT)_mbr.hex
-	python $(LIB_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(PROJ_DIR)/hex/$(PROJECT).uf2 $(OUTPUT_DIRECTORY)/$(PROJECT).hex
-	@echo Deleting $(OUTPUT_DIRECTORY)/$(PROJECT).hex since it's in UF2 form now.
-	rm $(OUTPUT_DIRECTORY)/$(PROJECT).hex
-	@echo
-	@echo Use $(PROJ_DIR)/hex/$(PROJECT).uf2 to flash via UF2 like standard, or $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex to use basic bootloader (removes custom bootloader!)
+	@if not exist "$(FIRMWARE_DIRECTORY)" mkdir "$(FIRMWARE_DIRECTORY)"
+	@echo Creating UF2 format file from produced hex...
+	python $(LIB_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
+	@echo Copying: $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex to $(FIRMWARE_DIRECTORY) directory.
+	copy /B /Y $(OUTPUT_DIRECTORY)\nrf52840_xxaa_mbr.hex $(FIRMWARE_DIRECTORY)\$(PROJECT)_mbr.hex
+	@echo.
+	@echo Use $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 to flash via UF2 like standard keeping the bootloader,
+	@echo or $(FIRMWARE_DIRECTORY)/nrf52840_xxaa_mbr.hex to use basic bootloader (removes custom bootloader!)
 
 SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar

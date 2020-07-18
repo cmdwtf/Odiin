@@ -1,3 +1,5 @@
-.DS_Store/*
+.vs/
+.va/
+.DS_Store/
 _build/
-build/
+_firmware/

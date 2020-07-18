@@ -34,6 +34,10 @@
             "command": "make"
         },
         {
+            "label": "Clean",
+            "command": "make clean"
+        },
+        {
             "label": "Make & Flash",
             "command": "make flash_all"
         },
