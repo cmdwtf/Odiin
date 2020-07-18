@@ -177,7 +177,13 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 			const uint8_t* data = rxFrameEnd.rx_data.p_data;
 			const uint32_t length = rxFrameEnd.rx_data.data_size;
 			NRF_LOG_WARNING("[NFC] RX: %d byte frame dropped.", length);
-			NRF_HEXDUMP_VERBOSE(data, length);
+
+			// dump the packet if it's not so crazy.
+			if (length > 0 && length <= 8)
+			{
+				NRF_HEXDUMP_VERBOSE(data, length);
+			}
+
 			return;
 		}
 
