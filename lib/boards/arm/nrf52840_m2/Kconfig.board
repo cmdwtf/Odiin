@@ -1,0 +1,8 @@
+# nRF52840-M2 board configuration
+
+# Copyright (c) 2020 makerdiary
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_NRF52840_M2
+	bool "nRF52840-M2"
+	depends on SOC_NRF52840_QIAA

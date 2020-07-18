@@ -1,0 +1,7 @@
+# Ignore the SDK files in this directory
+
+*
+
+# Except these files
+!.gitignore
+!README.md

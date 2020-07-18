@@ -1,0 +1,22 @@
+.DS_Store/*
+
+#vscode editor
+.vscode
+
+# Output directories
+_build/
+build/
+
+# mkdocs
+mkdocs-material/*
+site
+
+# Eclipse Project Files
+.cproject
+.project
+.pydevproject
+.settings
+
+# uVision generated files
+*.uvopt
+*.uvgui.*
