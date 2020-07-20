@@ -38,35 +38,9 @@ NRF_BLOCK_DEV_RAM_DEFINE(
 	NRF_BLOCK_DEV_RAM_CONFIG(512, usbMscBlockDevRam_buff, sizeof(usbMscBlockDevRam_buff)),
 	NFR_BLOCK_DEV_INFO_CONFIG(USB_DEVICE_MANUFACTURER, "RAM", "1.00"));
 
-// empty block device define
-NRF_BLOCK_DEV_EMPTY_DEFINE(
-	usbMscBlockDevEmpty,
-	NRF_BLOCK_DEV_EMPTY_CONFIG(512, 1024 * 1024),
-	NFR_BLOCK_DEV_INFO_CONFIG(USB_DEVICE_MANUFACTURER, "EMPTY", "1.00"));
-
-
-#ifdef USE_QSPI
-//NRF_BLOCK_DEV_QSPI_DEFINE(
-//	usbMscBlockDevQspi,
-//	NRF_BLOCK_DEV_QSPI_CONFIG(
-//		512,
-//		NRF_BLOCK_DEV_QSPI_FLAG_CACHE_WRITEBACK,
-//		NRF_DRV_QSPI_DEFAULT_CONFIG),
-//	NFR_BLOCK_DEV_INFO_CONFIG(USB_DEVICE_MANUFACTURER, "QSPI", "1.00"));
-
 #define BLOCKDEV_LIST() (                                	\
-	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevRam, block_dev),   	\
-	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevEmpty, block_dev),	\
-	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevQspi, block_dev))	\
+	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevRam, block_dev),   \
 )
-#else // USE_QSPI
-
-#define BLOCKDEV_LIST() (                                	\
-	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevRam, block_dev),   	\
-	NRF_BLOCKDEV_BASE_ADDR(usbMscBlockDevEmpty, block_dev)	\
-)
-#endif // USE_QSPI
-
 
 #define ENDPOINT_LIST() APP_USBD_MSC_ENDPOINT_LIST(1, 1)
 
