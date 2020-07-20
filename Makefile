@@ -3,21 +3,22 @@ TARGETS				:= nrf52840_xxaa
 FIRMWARE_DIRECTORY	:= _firmware
 OUTPUT_DIRECTORY 	:= _build
 
-LIB_ROOT ?= lib
-SDK_ROOT := $(LIB_ROOT)/nrf_sdks/nRF5_SDK
-PROJ_DIR := $(PROJECT)
+VENDOR_ROOT ?= vendor
+BOARD_SDK_ROOT ?= $(VENDOR_ROOT)/board
+SDK_ROOT := $(VENDOR_ROOT)/nRF5_SDK
+SOURCE_DIR := src
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
-  LINKER_SCRIPT  := $(PROJ_DIR)/link/nrf52.ld
+  LINKER_SCRIPT  := $(SOURCE_DIR)/link/nrf52.ld
 
 # Source files for application
 SRC_FILES += \
-  $(wildcard $(PROJ_DIR)/*.c*) \
-  $(wildcard $(PROJ_DIR)/platform/*.c*) \
-  $(wildcard $(PROJ_DIR)/app/*.c*) \
-  $(wildcard $(PROJ_DIR)/usb/*.c*) \
-  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/*.c*) \
-  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
+  $(wildcard $(SOURCE_DIR)/*.c*) \
+  $(wildcard $(SOURCE_DIR)/platform/*.c*) \
+  $(wildcard $(SOURCE_DIR)/app/*.c*) \
+  $(wildcard $(SOURCE_DIR)/usb/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
 
 # SDK source files
 SRC_FILES += \
@@ -86,12 +87,12 @@ SRC_FILES += \
 
 # Include folders for application
 INC_FOLDERS += \
-  $(PROJ_DIR)/config \
-  $(PROJ_DIR) \
+  $(SOURCE_DIR)/config \
+  $(SOURCE_DIR) \
 
 # Include folders for SDKs
 INC_FOLDERS += \
-  $(LIB_ROOT)/config \
+  $(BOARD_SDK_ROOT)/config \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(SDK_ROOT)/components/nfc/ndef/generic/message \
   $(SDK_ROOT)/components/nfc/t2t_lib \
@@ -255,7 +256,7 @@ erase:
 release: merge
 	@if not exist "$(FIRMWARE_DIRECTORY)" mkdir "$(FIRMWARE_DIRECTORY)"
 	@echo Creating UF2 format file from produced hex...
-	python $(LIB_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
+	python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
 	@echo Copying: $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex to $(FIRMWARE_DIRECTORY) directory.
 	copy /B /Y $(OUTPUT_DIRECTORY)\nrf52840_xxaa_mbr.hex $(FIRMWARE_DIRECTORY)\$(PROJECT)_mbr.hex
 	@echo.
