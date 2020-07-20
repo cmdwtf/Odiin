@@ -1,6 +1,6 @@
 #include "nxp_ntag21x_payloads.hpp"
 
-#include "log_module.ii"
+#include "nfc_log_module.ii"
 
 namespace nfc_tag_emulation::nxp_ntag21x
 {

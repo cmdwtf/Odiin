@@ -10,10 +10,10 @@
 #endif //NFCTAGEMU_LOG_ENABLED
 #include "nrf_log.h"
 
-#if defined(NFCEMU_VERBOSE_LOGGING) && (NFCEMU_VERBOSE_LOGGING == 1)
+#if defined(NFCTAGEMU_VERBOSE_LOGGING) && (NFCTAGEMU_VERBOSE_LOGGING == 1)
 #define NRF_LOG_VERBOSE(...) NRF_LOG_DEBUG(__VA_ARGS__)
 #define NRF_HEXDUMP_VERBOSE(p_data, len) NRF_LOG_HEXDUMP_DEBUG(p_data, len)
 #else
 #define NRF_LOG_VERBOSE(...)
-#define NRF_HEXDUMP_VERBOSE(p_data, len)
-#endif // NFCEMU_VERBOSE_LOGGING
+#define NRF_HEXDUMP_VERBOSE(p_data, len) do { UNUSED_VARIABLE(p_data); UNUSED_VARIABLE(len); } while(0)
+#endif // NFCTAGEMU_VERBOSE_LOGGING

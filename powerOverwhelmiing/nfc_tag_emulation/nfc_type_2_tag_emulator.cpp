@@ -3,7 +3,7 @@
 #include <cstring>
 #include <algorithm>
 
-#include "log_module.ii"
+#include "nfc_log_module.ii"
 #include "./nfrx_extensions/nrfx_extensions.h"
 
 namespace nfc_tag_emulation::nfc_type_2_tag

@@ -1,5 +1,5 @@
 #include "payload.h"
-#include "log_module.ii"
+#include "nfc_log_module.ii"
 
 namespace nfc_tag_emulation
 {
