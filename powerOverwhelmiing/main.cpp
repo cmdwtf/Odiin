@@ -8,6 +8,9 @@
 
 #include "nfc_tag_emulation/nxp_ntag21x_emulator.h"
 #include "app/app_logs.h"
+#include "app/app_clock.h"
+#include "usb/usb.h"
+#include "usb/usb_msc.h"
 
 using NtagPayload = nfc_tag_emulation::nxp_ntag21x::Ntag21XPayload;
 
@@ -17,19 +20,6 @@ nfc_tag_emulation::nxp_ntag21x::Ntag21xEmulator ntag215Emulator;
 extern const uint8_t t2tTesterBin[540];
 NtagPayload tester(t2tTesterBin, 540);
 NtagPayload* targetPayload = &tester;
-
-// low frequency clock init for app timer.
-void clock_initialization()
-{
-    NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
-    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-    NRF_CLOCK->TASKS_LFCLKSTART    = 1;
-
-    while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
-    {
-        // Do nothing.
-    }
-}
 
 // event handler for board support events (a la button)
 void bsp_evt_handler(bsp_event_t evt)
@@ -63,12 +53,16 @@ int main(int argc, char** argv)
 	D("=====================================");
 	I("Application starting.");
 
-	clock_initialization();
+	app_clocks_initialize();
 
-    uint32_t err_code = app_timer_init();
+    ret_code_t err_code = app_timer_init();
     APP_ERROR_CHECK(err_code);
 
 	bsp_configuration();
+
+	Usb::Device::Initialize();
+	Usb::MassStorageClass msc;
+	Usb::Device::Enable();
 
     // Setup NFC Tag
 	ntag215Emulator.Initialize();
@@ -82,8 +76,10 @@ int main(int argc, char** argv)
 	D("Application waiting for events!");
     while (1)
     {
-		// flush logs, and wait for events.
         app_log_flush();
+
+		Usb::Device::Update();
+
 		// why wfe/sev/wfe? event clearing and sleep for power optimization.
 		// see: https://devzone.nordicsemi.com/f/nordic-q-a/10424/nrf51422-won-t-sleep
         __WFE();

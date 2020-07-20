@@ -12,11 +12,12 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 
 # Source files for application
 SRC_FILES += \
-  $(wildcard $(PROJ_DIR)/*.cpp) \
-  $(wildcard $(PROJ_DIR)/app/*.cpp) \
-  $(wildcard $(PROJ_DIR)/platform/*.cpp) \
-  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/*.cpp) \
-  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/nfrx_extensions/*.cpp) \
+  $(wildcard $(PROJ_DIR)/*.c*) \
+  $(wildcard $(PROJ_DIR)/platform/*.c*) \
+  $(wildcard $(PROJ_DIR)/app/*.c*) \
+  $(wildcard $(PROJ_DIR)/usb/*.c*) \
+  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/*.c*) \
+  $(wildcard $(PROJ_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
 
 # SDK source files
 SRC_FILES += \
@@ -46,6 +47,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
@@ -55,6 +57,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(SDK_ROOT)/components/nfc/ndef/generic/message/nfc_ndef_msg.c \
   $(SDK_ROOT)/components/nfc/ndef/generic/record/nfc_ndef_record.c \
@@ -66,6 +69,20 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/sortlist/nrf_sortlist.c \
   $(SDK_ROOT)/components/libraries/timer/app_timer.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
+  $(SDK_ROOT)/components/libraries/usbd/class/msc/app_usbd_msc.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
+  $(SDK_ROOT)/components/libraries/block_dev/empty/nrf_block_dev_empty.c \
+  $(SDK_ROOT)/components/libraries/block_dev/ram/nrf_block_dev_ram.c \
+  $(SDK_ROOT)/components/libraries/block_dev/sdc/nrf_block_dev_sdc.c \
+  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_block_dev_qspi.c \
+  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_serial_flash_params.c \
+  $(SDK_ROOT)/external/utf_converter/utf.c \
+  $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
+  $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
+  $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
 
 # Include folders for application
 INC_FOLDERS += \
@@ -90,6 +107,8 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/ringbuf \
   $(SDK_ROOT)/components/libraries/hardfault/nrf52 \
   $(SDK_ROOT)/components/libraries/timer \
+  $(SDK_ROOT)/components/libraries/fifo \
+  $(SDK_ROOT)/components/libraries/atomic_fifo \
   $(SDK_ROOT)/modules/nrfx/hal \
   $(SDK_ROOT)/components/libraries/hardfault \
   $(SDK_ROOT)/components/libraries/uart \
@@ -108,7 +127,16 @@ INC_FOLDERS += \
   $(SDK_ROOT)/external/fprintf \
   $(SDK_ROOT)/components/libraries/log/src \
   $(SDK_ROOT)/components/libraries/sortlist \
-  $(SDK_ROOT)/components/libraries/timer \
+  $(SDK_ROOT)/components/libraries/usbd \
+  $(SDK_ROOT)/components/libraries/usbd/class/msc \
+  $(SDK_ROOT)/components/libraries/block_dev \
+  $(SDK_ROOT)/components/libraries/block_dev/empty \
+  $(SDK_ROOT)/components/libraries/block_dev/qspi \
+  $(SDK_ROOT)/components/libraries/block_dev/ram \
+  $(SDK_ROOT)/components/libraries/block_dev/sdc \
+  $(SDK_ROOT)/components/libraries/sdcard \
+  $(SDK_ROOT)/external/utf_converter \
+
 
 # Libraries common to all targets
 #LIB_FILES += \
@@ -126,6 +154,8 @@ CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
+CFLAGS += -DDEBUG
+CFLAGS += -DDEBUG_NRF
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DNRF52840_XXAA
 CFLAGS += -mcpu=cortex-m4
@@ -152,6 +182,8 @@ ASMFLAGS += -DBOARD_CUSTOM
 ASMFLAGS += -DAPP_TIMER_V2
 ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
+ASMFLAGS += -DDEBUG
+ASMFLAGS += -DDEBUG_NRF
 ASMFLAGS += -DFLOAT_ABI_HARD
 ASMFLAGS += -DNRF52840_XXAA
 
