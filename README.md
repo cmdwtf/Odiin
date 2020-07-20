@@ -19,7 +19,7 @@ The order in which I'm adding features is going to be mostly random depending on
 |NFC Fourm Type 1/3/4/5 Tag Emulation|🎄|
 |Bootloader for easy USB Firmware Updates|✔*|
 
-🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.  
+🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
 \* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader)
 
 
@@ -47,10 +47,14 @@ Contributions are absolutely welcome. In this early state, the project is majorl
 
 That said, everyone is more than welcome to report issues, make suggestions, or if it fancies you to fork and make a PR, go for it! Even if it's just for a typo.
 
-## Acknowledgments & License
-
-Individual files (especially in the nRF5 SDK that I've turned into a sub-module) are often directly licensed in their own files.
+## Acknowledgments & Licenses
 
 Several bits in this project are directly from the [makerdiary M.2 Developer Kit SDK](https://github.com/makerdiary/nrf52840-m2-devkit), which was licensed under the MIT license. See the LICENSE file in it's folder.
 
 If you'd like license this project or a part of it's code for a specific purpose or under specific terms, please get in touch!
+
+### Third-Party Licensed Software
+
+- [M.2 DevKit SDK](https://github.com/makerdiary/nrf52840-m2-devkit): MIT © 2020 makerdiary
+- [nRF5 SDK](https://developer.nordicsemi.com/): 5-Clause Nordic © 2010-2017 Nordic Semiconductor ASA
+- [littlefs](https://github.com/ARMmbed/littlefs): BSD-3-Clause License © 2017 ARM Limited

@@ -1,3 +1,6 @@
 [submodule "nRF5_SDK"]
 	path = vendor/nRF5_SDK
 	url = https://github.com/nitz/nRF5_SDK.git
+[submodule "littlefs"]
+	path = vendor/littlefs
+	url = https://github.com/ARMmbed/littlefs.git

@@ -143,6 +143,14 @@ INC_FOLDERS += \
 #LIB_FILES += \
 #  $(SDK_ROOT)/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a \
 
+# Non-SDK vendor files for application & includes
+SRC_FILES += \
+  $(wildcard $(VENDOR_ROOT)/littlefs/*.c) \
+  $(wildcard $(VENDOR_ROOT)/littlefs/bd/*.c) \
+
+INC_FOLDERS += \
+   $(VENDOR_ROOT)/littlefs
+
 # Optimization flags
 OPT = -O3 -g3
 # Uncomment the line below to enable link time optimization
