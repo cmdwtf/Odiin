@@ -47,7 +47,7 @@
 #include "app_config.h"
 #endif
 
-#include "../usb/usb_config.h"
+#include "global/usb_config.h"
 
 // <h> nRF_Drivers
 
@@ -976,6 +976,51 @@
 
 #ifndef APP_SCHEDULER_WITH_PROFILER
 #define APP_SCHEDULER_WITH_PROFILER 0
+#endif
+
+// </e>
+
+// <e> APP_SDCARD_ENABLED - app_sdcard - SD/MMC card support using SPI
+//==========================================================
+#ifndef APP_SDCARD_ENABLED
+#define APP_SDCARD_ENABLED 1
+#endif
+// <o> APP_SDCARD_SPI_INSTANCE  - SPI instance used
+
+// <0=> 0
+// <1=> 1
+// <2=> 2
+
+#ifndef APP_SDCARD_SPI_INSTANCE
+#define APP_SDCARD_SPI_INSTANCE 0
+#endif
+
+// <o> APP_SDCARD_FREQ_INIT  - SPI frequency
+
+// <33554432=> 125 kHz
+// <67108864=> 250 kHz
+// <134217728=> 500 kHz
+// <268435456=> 1 MHz
+// <536870912=> 2 MHz
+// <1073741824=> 4 MHz
+// <2147483648=> 8 MHz
+
+#ifndef APP_SDCARD_FREQ_INIT
+#define APP_SDCARD_FREQ_INIT 2147483648
+#endif
+
+// <o> APP_SDCARD_FREQ_DATA  - SPI frequency
+
+// <33554432=> 125 kHz
+// <67108864=> 250 kHz
+// <134217728=> 500 kHz
+// <268435456=> 1 MHz
+// <536870912=> 2 MHz
+// <1073741824=> 4 MHz
+// <2147483648=> 8 MHz
+
+#ifndef APP_SDCARD_FREQ_DATA
+#define APP_SDCARD_FREQ_DATA 2147483648
 #endif
 
 // </e>
@@ -4869,7 +4914,7 @@
 
 
 #ifndef NRF_BLOCK_DEV_SDC_ENABLED
-#define NRF_BLOCK_DEV_SDC_ENABLED 0
+#define NRF_BLOCK_DEV_SDC_ENABLED 1
 #endif
 
 // </e>
@@ -5064,6 +5109,328 @@
 #ifndef POWER_CONFIG_DEFAULT_DCDCENHV
 #define POWER_CONFIG_DEFAULT_DCDCENHV 0
 #endif
+
+// </e>
+
+// <e> NRFX_QSPI_ENABLED - nrfx_qspi - QSPI peripheral driver
+//==========================================================
+#ifndef NRFX_QSPI_ENABLED
+#define NRFX_QSPI_ENABLED 1
+#endif
+// <o> NRFX_QSPI_CONFIG_SCK_DELAY - tSHSL, tWHSL and tSHWL in number of 16 MHz periods (62.5 ns).  <0-255>
+
+
+#ifndef NRFX_QSPI_CONFIG_SCK_DELAY
+#define NRFX_QSPI_CONFIG_SCK_DELAY 1
+#endif
+
+// <o> NRFX_QSPI_CONFIG_XIP_OFFSET - Address offset in the external memory for Execute in Place operation.
+#ifndef NRFX_QSPI_CONFIG_XIP_OFFSET
+#define NRFX_QSPI_CONFIG_XIP_OFFSET 0
+#endif
+
+// <o> NRFX_QSPI_CONFIG_READOC  - Number of data lines and opcode used for reading.
+
+// <0=> FastRead
+// <1=> Read2O
+// <2=> Read2IO
+// <3=> Read4O
+// <4=> Read4IO
+
+#ifndef NRFX_QSPI_CONFIG_READOC
+#define NRFX_QSPI_CONFIG_READOC 0
+#endif
+
+// <o> NRFX_QSPI_CONFIG_WRITEOC  - Number of data lines and opcode used for writing.
+
+// <0=> PP
+// <1=> PP2O
+// <2=> PP4O
+// <3=> PP4IO
+
+#ifndef NRFX_QSPI_CONFIG_WRITEOC
+#define NRFX_QSPI_CONFIG_WRITEOC 0
+#endif
+
+// <o> NRFX_QSPI_CONFIG_ADDRMODE  - Addressing mode.
+
+// <0=> 24bit
+// <1=> 32bit
+
+#ifndef NRFX_QSPI_CONFIG_ADDRMODE
+#define NRFX_QSPI_CONFIG_ADDRMODE 0
+#endif
+
+// <o> NRFX_QSPI_CONFIG_MODE  - SPI mode.
+
+// <0=> Mode 0
+// <1=> Mode 1
+
+#ifndef NRFX_QSPI_CONFIG_MODE
+#define NRFX_QSPI_CONFIG_MODE 0
+#endif
+
+// <o> NRFX_QSPI_CONFIG_FREQUENCY  - Frequency divider.
+
+// <0=> 32MHz/1
+// <1=> 32MHz/2
+// <2=> 32MHz/3
+// <3=> 32MHz/4
+// <4=> 32MHz/5
+// <5=> 32MHz/6
+// <6=> 32MHz/7
+// <7=> 32MHz/8
+// <8=> 32MHz/9
+// <9=> 32MHz/10
+// <10=> 32MHz/11
+// <11=> 32MHz/12
+// <12=> 32MHz/13
+// <13=> 32MHz/14
+// <14=> 32MHz/15
+// <15=> 32MHz/16
+
+#ifndef NRFX_QSPI_CONFIG_FREQUENCY
+#define NRFX_QSPI_CONFIG_FREQUENCY 15
+#endif
+
+// <s> NRFX_QSPI_PIN_SCK - SCK pin value.
+#ifndef NRFX_QSPI_PIN_SCK
+#define NRFX_QSPI_PIN_SCK NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <s> NRFX_QSPI_PIN_CSN - CSN pin value.
+#ifndef NRFX_QSPI_PIN_CSN
+#define NRFX_QSPI_PIN_CSN NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <s> NRFX_QSPI_PIN_IO0 - IO0 pin value.
+#ifndef NRFX_QSPI_PIN_IO0
+#define NRFX_QSPI_PIN_IO0 NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <s> NRFX_QSPI_PIN_IO1 - IO1 pin value.
+#ifndef NRFX_QSPI_PIN_IO1
+#define NRFX_QSPI_PIN_IO1 NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <s> NRFX_QSPI_PIN_IO2 - IO2 pin value.
+#ifndef NRFX_QSPI_PIN_IO2
+#define NRFX_QSPI_PIN_IO2 NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <s> NRFX_QSPI_PIN_IO3 - IO3 pin value.
+#ifndef NRFX_QSPI_PIN_IO3
+#define NRFX_QSPI_PIN_IO3 NRF_QSPI_PIN_NOT_CONNECTED
+#endif
+
+// <o> NRFX_QSPI_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef NRFX_QSPI_CONFIG_IRQ_PRIORITY
+#define NRFX_QSPI_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// </e>
+
+// <e> NRFX_SPIM_ENABLED - nrfx_spim - SPIM peripheral driver
+//==========================================================
+#ifndef NRFX_SPIM_ENABLED
+#define NRFX_SPIM_ENABLED 1
+#endif
+// <q> NRFX_SPIM0_ENABLED  - Enable SPIM0 instance
+
+
+#ifndef NRFX_SPIM0_ENABLED
+#define NRFX_SPIM0_ENABLED 0
+#endif
+
+// <q> NRFX_SPIM1_ENABLED  - Enable SPIM1 instance
+
+
+#ifndef NRFX_SPIM1_ENABLED
+#define NRFX_SPIM1_ENABLED 0
+#endif
+
+// <q> NRFX_SPIM2_ENABLED  - Enable SPIM2 instance
+
+
+#ifndef NRFX_SPIM2_ENABLED
+#define NRFX_SPIM2_ENABLED 0
+#endif
+
+// <q> NRFX_SPIM3_ENABLED  - Enable SPIM3 instance
+
+
+#ifndef NRFX_SPIM3_ENABLED
+#define NRFX_SPIM3_ENABLED 0
+#endif
+
+// <q> NRFX_SPIM_EXTENDED_ENABLED  - Enable extended SPIM features
+
+
+#ifndef NRFX_SPIM_EXTENDED_ENABLED
+#define NRFX_SPIM_EXTENDED_ENABLED 0
+#endif
+
+// <o> NRFX_SPIM_MISO_PULL_CFG  - MISO pin pull configuration.
+
+// <0=> NRF_GPIO_PIN_NOPULL
+// <1=> NRF_GPIO_PIN_PULLDOWN
+// <3=> NRF_GPIO_PIN_PULLUP
+
+#ifndef NRFX_SPIM_MISO_PULL_CFG
+#define NRFX_SPIM_MISO_PULL_CFG 1
+#endif
+
+// <o> NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY
+#define NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// <e> NRFX_SPIM_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRFX_SPIM_CONFIG_LOG_ENABLED
+#define NRFX_SPIM_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRFX_SPIM_CONFIG_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef NRFX_SPIM_CONFIG_LOG_LEVEL
+#define NRFX_SPIM_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRFX_SPIM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef NRFX_SPIM_CONFIG_INFO_COLOR
+#define NRFX_SPIM_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRFX_SPIM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef NRFX_SPIM_CONFIG_DEBUG_COLOR
+#define NRFX_SPIM_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </e>
+
+// <e> SPI_ENABLED - nrf_drv_spi - SPI/SPIM peripheral driver - legacy layer
+//==========================================================
+#ifndef SPI_ENABLED
+#define SPI_ENABLED 1
+#endif
+// <o> SPI_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef SPI_DEFAULT_CONFIG_IRQ_PRIORITY
+#define SPI_DEFAULT_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// <o> NRF_SPI_DRV_MISO_PULLUP_CFG  - MISO PIN pull-up configuration.
+
+// <0=> NRF_GPIO_PIN_NOPULL
+// <1=> NRF_GPIO_PIN_PULLDOWN
+// <3=> NRF_GPIO_PIN_PULLUP
+
+#ifndef NRF_SPI_DRV_MISO_PULLUP_CFG
+#define NRF_SPI_DRV_MISO_PULLUP_CFG 1
+#endif
+
+// <e> SPI0_ENABLED - Enable SPI0 instance
+//==========================================================
+#ifndef SPI0_ENABLED
+#define SPI0_ENABLED 1
+#endif
+// <q> SPI0_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI0_USE_EASY_DMA
+#define SPI0_USE_EASY_DMA 1
+#endif
+
+// </e>
+
+// <e> SPI1_ENABLED - Enable SPI1 instance
+//==========================================================
+#ifndef SPI1_ENABLED
+#define SPI1_ENABLED 0
+#endif
+// <q> SPI1_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI1_USE_EASY_DMA
+#define SPI1_USE_EASY_DMA 1
+#endif
+
+// </e>
+
+// <e> SPI2_ENABLED - Enable SPI2 instance
+//==========================================================
+#ifndef SPI2_ENABLED
+#define SPI2_ENABLED 0
+#endif
+// <q> SPI2_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI2_USE_EASY_DMA
+#define SPI2_USE_EASY_DMA 1
+#endif
+
+// </e>
 
 // </e>
 

@@ -15,14 +15,13 @@
 
 #include "usb.h"
 
-
-extern app_usbd_msc_t usbMscClassDefinition;
+#include "global/global_data.h"
 
 namespace Usb
 {
 	MassStorageClass::MassStorageClass()
 	{
-    	app_usbd_class_inst_t const * classInstance = app_usbd_msc_class_inst_get(&usbMscClassDefinition);
+    	app_usbd_class_inst_t const * classInstance = app_usbd_msc_class_inst_get(get_usb_msc_class_definition());
 		static Device::class_info_t classInfo =
 		{
 			.classInstance = classInstance,

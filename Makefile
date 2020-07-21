@@ -15,6 +15,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
   $(wildcard $(SOURCE_DIR)/platform/*.c*) \
+  $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
   $(wildcard $(SOURCE_DIR)/usb/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
@@ -36,6 +37,8 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/fifo/app_fifo.c \
   $(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
   $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
+  $(SDK_ROOT)/components/libraries/scheduler/app_scheduler.c \
+  $(SDK_ROOT)/components/libraries/sdcard/app_sdcard.c \
   $(SDK_ROOT)/components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c \
   $(SDK_ROOT)/components/libraries/hardfault/hardfault_implementation.c \
   $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
@@ -49,12 +52,17 @@ SRC_FILES += \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_spi.c \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_nfct.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_qspi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spim.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
@@ -84,6 +92,8 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
   $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
+  $(SDK_ROOT)/external/fatfs/port/diskio_blkdev.c \
+  $(SDK_ROOT)/external/fatfs/src/ff.c \
 
 # Include folders for application
 INC_FOLDERS += \
@@ -137,6 +147,10 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/block_dev/sdc \
   $(SDK_ROOT)/components/libraries/sdcard \
   $(SDK_ROOT)/external/utf_converter \
+  $(SDK_ROOT)/external/fatfs/src \
+  $(SDK_ROOT)/external/fatfs/port \
+  $(SDK_ROOT)/external/protothreads \
+  $(SDK_ROOT)/external/protothreads/pt-1.4 \
 
 
 # Libraries common to all targets

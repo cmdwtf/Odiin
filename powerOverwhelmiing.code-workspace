@@ -50,7 +50,8 @@
 			"stdexcept": "cpp",
 			"streambuf": "cpp",
 			"cinttypes": "cpp",
-			"typeinfo": "cpp"
+			"typeinfo": "cpp",
+			"*.inc": "c"
 		},
 		"C_Cpp.default.includePath": [
 			"${default}",
