@@ -14,7 +14,6 @@
 #include "app_sdcard.h"
 
 #include "usb_config.h"
-#include "nrf52840_m2.h" // SDC_* pins. This is the custom board SDK header.
 
 // This code is in a C file instead of C++, (in addition to in a single file)
 // because "app_usbd_msc.h" uses a C-only enum forward declaration.

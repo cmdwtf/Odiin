@@ -1,4 +1,11 @@
 
+#if defined(__VSCODE__CPP__)
+// make vs code linter happy
+#include "nrf_block_dev_sdc.h"
+#endif // __VSCODE__CPP__
+
+#include "nrf52840_m2.h"
+
 #define SDC_BLOCK_DEVICE __sdcBlockDevice
 #define USB_MSC_CLASS_DEFINITION __usbMscClassDefinition
 
