@@ -11,56 +11,87 @@ SOURCE_DIR := src
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := $(SOURCE_DIR)/link/nrf52.ld
 
-# Source files for application
+########################################################
+## Application Files
+########################################################
+
 SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
-  $(wildcard $(SOURCE_DIR)/platform/*.c*) \
-  $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
-  $(wildcard $(SOURCE_DIR)/usb/*.c*) \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
+  $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
+  $(wildcard $(SOURCE_DIR)/platform/*.c*) \
   $(wildcard $(SOURCE_DIR)/tests/*.c*) \
+  $(wildcard $(SOURCE_DIR)/usb/*.c*) \
 
-# SDK source files
+INC_FOLDERS += \
+  $(SOURCE_DIR) \
+  $(SOURCE_DIR)/config \
+
+########################################################
+## nRF5 SDK Files
+########################################################
+
 SRC_FILES += \
-  $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
+  $(SDK_ROOT)/components/boards/boards.c \
+  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c \
+  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c \
+  $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
+  $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
+  $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
+  $(SDK_ROOT)/components/libraries/balloc/nrf_balloc.c \
+  $(SDK_ROOT)/components/libraries/block_dev/empty/nrf_block_dev_empty.c \
+  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_block_dev_qspi.c \
+  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_serial_flash_params.c \
+  $(SDK_ROOT)/components/libraries/block_dev/ram/nrf_block_dev_ram.c \
+  $(SDK_ROOT)/components/libraries/block_dev/sdc/nrf_block_dev_sdc.c \
+  $(SDK_ROOT)/components/libraries/bsp/bsp.c \
+  $(SDK_ROOT)/components/libraries/button/app_button.c \
+  $(SDK_ROOT)/components/libraries/fifo/app_fifo.c \
+  $(SDK_ROOT)/components/libraries/gfx/*.c \
+  $(SDK_ROOT)/components/libraries/hardfault/hardfault_implementation.c \
+  $(SDK_ROOT)/components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_rtt.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_serial.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_uart.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_default_backends.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_frontend.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_str_formatter.c \
-  $(SDK_ROOT)/components/boards/boards.c \
+  $(SDK_ROOT)/components/libraries/memobj/nrf_memobj.c \
+  $(SDK_ROOT)/components/libraries/ringbuf/nrf_ringbuf.c \
+  $(SDK_ROOT)/components/libraries/scheduler/app_scheduler.c \
+  $(SDK_ROOT)/components/libraries/sdcard/app_sdcard.c \
+  $(SDK_ROOT)/components/libraries/sortlist/nrf_sortlist.c \
+  $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
+  $(SDK_ROOT)/components/libraries/timer/app_timer.c \
+  $(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
+  $(SDK_ROOT)/components/libraries/usbd/class/msc/app_usbd_msc.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \
   $(SDK_ROOT)/components/libraries/util/app_error_handler_gcc.c \
   $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
-  $(SDK_ROOT)/components/libraries/fifo/app_fifo.c \
-  $(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
   $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
-  $(SDK_ROOT)/components/libraries/scheduler/app_scheduler.c \
-  $(SDK_ROOT)/components/libraries/sdcard/app_sdcard.c \
-  $(SDK_ROOT)/components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c \
-  $(SDK_ROOT)/components/libraries/hardfault/hardfault_implementation.c \
   $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
-  $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
-  $(SDK_ROOT)/components/libraries/balloc/nrf_balloc.c \
+  $(SDK_ROOT)/components/nfc/ndef/generic/message/nfc_ndef_msg.c \
+  $(SDK_ROOT)/components/nfc/ndef/generic/record/nfc_ndef_record.c \
+  $(SDK_ROOT)/components/nfc/ndef/uri/nfc_uri_msg.c \
+  $(SDK_ROOT)/components/nfc/ndef/uri/nfc_uri_rec.c \
+  $(SDK_ROOT)/components/nfc/platform/nfc_platform.c \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf.c \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf_format.c \
-  $(SDK_ROOT)/components/libraries/memobj/nrf_memobj.c \
-  $(SDK_ROOT)/components/libraries/ringbuf/nrf_ringbuf.c \
-  $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
+  $(SDK_ROOT)/external/utf_converter/utf.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
-  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_spi.c \
-  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c \
-  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c \
-  $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_nfct.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_qspi.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spi.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spim.c \
@@ -69,124 +100,110 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
+  $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
-  $(SDK_ROOT)/components/nfc/ndef/generic/message/nfc_ndef_msg.c \
-  $(SDK_ROOT)/components/nfc/ndef/generic/record/nfc_ndef_record.c \
-  $(SDK_ROOT)/components/nfc/platform/nfc_platform.c \
-  $(SDK_ROOT)/components/nfc/ndef/uri/nfc_uri_msg.c \
-  $(SDK_ROOT)/components/nfc/ndef/uri/nfc_uri_rec.c \
-  $(SDK_ROOT)/components/libraries/bsp/bsp.c \
-  $(SDK_ROOT)/components/libraries/button/app_button.c \
-  $(SDK_ROOT)/components/libraries/sortlist/nrf_sortlist.c \
-  $(SDK_ROOT)/components/libraries/timer/app_timer.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
-  $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
-  $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
-  $(SDK_ROOT)/components/libraries/usbd/class/msc/app_usbd_msc.c \
-  $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
-  $(SDK_ROOT)/components/libraries/block_dev/empty/nrf_block_dev_empty.c \
-  $(SDK_ROOT)/components/libraries/block_dev/ram/nrf_block_dev_ram.c \
-  $(SDK_ROOT)/components/libraries/block_dev/sdc/nrf_block_dev_sdc.c \
-  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_block_dev_qspi.c \
-  $(SDK_ROOT)/components/libraries/block_dev/qspi/nrf_serial_flash_params.c \
-  $(SDK_ROOT)/external/utf_converter/utf.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
-  $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
-  $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
-  $(SDK_ROOT)/components/libraries/gfx/*.c \
+  $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
 
-# Include folders for application
-INC_FOLDERS += \
-  $(SOURCE_DIR)/config \
-  $(SOURCE_DIR) \
-
-# Include folders for SDKs
 INC_FOLDERS += \
   $(BOARD_SDK_ROOT)/config \
-  $(SDK_ROOT)/modules/nrfx/mdk \
-  $(SDK_ROOT)/components/nfc/ndef/generic/message \
-  $(SDK_ROOT)/components/nfc/t2t_lib \
-  $(SDK_ROOT)/components/libraries/fifo \
-  $(SDK_ROOT)/components/nfc/platform \
-  $(SDK_ROOT)/components/libraries/strerror \
-  $(SDK_ROOT)/components/toolchain/cmsis/include \
-  $(SDK_ROOT)/components/libraries/util \
-  $(SDK_ROOT)/components/libraries/balloc \
-  $(SDK_ROOT)/components/libraries/bsp \
-  $(SDK_ROOT)/components/libraries/button \
-  $(SDK_ROOT)/components/libraries/memobj \
-  $(SDK_ROOT)/components/libraries/ringbuf \
-  $(SDK_ROOT)/components/libraries/hardfault/nrf52 \
-  $(SDK_ROOT)/components/libraries/timer \
-  $(SDK_ROOT)/components/libraries/fifo \
-  $(SDK_ROOT)/components/libraries/atomic_fifo \
-  $(SDK_ROOT)/modules/nrfx/hal \
-  $(SDK_ROOT)/components/libraries/hardfault \
-  $(SDK_ROOT)/components/libraries/uart \
-  $(SDK_ROOT)/components/nfc/ndef/uri \
-  $(SDK_ROOT)/modules/nrfx \
-  $(SDK_ROOT)/components/libraries/experimental_section_vars \
-  $(SDK_ROOT)/integration/nrfx/legacy \
-  $(SDK_ROOT)/components/libraries/delay \
+  $(SDK_ROOT)/components/boards \
   $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd \
   $(SDK_ROOT)/components/libraries/atomic \
-  $(SDK_ROOT)/components/libraries/log \
-  $(SDK_ROOT)/components/boards \
-  $(SDK_ROOT)/components/nfc/ndef/generic/record \
-  $(SDK_ROOT)/integration/nrfx \
-  $(SDK_ROOT)/modules/nrfx/drivers/include \
-  $(SDK_ROOT)/external/fprintf \
-  $(SDK_ROOT)/components/libraries/log/src \
-  $(SDK_ROOT)/components/libraries/sortlist \
-  $(SDK_ROOT)/components/libraries/usbd \
-  $(SDK_ROOT)/components/libraries/usbd/class/msc \
+  $(SDK_ROOT)/components/libraries/atomic_fifo \
+  $(SDK_ROOT)/components/libraries/balloc \
   $(SDK_ROOT)/components/libraries/block_dev \
   $(SDK_ROOT)/components/libraries/block_dev/empty \
   $(SDK_ROOT)/components/libraries/block_dev/qspi \
   $(SDK_ROOT)/components/libraries/block_dev/ram \
   $(SDK_ROOT)/components/libraries/block_dev/sdc \
-  $(SDK_ROOT)/components/libraries/sdcard \
+  $(SDK_ROOT)/components/libraries/bsp \
+  $(SDK_ROOT)/components/libraries/button \
+  $(SDK_ROOT)/components/libraries/delay \
+  $(SDK_ROOT)/components/libraries/experimental_section_vars \
+  $(SDK_ROOT)/components/libraries/fifo \
+  $(SDK_ROOT)/components/libraries/fifo \
   $(SDK_ROOT)/components/libraries/gfx \
-  $(SDK_ROOT)/external/utf_converter \
+  $(SDK_ROOT)/components/libraries/hardfault \
+  $(SDK_ROOT)/components/libraries/hardfault/nrf52 \
+  $(SDK_ROOT)/components/libraries/log \
+  $(SDK_ROOT)/components/libraries/log/src \
+  $(SDK_ROOT)/components/libraries/memobj \
+  $(SDK_ROOT)/components/libraries/ringbuf \
+  $(SDK_ROOT)/components/libraries/sdcard \
+  $(SDK_ROOT)/components/libraries/sortlist \
+  $(SDK_ROOT)/components/libraries/strerror \
+  $(SDK_ROOT)/components/libraries/timer \
+  $(SDK_ROOT)/components/libraries/uart \
+  $(SDK_ROOT)/components/libraries/usbd \
+  $(SDK_ROOT)/components/libraries/usbd/class/msc \
+  $(SDK_ROOT)/components/libraries/util \
+  $(SDK_ROOT)/components/nfc/ndef/generic/message \
+  $(SDK_ROOT)/components/nfc/ndef/generic/record \
+  $(SDK_ROOT)/components/nfc/ndef/uri \
+  $(SDK_ROOT)/components/nfc/platform \
+  $(SDK_ROOT)/components/nfc/t2t_lib \
+  $(SDK_ROOT)/components/toolchain/cmsis/include \
+  $(SDK_ROOT)/external/fprintf \
   $(SDK_ROOT)/external/protothreads \
   $(SDK_ROOT)/external/protothreads/pt-1.4 \
+  $(SDK_ROOT)/external/utf_converter \
+  $(SDK_ROOT)/integration/nrfx \
+  $(SDK_ROOT)/integration/nrfx/legacy \
+  $(SDK_ROOT)/modules/nrfx \
+  $(SDK_ROOT)/modules/nrfx/drivers/include \
+  $(SDK_ROOT)/modules/nrfx/hal \
+  $(SDK_ROOT)/modules/nrfx/mdk \
 
+########################################################
+## Other Vendor Files
+########################################################
+
+SRC_FILES += \
+  $(wildcard $(VENDOR_ROOT)/display/*.c) \
+  $(wildcard $(VENDOR_ROOT)/fatfs/port/*.c) \
+  $(wildcard $(VENDOR_ROOT)/fatfs/source/ff.c) \
+  $(wildcard $(VENDOR_ROOT)/fatfs/source/ffunicode.c) \
+  $(wildcard $(VENDOR_ROOT)/littlefs/*.c) \
+  $(wildcard $(VENDOR_ROOT)/littlefs/bd/*.c) \
+
+INC_FOLDERS += \
+   $(VENDOR_ROOT)/display \
+   $(VENDOR_ROOT)/fatfs/source \
+   $(VENDOR_ROOT)/fatfs/port \
+   $(VENDOR_ROOT)/littlefs \
+
+########################################################
+## Library Files
+########################################################
 
 # Libraries common to all targets
 #LIB_FILES += \
 #  $(SDK_ROOT)/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a \
 
-# Non-SDK vendor files for application & includes
-SRC_FILES += \
-  $(wildcard $(VENDOR_ROOT)/littlefs/*.c) \
-  $(wildcard $(VENDOR_ROOT)/littlefs/bd/*.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/source/ff.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/source/ffunicode.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/port/*.c) \
-  $(wildcard $(VENDOR_ROOT)/display/*.c) \
 
-INC_FOLDERS += \
-   $(VENDOR_ROOT)/littlefs \
-   $(VENDOR_ROOT)/fatfs/source \
-   $(VENDOR_ROOT)/fatfs/port \
-   $(VENDOR_ROOT)/display \
+########################################################
+## Compiler Flags
+########################################################
+
+MAX_DEBUG_INFO = -g3
 
 # Optimization flags
-OPT = -O3 -g3
+OPT = -O3 $(MAX_DEBUG_INFO)
 # Uncomment the line below to enable link time optimization
 #OPT += -flto
 
 # C flags common to all targets
 CFLAGS += $(OPT)
-CFLAGS += -DNRF52840_M2
-CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
+CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += -DDEBUG
 CFLAGS += -DDEBUG_NRF
 CFLAGS += -DFLOAT_ABI_HARD
+CFLAGS += -DNRF52840_M2
 CFLAGS += -DNRF52840_XXAA
 CFLAGS += -mcpu=cortex-m4
 CFLAGS += -mthumb -mabi=aapcs
@@ -203,19 +220,19 @@ CXXFLAGS += $(OPT)
 CXXFLAGS += -fno-rtti
 
 # Assembler flags common to all targets
-ASMFLAGS += -g3
-ASMFLAGS += -mcpu=cortex-m4
-ASMFLAGS += -mthumb -mabi=aapcs
-ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
-ASMFLAGS += -DNRF52840_M2
-ASMFLAGS += -DBOARD_CUSTOM
+ASMFLAGS += $(MAX_DEBUG_INFO)
 ASMFLAGS += -DAPP_TIMER_V2
 ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
+ASMFLAGS += -DBOARD_CUSTOM
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 ASMFLAGS += -DDEBUG
 ASMFLAGS += -DDEBUG_NRF
 ASMFLAGS += -DFLOAT_ABI_HARD
+ASMFLAGS += -DNRF52840_M2
 ASMFLAGS += -DNRF52840_XXAA
+ASMFLAGS += -mcpu=cortex-m4
+ASMFLAGS += -mthumb -mabi=aapcs
+ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 # Linker flags
 LDFLAGS += $(OPT)
