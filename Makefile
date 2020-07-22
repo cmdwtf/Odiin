@@ -21,6 +21,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
+  $(wildcard $(SOURCE_DIR)/tests/*.c*) \
 
 # SDK source files
 SRC_FILES += \
