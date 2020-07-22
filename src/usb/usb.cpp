@@ -39,7 +39,7 @@ namespace Usb
 
 			supportsPowerDetection = _supportsPowerDetection;
 
-			NRF_LOG_INFO("USB initialized. (Power Detction support: %s.)", supportsPowerDetection ? "enabled" : "disabled");
+			NRF_LOG_INFO("USB initialized.");
 
 			initialized = true;
 			return true;
