@@ -94,6 +94,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
   $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
+  $(SDK_ROOT)/components/libraries/gfx/*.c \
 
 # Include folders for application
 INC_FOLDERS += \
@@ -146,6 +147,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/block_dev/ram \
   $(SDK_ROOT)/components/libraries/block_dev/sdc \
   $(SDK_ROOT)/components/libraries/sdcard \
+  $(SDK_ROOT)/components/libraries/gfx \
   $(SDK_ROOT)/external/utf_converter \
   $(SDK_ROOT)/external/protothreads \
   $(SDK_ROOT)/external/protothreads/pt-1.4 \
@@ -162,11 +164,13 @@ SRC_FILES += \
   $(wildcard $(VENDOR_ROOT)/fatfs/source/ff.c) \
   $(wildcard $(VENDOR_ROOT)/fatfs/source/ffunicode.c) \
   $(wildcard $(VENDOR_ROOT)/fatfs/port/*.c) \
+  $(wildcard $(VENDOR_ROOT)/display/*.c) \
 
 INC_FOLDERS += \
    $(VENDOR_ROOT)/littlefs \
    $(VENDOR_ROOT)/fatfs/source \
    $(VENDOR_ROOT)/fatfs/port \
+   $(VENDOR_ROOT)/display \
 
 # Optimization flags
 OPT = -O3 -g3
