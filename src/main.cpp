@@ -12,6 +12,8 @@
 #include "usb/usb.h"
 #include "usb/usb_msc.h"
 
+#include "global/global_data.h"
+
 using NtagPayload = nfc_tag_emulation::nxp_ntag21x::Ntag21XPayload;
 
 nfc_tag_emulation::nxp_ntag21x::Ntag21xEmulator ntag215Emulator;
@@ -60,9 +62,14 @@ int main(int argc, char** argv)
 
 	bsp_configuration();
 
+	// setup USB
 	Usb::Device::Initialize();
 	Usb::MassStorageClass msc;
 	Usb::Device::Enable();
+
+	// setup SDC
+	SDCARD.Mount();
+	Usb::Device::RegisterListener(&SDCARD);
 
     // Setup NFC Tag
 	ntag215Emulator.Initialize();

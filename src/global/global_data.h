@@ -13,3 +13,12 @@ const app_usbd_msc_t* get_usb_msc_class_definition(void);
 #ifdef __cplusplus
 }
 #endif
+
+// C++ only globals
+#ifdef __cplusplus
+
+#include "files/sdcard.h"
+
+extern Files::SdCard SDCARD;
+
+#endif // __cplusplus

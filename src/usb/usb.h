@@ -1,9 +1,7 @@
 #pragma once
 
-#include <map>
-using std::map;
-
 #include "app_usbd.h"
+#include "usb_listener.h"
 
 namespace Usb
 {
@@ -22,7 +20,8 @@ namespace Usb
 		bool Enable();
 		bool Disable();
 		bool IsEnabled();
-		bool RegisterDeviceClass(const class_info_t * const deviceClass);
+		bool RegisterDeviceClass(const class_info_t* const deviceClass);
+		bool RegisterListener(Listener* listener);
 
 		// Update should be called in the main loop before or after __WFE.
 		void Update();

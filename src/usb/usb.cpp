@@ -1,5 +1,10 @@
 #include "usb.h"
 
+#include <map>
+#include <list>
+using std::list;
+using std::map;
+
 #include "usb_log_module.ii"
 
 #include "nrf_drv_clock.h"
@@ -14,12 +19,12 @@ namespace Usb
 			bool enabled = false;
 			bool connected = false;
 			bool supportsPowerDetection = false;
-			map<const app_usbd_class_inst_t*, const class_info_t*> registry;
+			map<const app_usbd_class_inst_t*, const class_info_t*> classRegistry;
 			void UsbdEventHandler(app_usbd_event_type_t event);
 			static const app_usbd_config_t usbd_config = {
 				.ev_state_proc = UsbdEventHandler
 			};
-
+			list<Listener*> eventListeners;
 		} // namespace
 
 		bool Initialize(bool _supportsPowerDetection /*= true*/)
@@ -115,7 +120,7 @@ namespace Usb
 				return false;
 			}
 
-			if (registry.find(deviceClass->classInstance) != registry.end())
+			if (classRegistry.find(deviceClass->classInstance) != classRegistry.end())
 			{
 				NRF_LOG_WARNING("Failed to register new device class, that class is already registered.");
 				return false;
@@ -126,13 +131,19 @@ namespace Usb
 
 			if (ret == NRF_SUCCESS)
 			{
-				registry[deviceClass->classInstance] = deviceClass;
+				classRegistry[deviceClass->classInstance] = deviceClass;
 				NRF_LOG_INFO("Registered USB device class `%s`.", deviceClass->name);
 				return true;
 			}
 
 			NRF_LOG_WARNING("Failed to registered USB device class `%s`.", deviceClass->name);
 			return false;
+		}
+
+		bool RegisterListener(Listener* listener)
+		{
+			eventListeners.push_back(listener);
+			return true;
 		}
 
 		void Update()
@@ -160,30 +171,38 @@ namespace Usb
 					case APP_USBD_EVT_STARTED:
 						break;
 					case APP_USBD_EVT_STOPPED:
-						//UNUSED_RETURN_VALUE(fatfs_init()); #FSFS
+						NRF_LOG_INFO("USB stopped, disabling driver.");
 						app_usbd_disable();
 						break;
 					case APP_USBD_EVT_POWER_DETECTED:
-						NRF_LOG_INFO("USB power detected");
+						NRF_LOG_INFO("USB power detected, enabling driver.");
 
 						if (!nrf_drv_usbd_is_enabled())
 						{
-							//fatfs_uninit(); #FSFS
 							app_usbd_enable();
 						}
 						break;
 					case APP_USBD_EVT_POWER_REMOVED:
-						NRF_LOG_INFO("USB power removed");
+						NRF_LOG_INFO("USB power removed, switching to disconnected state.");
 						app_usbd_stop();
 						connected = false;
 						break;
 					case APP_USBD_EVT_POWER_READY:
-						NRF_LOG_INFO("USB ready");
+						NRF_LOG_INFO("USB ready! Switching to connected state.");
 						app_usbd_start();
 						connected = true;
 						break;
 					default:
 						break;
+				}
+
+				if (eventListeners.size() > 0)
+				{
+					auto it = eventListeners.begin();
+					while (it != eventListeners.end())
+					{
+						(*it++)->OnUsbEvent(event);
+					}
 				}
 			}
 		}

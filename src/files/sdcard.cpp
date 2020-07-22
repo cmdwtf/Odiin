@@ -259,6 +259,31 @@ namespace Files
 	/////////////////////////////////////////////////
 	// Internal Operations
 
+	void SdCard::OnUsbEvent(app_usbd_event_type_t event)
+	{
+		switch (event)
+		{
+			case APP_USBD_EVT_STOPPED:
+				if (mounted == false && autoRemountAfterUsbDisconnect)
+				{
+					NRF_LOG_INFO("USB stopped, automatically remounting SDC.");
+					Initialize();
+					Mount();
+				}
+				break;
+			case APP_USBD_EVT_POWER_DETECTED:
+				if (initialized)
+				{
+					NRF_LOG_INFO("USB got power, uninitializing SDC to give it priority.");
+					Uninitialize();
+				}
+				break;
+			default:
+				// everything else is an uninteresting event.
+				break;
+		}
+	}
+
 	bool SdCard::Initialize()
 	{
 		if (initialized)
