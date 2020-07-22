@@ -682,6 +682,82 @@
 
 // </e>
 
+// <e> SPI_ENABLED - nrf_drv_spi - SPI/SPIM peripheral driver - legacy layer
+//==========================================================
+#ifndef SPI_ENABLED
+#define SPI_ENABLED 1
+#endif
+// <o> SPI_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef SPI_DEFAULT_CONFIG_IRQ_PRIORITY
+#define SPI_DEFAULT_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// <o> NRF_SPI_DRV_MISO_PULLUP_CFG  - MISO PIN pull-up configuration.
+
+// <0=> NRF_GPIO_PIN_NOPULL
+// <1=> NRF_GPIO_PIN_PULLDOWN
+// <3=> NRF_GPIO_PIN_PULLUP
+
+#ifndef NRF_SPI_DRV_MISO_PULLUP_CFG
+#define NRF_SPI_DRV_MISO_PULLUP_CFG 1
+#endif
+
+// <e> SPI0_ENABLED - Enable SPI0 instance
+//==========================================================
+#ifndef SPI0_ENABLED
+#define SPI0_ENABLED 1
+#endif
+// <q> SPI0_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI0_USE_EASY_DMA
+#define SPI0_USE_EASY_DMA 1
+#endif
+
+// </e>
+
+// <e> SPI1_ENABLED - Enable SPI1 instance
+//==========================================================
+#ifndef SPI1_ENABLED
+#define SPI1_ENABLED 1
+#endif
+// <q> SPI1_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI1_USE_EASY_DMA
+#define SPI1_USE_EASY_DMA 1
+#endif
+
+// </e>
+
+// <e> SPI2_ENABLED - Enable SPI2 instance
+//==========================================================
+#ifndef SPI2_ENABLED
+#define SPI2_ENABLED 1
+#endif
+// <q> SPI2_USE_EASY_DMA  - Use EasyDMA
+
+
+#ifndef SPI2_USE_EASY_DMA
+#define SPI2_USE_EASY_DMA 1
+#endif
+
+// </e>
+
+// </e>
+
 // <e> NRFX_UART_ENABLED - nrfx_uart - UART peripheral driver
 //==========================================================
 #ifndef NRFX_UART_ENABLED
@@ -1533,7 +1609,7 @@
 // <i> Function for getting the timestamp is provided by the user
 //==========================================================
 #ifndef NRF_LOG_USES_TIMESTAMP
-#define NRF_LOG_USES_TIMESTAMP 0
+#define NRF_LOG_USES_TIMESTAMP 1
 #endif
 // <o> NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY - Default frequency of the timestamp (in Hz) or 0 to use app_timer frequency.
 #ifndef NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY
@@ -5249,28 +5325,28 @@
 
 
 #ifndef NRFX_SPIM0_ENABLED
-#define NRFX_SPIM0_ENABLED 0
+#define NRFX_SPIM0_ENABLED 1
 #endif
 
 // <q> NRFX_SPIM1_ENABLED  - Enable SPIM1 instance
 
 
 #ifndef NRFX_SPIM1_ENABLED
-#define NRFX_SPIM1_ENABLED 0
+#define NRFX_SPIM1_ENABLED 1
 #endif
 
 // <q> NRFX_SPIM2_ENABLED  - Enable SPIM2 instance
 
 
 #ifndef NRFX_SPIM2_ENABLED
-#define NRFX_SPIM2_ENABLED 0
+#define NRFX_SPIM2_ENABLED 1
 #endif
 
 // <q> NRFX_SPIM3_ENABLED  - Enable SPIM3 instance
 
 
 #ifndef NRFX_SPIM3_ENABLED
-#define NRFX_SPIM3_ENABLED 0
+#define NRFX_SPIM3_ENABLED 1
 #endif
 
 // <q> NRFX_SPIM_EXTENDED_ENABLED  - Enable extended SPIM features
@@ -5358,15 +5434,44 @@
 
 // </e>
 
-// <e> SPI_ENABLED - nrf_drv_spi - SPI/SPIM peripheral driver - legacy layer
+// <e> NRFX_SPI_ENABLED - nrfx_spi - SPI peripheral driver
 //==========================================================
-#ifndef SPI_ENABLED
-#define SPI_ENABLED 1
+#ifndef NRFX_SPI_ENABLED
+#define NRFX_SPI_ENABLED 1
 #endif
-// <o> SPI_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+// <q> NRFX_SPI0_ENABLED  - Enable SPI0 instance
 
 
-// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+#ifndef NRFX_SPI0_ENABLED
+#define NRFX_SPI0_ENABLED 0
+#endif
+
+// <q> NRFX_SPI1_ENABLED  - Enable SPI1 instance
+
+
+#ifndef NRFX_SPI1_ENABLED
+#define NRFX_SPI1_ENABLED 0
+#endif
+
+// <q> NRFX_SPI2_ENABLED  - Enable SPI2 instance
+
+
+#ifndef NRFX_SPI2_ENABLED
+#define NRFX_SPI2_ENABLED 0
+#endif
+
+// <o> NRFX_SPI_MISO_PULL_CFG  - MISO pin pull configuration.
+
+// <0=> NRF_GPIO_PIN_NOPULL
+// <1=> NRF_GPIO_PIN_PULLDOWN
+// <3=> NRF_GPIO_PIN_PULLUP
+
+#ifndef NRFX_SPI_MISO_PULL_CFG
+#define NRFX_SPI_MISO_PULL_CFG 1
+#endif
+
+// <o> NRFX_SPI_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
 // <0=> 0 (highest)
 // <1=> 1
 // <2=> 2
@@ -5376,58 +5481,57 @@
 // <6=> 6
 // <7=> 7
 
-#ifndef SPI_DEFAULT_CONFIG_IRQ_PRIORITY
-#define SPI_DEFAULT_CONFIG_IRQ_PRIORITY 6
+#ifndef NRFX_SPI_DEFAULT_CONFIG_IRQ_PRIORITY
+#define NRFX_SPI_DEFAULT_CONFIG_IRQ_PRIORITY 6
 #endif
 
-// <o> NRF_SPI_DRV_MISO_PULLUP_CFG  - MISO PIN pull-up configuration.
-
-// <0=> NRF_GPIO_PIN_NOPULL
-// <1=> NRF_GPIO_PIN_PULLDOWN
-// <3=> NRF_GPIO_PIN_PULLUP
-
-#ifndef NRF_SPI_DRV_MISO_PULLUP_CFG
-#define NRF_SPI_DRV_MISO_PULLUP_CFG 1
-#endif
-
-// <e> SPI0_ENABLED - Enable SPI0 instance
+// <e> NRFX_SPI_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
-#ifndef SPI0_ENABLED
-#define SPI0_ENABLED 1
+#ifndef NRFX_SPI_CONFIG_LOG_ENABLED
+#define NRFX_SPI_CONFIG_LOG_ENABLED 0
 #endif
-// <q> SPI0_USE_EASY_DMA  - Use EasyDMA
+// <o> NRFX_SPI_CONFIG_LOG_LEVEL  - Default Severity level
 
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
 
-#ifndef SPI0_USE_EASY_DMA
-#define SPI0_USE_EASY_DMA 1
-#endif
-
-// </e>
-
-// <e> SPI1_ENABLED - Enable SPI1 instance
-//==========================================================
-#ifndef SPI1_ENABLED
-#define SPI1_ENABLED 0
-#endif
-// <q> SPI1_USE_EASY_DMA  - Use EasyDMA
-
-
-#ifndef SPI1_USE_EASY_DMA
-#define SPI1_USE_EASY_DMA 1
+#ifndef NRFX_SPI_CONFIG_LOG_LEVEL
+#define NRFX_SPI_CONFIG_LOG_LEVEL 3
 #endif
 
-// </e>
+// <o> NRFX_SPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
 
-// <e> SPI2_ENABLED - Enable SPI2 instance
-//==========================================================
-#ifndef SPI2_ENABLED
-#define SPI2_ENABLED 0
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef NRFX_SPI_CONFIG_INFO_COLOR
+#define NRFX_SPI_CONFIG_INFO_COLOR 0
 #endif
-// <q> SPI2_USE_EASY_DMA  - Use EasyDMA
 
+// <o> NRFX_SPI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
 
-#ifndef SPI2_USE_EASY_DMA
-#define SPI2_USE_EASY_DMA 1
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef NRFX_SPI_CONFIG_DEBUG_COLOR
+#define NRFX_SPI_CONFIG_DEBUG_COLOR 0
 #endif
 
 // </e>
@@ -5496,6 +5600,164 @@
 #endif
 
 // </e>
+
+//==========================================================
+
+// <e> APPDISPLAY_LOG_ENABLED - Enable logging in APPDISPLAY and its submodules.
+//==========================================================
+
+#ifndef APPDISPLAY_LOG_ENABLED
+#define APPDISPLAY_LOG_ENABLED 1
+#endif
+
+// <o> APPDISPLAY_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef APPDISPLAY_LOG_LEVEL
+#define APPDISPLAY_LOG_LEVEL 4
+#endif
+
+// <q> APPDISPLAY_VERBOSE_LOGGING - Enable verbose logging in APPDISPLAY and its submodules.
+// <i> This is for even more verbose than 'Debug' logging. Requires LOG_LEVEL to be set to debug.
+//==========================================================
+
+#ifndef APPDISPLAY_VERBOSE_LOGGING
+#define APPDISPLAY_VERBOSE_LOGGING 1
+#endif
+
+// <o> APPDISPLAY_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef APPDISPLAY_INFO_COLOR
+#define APPDISPLAY_INFO_COLOR 0
+#endif
+
+// <o> APPDISPLAY_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef APPDISPLAY_DEBUG_COLOR
+#define APPDISPLAY_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <h> nRF_Drivers_External
+
+//==========================================================
+// <e> ILI9341_ENABLED - ili9341 - ILI9341 TFT controller
+//==========================================================
+#ifndef ILI9341_ENABLED
+#define ILI9341_ENABLED 1
+#endif
+// <h> SPI_CONFIGURATION - SPI configuration
+
+//==========================================================
+// <o> ILI9341_SCK_PIN - Pin number  <0-47>
+
+
+#ifndef ILI9341_SCK_PIN
+#define ILI9341_SCK_PIN 47 // #cmd
+#endif
+
+// <o> ILI9341_MISO_PIN - Pin number  <0-47>
+
+
+#ifndef ILI9341_MISO_PIN
+#define ILI9341_MISO_PIN 46 // #cmd
+#endif
+
+// <o> ILI9341_MOSI_PIN - Pin number  <0-47>
+
+
+#ifndef ILI9341_MOSI_PIN
+#define ILI9341_MOSI_PIN 45 // #cmd
+#endif
+
+// <o> ILI9341_SS_PIN - Pin number  <0-47>
+
+
+#ifndef ILI9341_SS_PIN
+#define ILI9341_SS_PIN 44 // #cmd
+#endif
+
+// <o> ILI9341_IRQ_PRIORITY  - Interrupt priority
+
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef ILI9341_IRQ_PRIORITY
+#define ILI9341_IRQ_PRIORITY 3
+#endif
+
+// </h>
+//==========================================================
+
+// <o> ILI9341_SPI_INSTANCE
+
+// <0=> 0
+// <1=> 1
+// <2=> 2
+
+#ifndef ILI9341_SPI_INSTANCE
+#define ILI9341_SPI_INSTANCE 1 // #cmd -- move this to 3 when we move to NRFX
+#endif
+
+// <o> ILI9341_DC_PIN - Pin number  <0-47>
+
+
+#ifndef ILI9341_DC_PIN
+#define ILI9341_DC_PIN 43 // #cmd
+#endif
+
+// <o> ILI9341_HEIGHT - ILI9341 height  <0-320>
+
+
+#ifndef ILI9341_HEIGHT
+#define ILI9341_HEIGHT 320
+#endif
+
+// <o> ILI9341_WIDTH - ILI9341 width  <0-240>
+
+
+#ifndef ILI9341_WIDTH
+#define ILI9341_WIDTH 240
+#endif
+
+// </e>
+
+// </h>
+//==========================================================
 
 // <<< end of configuration section >>>
 #endif //SDK_CONFIG_H
