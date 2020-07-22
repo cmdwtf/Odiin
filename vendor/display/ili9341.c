@@ -266,6 +266,8 @@ static ret_code_t hardware_init(void)
     ret_code_t err_code;
 
     nrf_gpio_cfg_output(ILI9341_DC_PIN);
+    nrf_gpio_cfg_output(ILI9341_RESET_PIN);
+    nrf_gpio_cfg_output(ILI9341_BACKLIGHT_CONTROL_PIN);
 
     nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
 
@@ -275,6 +277,14 @@ static ret_code_t hardware_init(void)
     spi_config.ss_pin   = ILI9341_SS_PIN;
 
     err_code = nrf_drv_spi_init(&spi, &spi_config, NULL, NULL);
+
+    nrf_gpio_pin_clear(ILI9341_RESET_PIN);
+    nrf_delay_ms(20);
+    nrf_gpio_pin_set(ILI9341_RESET_PIN);
+    nrf_delay_ms(20);
+
+    nrf_gpio_pin_set(ILI9341_BACKLIGHT_CONTROL_PIN);
+
     return err_code;
 }
 
@@ -296,6 +306,8 @@ static ret_code_t ili9341_init(void)
 static void ili9341_uninit(void)
 {
     nrf_drv_spi_uninit(&spi);
+
+    nrf_gpio_pin_clear(ILI9341_BACKLIGHT_CONTROL_PIN);
 }
 
 static void ili9341_pixel_draw(uint16_t x, uint16_t y, uint32_t color)

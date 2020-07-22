@@ -1274,6 +1274,13 @@
 
 // </e>
 
+// <q> NRF_GFX_ENABLED  - nrf_gfx - GFX module
+
+
+#ifndef NRF_GFX_ENABLED
+#define NRF_GFX_ENABLED 1
+#endif
+
 // <q> NRF_MEMOBJ_ENABLED  - nrf_memobj - Linked memory allocator module
 
 
@@ -1609,7 +1616,7 @@
 // <i> Function for getting the timestamp is provided by the user
 //==========================================================
 #ifndef NRF_LOG_USES_TIMESTAMP
-#define NRF_LOG_USES_TIMESTAMP 1
+#define NRF_LOG_USES_TIMESTAMP 0
 #endif
 // <o> NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY - Default frequency of the timestamp (in Hz) or 0 to use app_timer frequency.
 #ifndef NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY
@@ -5675,32 +5682,32 @@
 // <h> SPI_CONFIGURATION - SPI configuration
 
 //==========================================================
-// <o> ILI9341_SCK_PIN - Pin number  <0-47>
+// <o> ILI9341_SCK_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_SCK_PIN
-#define ILI9341_SCK_PIN 47 // #cmd
+#define ILI9341_SCK_PIN NRF_GPIO_PIN_MAP(0, 21)
 #endif
 
-// <o> ILI9341_MISO_PIN - Pin number  <0-47>
+// <o> ILI9341_MISO_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_MISO_PIN
-#define ILI9341_MISO_PIN 46 // #cmd
+#define ILI9341_MISO_PIN NRF_GPIO_PIN_MAP(0, 24)
 #endif
 
-// <o> ILI9341_MOSI_PIN - Pin number  <0-47>
+// <o> ILI9341_MOSI_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_MOSI_PIN
-#define ILI9341_MOSI_PIN 45 // #cmd
+#define ILI9341_MOSI_PIN NRF_GPIO_PIN_MAP(0, 4)
 #endif
 
-// <o> ILI9341_SS_PIN - Pin number  <0-47>
+// <o> ILI9341_SS_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_SS_PIN
-#define ILI9341_SS_PIN 44 // #cmd
+#define ILI9341_SS_PIN NRF_GPIO_PIN_MAP(0, 26)
 #endif
 
 // <o> ILI9341_IRQ_PRIORITY  - Interrupt priority
@@ -5730,14 +5737,28 @@
 // <2=> 2
 
 #ifndef ILI9341_SPI_INSTANCE
-#define ILI9341_SPI_INSTANCE 1 // #cmd -- move this to 3 when we move to NRFX
+#define ILI9341_SPI_INSTANCE 1 // #todo -- move this to 3 when we move to NRFX
 #endif
 
-// <o> ILI9341_DC_PIN - Pin number  <0-47>
+// <o> ILI9341_DC_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_DC_PIN
-#define ILI9341_DC_PIN 43 // #cmd
+#define ILI9341_DC_PIN NRF_GPIO_PIN_MAP(0, 20)
+#endif
+
+// <o> ILI9341_RESET_PIN - Pin number  <0-73>
+
+
+#ifndef ILI9341_RESET_PIN
+#define ILI9341_RESET_PIN NRF_GPIO_PIN_MAP(0, 27)
+#endif
+
+// <o> ILI9341_BACKLIGHT_CONTROL_PIN - Pin number  <0-73>
+
+
+#ifndef ILI9341_BACKLIGHT_CONTROL_PIN
+#define ILI9341_BACKLIGHT_CONTROL_PIN NRF_GPIO_PIN_MAP(0, 23)
 #endif
 
 // <o> ILI9341_HEIGHT - ILI9341 height  <0-320>
