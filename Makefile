@@ -172,6 +172,7 @@ SRC_FILES += \
   $(wildcard $(VENDOR_ROOT)/littlefs/bd/*.c) \
 
 INC_FOLDERS += \
+   $(VENDOR_ROOT)/cie1931 \
    $(VENDOR_ROOT)/display \
    $(VENDOR_ROOT)/fatfs/source \
    $(VENDOR_ROOT)/fatfs/port \
@@ -223,7 +224,7 @@ CFLAGS += -fno-builtin -fshort-enums
 CXXFLAGS += $(OPT)
 
 # We are using C++, but no RTTI is needed (and doesn't work anyways!)
-CXXFLAGS += -fno-rtti
+CXXFLAGS += -fno-rtti -std=c++17
 
 # Assembler flags common to all targets
 ASMFLAGS += $(MAX_DEBUG_INFO)

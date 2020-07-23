@@ -4,3 +4,6 @@
 [submodule "littlefs"]
 	path = vendor/littlefs
 	url = https://github.com/ARMmbed/littlefs.git
+[submodule "Cie1931"]
+	path = vendor/Cie1931
+	url = https://github.com/nitz/Cie1931.git
