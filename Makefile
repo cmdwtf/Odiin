@@ -4,8 +4,6 @@ FIRMWARE_DIRECTORY	:= _firmware
 OUTPUT_DIRECTORY 	:= _build
 
 VENDOR_ROOT ?= vendor
-BOARD_SDK_ROOT ?= $(VENDOR_ROOT)/board
-SDK_ROOT := $(VENDOR_ROOT)/nRF5_SDK
 SOURCE_DIR := src
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
@@ -32,8 +30,11 @@ INC_FOLDERS += \
   $(SOURCE_DIR)/config \
 
 ########################################################
-## nRF5 SDK Files
+## Vendor: nRF5 SDK & Board SDK Files
 ########################################################
+
+SDK_ROOT := $(VENDOR_ROOT)/nRF5_SDK
+BOARD_SDK_ROOT ?= $(VENDOR_ROOT)/board
 
 SRC_FILES += \
   $(SDK_ROOT)/components/boards/boards.c \
@@ -158,6 +159,27 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/drivers/include \
   $(SDK_ROOT)/modules/nrfx/hal \
   $(SDK_ROOT)/modules/nrfx/mdk \
+
+########################################################
+## Vendor: lvgl
+########################################################
+
+LVGL_DIR := $(VENDOR_ROOT)/lvgl/lvgl
+LVGL_SRC_DIR := $(LVGL_DIR)/src
+
+SRC_FILES += \
+  $(wildcard $(LVGL_SRC_DIR)/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_core/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_draw/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_font/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_gpu/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_hal/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_misc/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_themes/*.c) \
+  $(wildcard $(LVGL_SRC_DIR)/lv_widgets/*.c) \
+
+INC_FOLDERS += \
+   $(LVGL_DIR) \
 
 ########################################################
 ## Other Vendor Files
