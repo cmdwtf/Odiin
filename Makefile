@@ -294,7 +294,7 @@ default: nrf52840_xxaa
 # Print all targets that can be built
 help:
 	@echo following targets are available:
-	@echo		$(PROJECT)_nrf52840_xxaa
+	@echo		nrf52840_xxaa
 	@echo		sdk_config - starting external tool for editing sdk_config.h (requires java)
 	@echo		flash      - flashing binary
 
