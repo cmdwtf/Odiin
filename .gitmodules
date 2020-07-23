@@ -7,3 +7,6 @@
 [submodule "Cie1931"]
 	path = vendor/Cie1931
 	url = https://github.com/nitz/Cie1931.git
+[submodule "lvgl"]
+	path = vendor/lvgl/lvgl
+	url = https://github.com/lvgl/lvgl.git
