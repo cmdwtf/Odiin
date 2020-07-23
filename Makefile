@@ -72,7 +72,6 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
   $(SDK_ROOT)/components/libraries/usbd/class/msc/app_usbd_msc.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \
-  $(SDK_ROOT)/components/libraries/util/app_error_handler_gcc.c \
   $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
   $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
   $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
@@ -190,12 +189,16 @@ INC_FOLDERS += \
 ## Compiler Flags
 ########################################################
 
+# Debug flags
 MAX_DEBUG_INFO = -g3
+#DEBUG_DEFINES = -DDEBUG -DDEBUG_NRF
+DEBUG_DEFINES =
 
 # Optimization flags
 OPT = -O3 $(MAX_DEBUG_INFO)
 # Uncomment the line below to enable link time optimization
 #OPT += -flto
+
 
 # C flags common to all targets
 CFLAGS += $(OPT)
@@ -203,8 +206,7 @@ CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
-CFLAGS += -DDEBUG
-CFLAGS += -DDEBUG_NRF
+CFLAGS += $(DEBUG_DEFINES)
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DNRF52840_M2
 CFLAGS += -DNRF52840_XXAA
@@ -228,8 +230,7 @@ ASMFLAGS += -DAPP_TIMER_V2
 ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 ASMFLAGS += -DBOARD_CUSTOM
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
-ASMFLAGS += -DDEBUG
-ASMFLAGS += -DDEBUG_NRF
+ASMFLAGS += $(DEBUG_DEFINES)
 ASMFLAGS += -DFLOAT_ABI_HARD
 ASMFLAGS += -DNRF52840_M2
 ASMFLAGS += -DNRF52840_XXAA
