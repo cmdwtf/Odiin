@@ -6,6 +6,11 @@ OUTPUT_DIRECTORY 	:= _build
 VENDOR_ROOT ?= vendor
 SOURCE_DIR := src
 
+# Amount of RAM to dedicate to the heap.
+# lvgl suggets at least 16K, and examples
+# for nRF52 have shipped with 8K.
+HEAP_SIZE_BYTES := 32768
+
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := $(SOURCE_DIR)/link/nrf52.ld
 
@@ -272,10 +277,10 @@ LDFLAGS += -Wl,--gc-sections
 # use newlib in nano version
 LDFLAGS += --specs=nano.specs
 
-nrf52840_xxaa: CFLAGS += -D__HEAP_SIZE=8192
-nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=8192
-nrf52840_xxaa: ASMFLAGS += -D__HEAP_SIZE=8192
-nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
+nrf52840_xxaa: CFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
+nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=$(HEAP_SIZE_BYTES)
+nrf52840_xxaa: ASMFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
+nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=$(HEAP_SIZE_BYTES)
 
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
