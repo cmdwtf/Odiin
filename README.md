@@ -59,3 +59,4 @@ If you'd like license this project or a part of it's code for a specific purpose
 - [nRF5 SDK](https://developer.nordicsemi.com/): 5-Clause Nordic © 2010-2017 Nordic Semiconductor ASA
 - [littlefs](https://github.com/ARMmbed/littlefs): BSD-3-Clause License © 2017 ARM Limited
 - [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx, ChaN (See LICENSE.txt in vendor/fatfs for details)
+- [ILI9341 Colors](https://github.com/adafruit/Adafruit_ILI9341): MIT © ? Limor Fried/Ladyada for Adafruit Industries.

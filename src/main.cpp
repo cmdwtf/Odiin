@@ -11,6 +11,7 @@
 #include "app/app_clock.h"
 #include "usb/usb.h"
 #include "usb/usb_msc.h"
+#include "display/display_screen.h"
 
 #include "global/global_data.h"
 
@@ -70,6 +71,16 @@ int main(int argc, char** argv)
 	// setup SDC
 	SDCARD.Mount();
 	Usb::Device::RegisterListener(&SDCARD);
+
+	// setup LCD
+	Display::Screen screen;
+	screen.ClearBackground();
+	screen.DrawText("Hello frans!", 5, 5);
+	screen.DrawText("This is where the fun begins!", 5, 100, MAGENTA, true, false);
+	screen.DrawText("`'~,._.,~'`", 5, 45, ORANGE, true, true);
+	screen.DrawText("Coming soon: a completely boring\nUI! Also, I can word wrap!", 5, 200, CYAN, true, false);
+	screen.DrawText("It's not the fastest,\nnor the prettiest.", 5, 240, GREENYELLOW, true, false);
+	screen.DrawText("But dammit, it works.", 5, 300, PINK, true, false);
 
     // Setup NFC Tag
 	ntag215Emulator.Initialize();

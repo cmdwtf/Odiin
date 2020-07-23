@@ -42,6 +42,8 @@
 
 #if NRF_MODULE_ENABLED(ILI9341)
 
+#include "ili9341.h"
+
 #include "nrf_lcd.h"
 #include "nrfx_spim.h"
 #include "nrf_delay.h"
@@ -583,7 +585,7 @@ static lcd_cb_t ili9341_cb = {
 };
 
 
-const nrf_lcd_t nrf_lcd_ili9341 = {
+const nrf_lcd_t lcd_ili9341 = {
     .lcd_init = ili9341_init,
     .lcd_uninit = ili9341_uninit,
     .lcd_pixel_draw = ili9341_pixel_draw,

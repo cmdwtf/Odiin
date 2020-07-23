@@ -18,6 +18,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
+  $(wildcard $(SOURCE_DIR)/display/*.c*) \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
@@ -191,8 +192,8 @@ INC_FOLDERS += \
 
 # Debug flags
 MAX_DEBUG_INFO = -g3
-#DEBUG_DEFINES = -DDEBUG -DDEBUG_NRF
-DEBUG_DEFINES =
+DEBUG_DEFINES = -DDEBUG -DDEBUG_NRF
+#DEBUG_DEFINES =
 
 # Optimization flags
 OPT = -O3 $(MAX_DEBUG_INFO)

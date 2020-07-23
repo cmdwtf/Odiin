@@ -27,14 +27,13 @@
 
 #define BORDER 2
 
-static const char *test_text = "nRF52 family";
+static const char *test_text = "POWMIING GFX!";
 
 extern const nrf_gfx_font_desc_t orkney_24ptFontInfo;
-extern const nrf_lcd_t nrf_lcd_ili9341;
-extern const nrf_lcd_t nrf_lcd_st7735;
+extern const nrf_lcd_t lcd_ili9341;
 
 static const nrf_gfx_font_desc_t *p_font = &orkney_24ptFontInfo;
-static const nrf_lcd_t *p_lcd = &nrf_lcd_ili9341;
+static const nrf_lcd_t *p_lcd = &lcd_ili9341;
 
 static void gfx_initialization(void)
 {
