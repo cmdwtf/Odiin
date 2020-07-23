@@ -5360,7 +5360,7 @@
 
 
 #ifndef NRFX_SPIM_EXTENDED_ENABLED
-#define NRFX_SPIM_EXTENDED_ENABLED 0
+#define NRFX_SPIM_EXTENDED_ENABLED 1
 #endif
 
 // <o> NRFX_SPIM_MISO_PULL_CFG  - MISO pin pull configuration.
@@ -5737,7 +5737,7 @@
 // <2=> 2
 
 #ifndef ILI9341_SPI_INSTANCE
-#define ILI9341_SPI_INSTANCE 1 // #todo -- move this to 3 when we move to NRFX
+#define ILI9341_SPI_INSTANCE 3
 #endif
 
 // <o> ILI9341_DC_PIN - Pin number  <0-73>

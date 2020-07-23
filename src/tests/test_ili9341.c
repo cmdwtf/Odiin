@@ -159,20 +159,13 @@ static void rect_draw(void)
 
 void TEST_Gfx()
 {
-	GFX_TEST_LOG("gfx init start");
+	GFX_TEST_LOG("TEST_Gfx start");
 	gfx_initialization();
-	GFX_TEST_LOG("gfx init done");
-
-	GFX_TEST_LOG("backlight configure");
-	nrf_gpio_cfg_output(ILI9341_BACKLIGHT_CONTROL_PIN);
-	nrf_gpio_pin_set(ILI9341_BACKLIGHT_CONTROL_PIN);
-	GFX_TEST_LOG("backlight done, value %s", (nrf_gpio_pin_latch_get(ILI9341_BACKLIGHT_CONTROL_PIN) > 0 ? "latched" : "unlatched"));
 
 	uint32_t waitTimeMs = 1000;
 
 	while (1)
 	{
-		GFX_TEST_LOG("loop start");
 		GFX_TEST_LOG("background_set()");
 		brackground_set();
 		GFX_TEST_LOG("text_print()");
@@ -197,7 +190,6 @@ void TEST_Gfx()
 		rect_draw();
 		GFX_TEST_LOG("waiting...");
 		nrf_delay_ms(waitTimeMs);
-		GFX_TEST_LOG("loop complete");
 	}
 }
 
