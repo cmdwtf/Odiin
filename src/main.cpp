@@ -74,13 +74,6 @@ int main(int argc, char** argv)
 
 	// setup LCD
 	Display::Screen screen;
-	screen.ClearBackground();
-	screen.DrawText("Hello frans!", 5, 5);
-	screen.DrawText("This is where the fun begins!", 5, 100, MAGENTA, true, false);
-	screen.DrawText("`'~,._.,~'`", 5, 45, ORANGE, true, true);
-	screen.DrawText("Coming soon: a completely boring\nUI! Also, I can word wrap!", 5, 200, CYAN, true, false);
-	screen.DrawText("It's not the fastest,\nnor the prettiest.", 5, 240, GREENYELLOW, true, false);
-	screen.DrawText("But dammit, it works.", 5, 300, PINK, true, false);
 
     // Setup NFC Tag
 	ntag215Emulator.Initialize();
@@ -97,6 +90,7 @@ int main(int argc, char** argv)
         app_log_flush();
 
 		Usb::Device::Update();
+		screen.Update();
 
 		// why wfe/sev/wfe? event clearing and sleep for power optimization.
 		// see: https://devzone.nordicsemi.com/f/nordic-q-a/10424/nrf51422-won-t-sleep

@@ -89,8 +89,6 @@ SRC_FILES += \
   $(SDK_ROOT)/components/nfc/platform/nfc_platform.c \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf.c \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf_format.c \
-  $(SDK_ROOT)/external/thedotfactory_fonts/orkney24pts.c \
-  $(SDK_ROOT)/external/thedotfactory_fonts/orkney8pts.c \
   $(SDK_ROOT)/external/utf_converter/utf.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \

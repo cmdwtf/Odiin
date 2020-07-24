@@ -16,10 +16,11 @@ namespace Display
 		Screen(const Screen &) = delete;
 		Screen &operator=(const Screen &) = delete;
 
+		void Update();
 		inline bool IsInitialized() { return initialized; }
-		void ClearBackground(color_t clearColor = BLACK);
-		void DrawText(const char* text, coord_t x, coord_t y, color_t fontColor = WHITE, bool wordWrap = true, bool big = true);
+		static constexpr uint32_t GraphicsTickMs = 1;
 	private:
-		bool initialized = false;
+		static bool initialized;
+		static void Tick(void* context);
 	};
 } // namespace Display
