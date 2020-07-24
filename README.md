@@ -58,6 +58,14 @@ If you'd like license this project or a part of it's code for a specific purpose
 - [M.2 DevKit SDK](https://github.com/makerdiary/nrf52840-m2-devkit): MIT © 2020 makerdiary
 - [nRF5 SDK](https://developer.nordicsemi.com/): 5-Clause Nordic © 2010-2017 Nordic Semiconductor ASA
 - [littlefs](https://github.com/ARMmbed/littlefs): BSD-3-Clause License © 2017 ARM Limited
-- [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx, ChaN (See LICENSE.txt in vendor/fatfs for details)
+- [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx ChaN (See LICENSE.txt in vendor/fatfs for details)
 - [ILI9341 Colors](https://github.com/adafruit/Adafruit_ILI9341): MIT © ? Limor Fried/Ladyada for Adafruit Industries.
 - [lvgl](https://github.com/lvgl/lvgl): MIT © 2020 LVGL LLC
+
+#### Fonts
+
+- [Font Awesome](https://github.com/FortAwesome/Font-Awesome): SIL OFL 1.1 / CC BY 4.0
+- [Font Awesome](https://github.com/FortAwesome/Font-Awesome): SIL OFL 1.1 / CC BY 4.0
+- [PressStart2P](https://fonts.google.com/specimen/Press+Start+2P): SIL OFL 1.1 © 2011,Cody "CodeMan38" Boisclair (cody@zone38.net)
+- [proggyfonts](https://github.com/bluescan/proggyfonts/): MIT © 2004, 2005 Tristan Grimmer
+- [unascii](http://pelulamu.net/unscii/): (8, 8-mcr, 8-fantasy) Public Domain, by Viznut.

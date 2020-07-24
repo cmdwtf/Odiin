@@ -22,6 +22,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/*.c*) \
+  $(wildcard $(SOURCE_DIR)/display/fonts/*.c*) \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/input/*.c*) \
@@ -169,7 +170,8 @@ INC_FOLDERS += \
 ## Vendor: lvgl
 ########################################################
 
-LVGL_DIR := $(VENDOR_ROOT)/lvgl/lvgl
+LVGL_BASE_DIR := $(VENDOR_ROOT)/lvgl
+LVGL_DIR := $(LVGL_BASE_DIR)/lvgl
 LVGL_SRC_DIR := $(LVGL_DIR)/src
 
 SRC_FILES += \
@@ -184,6 +186,7 @@ SRC_FILES += \
   $(wildcard $(LVGL_SRC_DIR)/lv_widgets/*.c) \
 
 INC_FOLDERS += \
+   $(LVGL_BASE_DIR) \
    $(LVGL_DIR) \
 
 ########################################################
