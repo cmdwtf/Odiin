@@ -24,6 +24,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/display/*.c*) \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/global/*.c*) \
+  $(wildcard $(SOURCE_DIR)/input/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
   $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
   $(wildcard $(SOURCE_DIR)/platform/*.c*) \

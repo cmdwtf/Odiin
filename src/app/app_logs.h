@@ -8,6 +8,7 @@
 #define W(...) NRF_LOG_WARNING(__VA_ARGS__)
 #define I(...) NRF_LOG_INFO(__VA_ARGS__)
 #define D(...) NRF_LOG_DEBUG(__VA_ARGS__)
+#define R(...) NRF_LOG_RAW_INFO(__VA_ARGS__)
 
 //#define NO_VERBOSE_LOGS
 #if defined(NRF_LOG_DEFERRED) && NRF_LOG_DEFERRED && !defined(NO_VERBOSE_LOGS)

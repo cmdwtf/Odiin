@@ -15,9 +15,9 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static void controls_create(lv_obj_t * parent);
-static void visuals_create(lv_obj_t * parent);
-static void selectors_create(lv_obj_t * parent);
+static void controls_create(lv_obj_t * parent, lv_group_t* group);
+static void visuals_create(lv_obj_t * parent, lv_group_t* group);
+static void selectors_create(lv_obj_t * parent, lv_group_t* group);
 static void slider_event_cb(lv_obj_t * slider, lv_event_t e);
 static void ta_event_cb(lv_obj_t * ta, lv_event_t e);
 static void kb_event_cb(lv_obj_t * ta, lv_event_t e);
@@ -53,7 +53,7 @@ static lv_style_t style_box;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void TEST_lv_demo_widgets(void)
+void TEST_lv_demo_widgets(lv_group_t* group)
 {
     tv = lv_tabview_create(lv_scr_act(), NULL);
 #if LV_USE_THEME_MATERIAL
@@ -77,15 +77,19 @@ void TEST_lv_demo_widgets(void)
     t2 = lv_tabview_add_tab(tv, "Visuals");
     t3 = lv_tabview_add_tab(tv, "Selectors");
 
+	lv_group_add_obj(group, t1);
+	lv_group_add_obj(group, t2);
+	lv_group_add_obj(group, t3);
+
 
     lv_style_init(&style_box);
     lv_style_set_value_align(&style_box, LV_STATE_DEFAULT, LV_ALIGN_OUT_TOP_LEFT);
     lv_style_set_value_ofs_y(&style_box, LV_STATE_DEFAULT, - LV_DPX(10));
     lv_style_set_margin_top(&style_box, LV_STATE_DEFAULT, LV_DPX(30));
 
-    controls_create(t1);
-    visuals_create(t2);
-    selectors_create(t3);
+    controls_create(t1, group);
+    visuals_create(t2, group);
+    selectors_create(t3, group);
 
 #if LV_DEMO_WIDGETS_SLIDESHOW
     lv_task_create(tab_changer_task_cb, 8000, LV_TASK_PRIO_LOW, NULL);
@@ -93,51 +97,23 @@ void TEST_lv_demo_widgets(void)
 
 }
 
-void lv_demo_widgets_custom(void)
-{
-	tv = lv_tabview_create(lv_scr_act(), NULL);
-#if LV_USE_THEME_MATERIAL
-	if (LV_THEME_DEFAULT_INIT == lv_theme_material_init) {
-		lv_disp_size_t disp_size = lv_disp_get_size_category(NULL);
-		if (disp_size >= LV_DISP_SIZE_MEDIUM) {
-			lv_obj_set_style_local_pad_left(tv, LV_TABVIEW_PART_TAB_BG, LV_STATE_DEFAULT, LV_HOR_RES / 2);
-			lv_obj_t* sw = lv_switch_create(lv_scr_act(), NULL);
-			if (lv_theme_get_flags() & LV_THEME_MATERIAL_FLAG_DARK)
-				lv_switch_on(sw, LV_ANIM_OFF);
-			lv_obj_set_event_cb(sw, color_chg_event_cb);
-			lv_obj_set_pos(sw, LV_DPX(10), LV_DPX(10));
-			lv_obj_set_style_local_value_str(sw, LV_SWITCH_PART_BG, LV_STATE_DEFAULT, "Dark");
-			lv_obj_set_style_local_value_align(sw, LV_SWITCH_PART_BG, LV_STATE_DEFAULT, LV_ALIGN_OUT_RIGHT_MID);
-			lv_obj_set_style_local_value_ofs_x(sw, LV_SWITCH_PART_BG, LV_STATE_DEFAULT, LV_DPI / 35);
-		}
-	}
-#endif
-
-	t1 = lv_tabview_add_tab(tv, "Controls");
-	t2 = lv_tabview_add_tab(tv, "Visuals");
-	t3 = lv_tabview_add_tab(tv, "Selectors");
-
-
-	lv_style_init(&style_box);
-	lv_style_set_value_align(&style_box, LV_STATE_DEFAULT, LV_ALIGN_OUT_TOP_LEFT);
-	lv_style_set_value_ofs_y(&style_box, LV_STATE_DEFAULT, -LV_DPX(10));
-	lv_style_set_margin_top(&style_box, LV_STATE_DEFAULT, LV_DPX(30));
-
-	controls_create(t1);
-	visuals_create(t2);
-	selectors_create(t3);
-
-#if LV_DEMO_WIDGETS_SLIDESHOW
-	lv_task_create(tab_changer_task_cb, 8000, LV_TASK_PRIO_LOW, NULL);
-#endif
-}
-
 /**********************
  *   STATIC FUNCTIONS
  **********************/
 
-
-static void controls_create(lv_obj_t * parent)
+static void msgbox_event_cb(lv_obj_t * msgbox, lv_event_t e)
+{
+    if(e == LV_EVENT_CLICKED) {
+        uint16_t b = lv_msgbox_get_active_btn(msgbox);
+        if(b == 0 || b == 1) {
+            lv_obj_del(msgbox);
+            lv_obj_reset_style_list(lv_layer_top(), LV_OBJ_PART_MAIN);
+            lv_obj_set_click(lv_layer_top(), false);
+            lv_event_send(tv, LV_EVENT_REFRESH, NULL);
+        }
+    }
+}
+static void controls_create(lv_obj_t * parent, lv_group_t* group)
 {
     lv_page_set_scrl_layout(parent, LV_LAYOUT_PRETTY_TOP);
 
@@ -151,6 +127,10 @@ static void controls_create(lv_obj_t * parent)
     lv_msgbox_add_btns(m, btns);
     lv_obj_t * btnm = lv_msgbox_get_btnmatrix(m);
     lv_btnmatrix_set_btn_ctrl(btnm, 1, LV_BTNMATRIX_CTRL_CHECK_STATE);
+	lv_group_add_obj(group, m);
+	lv_group_focus_obj(m);
+    lv_obj_set_event_cb(m, msgbox_event_cb);
+    lv_obj_set_click(lv_scr_act(), true);
 #endif
 
     lv_obj_t * h = lv_cont_create(parent, NULL);
@@ -234,7 +214,7 @@ static void controls_create(lv_obj_t * parent)
 #endif
 }
 
-static void visuals_create(lv_obj_t * parent)
+static void visuals_create(lv_obj_t * parent, lv_group_t* group)
 {
     lv_page_set_scrl_layout(parent, LV_LAYOUT_PRETTY_TOP);
 
@@ -433,7 +413,7 @@ static void visuals_create(lv_obj_t * parent)
 }
 
 
-static void selectors_create(lv_obj_t * parent)
+static void selectors_create(lv_obj_t * parent, lv_group_t* group)
 {
     lv_page_set_scrl_layout(parent, LV_LAYOUT_PRETTY_MID);
 

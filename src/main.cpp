@@ -69,11 +69,18 @@ int main(int argc, char** argv)
 	Usb::Device::Enable();
 
 	// setup SDC
-	SDCARD.Mount();
-	Usb::Device::RegisterListener(&SDCARD);
+	Files::SdCard sdcard;
+	SDCARD = &sdcard;
+	SDCARD->Mount();
+
+	Usb::Device::RegisterListener(SDCARD);
+
+	// setup Input
+	Input::Keypad keypad;
 
 	// setup LCD
-	Display::Screen screen;
+	Display::Screen screen(&keypad);
+	SCREEN = &screen;
 
     // Setup NFC Tag
 	ntag215Emulator.Initialize();
@@ -90,7 +97,7 @@ int main(int argc, char** argv)
         app_log_flush();
 
 		Usb::Device::Update();
-		screen.Update();
+		SCREEN->Update();
 
 		// why wfe/sev/wfe? event clearing and sleep for power optimization.
 		// see: https://devzone.nordicsemi.com/f/nordic-q-a/10424/nrf51422-won-t-sleep

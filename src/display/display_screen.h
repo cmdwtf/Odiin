@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "ili9341.h"
+#include "input/input_keypad.h"
 
 namespace Display
 {
@@ -11,7 +12,7 @@ namespace Display
 	class Screen
 	{
 	public:
-		Screen();
+		Screen(Input::Keypad* keypad);
 		virtual ~Screen();
 		Screen(const Screen &) = delete;
 		Screen &operator=(const Screen &) = delete;
@@ -22,5 +23,6 @@ namespace Display
 	private:
 		static bool initialized;
 		static void Tick(void* context);
+		Input::Keypad* keypad;
 	};
 } // namespace Display

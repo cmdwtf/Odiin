@@ -5671,6 +5671,69 @@
 
 // </e>
 
+//==========================================================
+
+// <e> APPINPUT_LOG_ENABLED - Enable logging in APPINPUT and its submodules.
+//==========================================================
+
+#ifndef APPINPUT_LOG_ENABLED
+#define APPINPUT_LOG_ENABLED 1
+#endif
+
+// <o> APPINPUT_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef APPINPUT_LOG_LEVEL
+#define APPINPUT_LOG_LEVEL 4
+#endif
+
+// <q> APPINPUT_VERBOSE_LOGGING - Enable verbose logging in APPINPUT and its submodules.
+// <i> This is for even more verbose than 'Debug' logging. Requires LOG_LEVEL to be set to debug.
+//==========================================================
+
+#ifndef APPINPUT_VERBOSE_LOGGING
+#define APPINPUT_VERBOSE_LOGGING 1
+#endif
+
+// <o> APPINPUT_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef APPINPUT_INFO_COLOR
+#define APPINPUT_INFO_COLOR 0
+#endif
+
+// <o> APPINPUT_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef APPINPUT_DEBUG_COLOR
+#define APPINPUT_DEBUG_COLOR 0
+#endif
+
+// </e>
+
 // <h> nRF_Drivers_External
 
 //==========================================================

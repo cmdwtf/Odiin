@@ -1,4 +1,6 @@
 #include "global_data.h"
 
-// our global sd card instance.
-Files::SdCard SDCARD;
+// global references to app-wide instances
+
+Files::SdCard* SDCARD = nullptr;
+Display::Screen* SCREEN = nullptr;

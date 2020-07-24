@@ -31,13 +31,15 @@ namespace Display
 
 	bool Screen::initialized = false;
 
-	Screen::Screen()
+	Screen::Screen(Input::Keypad* _keypad)
 	{
 		if (initialized)
 		{
 			NRF_LOG_INFO("A Display::Screen was created after one was already initialized. This use case is not supported.");
 			return;
 		}
+
+		keypad = _keypad;
 
 		NRF_LOG_INFO("Initializing gfx hardware...");
 		ret_code_t initResult = nrf_gfx_init(lcd);
@@ -79,7 +81,7 @@ namespace Display
         APP_ERROR_CHECK(timerResult);
 
 		NRF_LOG_INFO("Gfx drawing demo widgets...");
-		TEST_lv_demo_widgets();
+		TEST_lv_demo_widgets(keypad->GetInputGroup());
 
 		NRF_LOG_INFO("Gfx ready!");
 

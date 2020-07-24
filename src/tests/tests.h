@@ -8,5 +8,7 @@
 #define C_LINKAGE
 #endif
 
+#include "lvgl.h"
+
 void TEST_ReadDirectories();
-C_LINKAGE void TEST_lv_demo_widgets();
+C_LINKAGE void TEST_lv_demo_widgets(lv_group_t* group);
