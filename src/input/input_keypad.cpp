@@ -1,31 +1,52 @@
 #include "input_keypad.h"
 
-#include "nrf52840_m2.h"
-#include "bsp.h"
-
 #include "input_log_module.ii"
 
 namespace Input
 {
-	bool keyboard_read(lv_indev_drv_t * drv, lv_indev_data_t*data)
+	bool Keypad::ReadCallback(lv_indev_drv_t* driver, lv_indev_data_t*data)
 	{
-		data->key = LV_KEY_ENTER; // hard coded for debug!
+		Keypad* instance = (Keypad*)driver->user_data;
 
-		if(bsp_button_is_pressed(0))
+		if (instance->lastKeyPressed == LV_KEY_NONE)
 		{
-			data->state = LV_INDEV_STATE_PR;
+			// we don't have a key pressed, scan for a new one.
+			lv_key_t pressed = GetPressedKey();
+			if (pressed != LV_KEY_NONE)
+			{
+				data->key = pressed;
+				data->state = LV_INDEV_STATE_PR;
+			}
+			else
+			{
+				data->state = LV_INDEV_STATE_REL;
+			}
 		}
 		else
 		{
-			data->state = LV_INDEV_STATE_REL;
+			// we are currently pressing a key, return it's state.
+
+			if (KeyIsPressed(instance->lastKeyPressed))
+			{
+				data->state = LV_INDEV_STATE_PR;
+			}
+			else
+			{
+				data->state = LV_INDEV_STATE_REL;
+
+				// we let go of the key, so now no key is pressed,
+				// we can go back to scanning mode
+				instance->lastKeyPressed = LV_KEY_NONE;
+			}
 		}
 
-		return false; /*No buffering now so no more data read*/
+		// we aren't doing any buffering, so no need to return true.
+		return false;
 	}
 
 	Keypad::Keypad()
 	{
-
+		Input::InitializeHal();
 	}
 
 	Keypad::~Keypad()
@@ -53,11 +74,18 @@ namespace Input
 			return;
 		}
 
-		lv_indev_drv_t indev_drv;
-		lv_indev_drv_init(&indev_drv);
-		indev_drv.type = LV_INDEV_TYPE_KEYPAD;
-		indev_drv.read_cb = keyboard_read;
-		keypadDev = lv_indev_drv_register(&indev_drv);
+		if (lv_disp_get_default() == nullptr)
+		{
+			NRF_LOG_ERROR("Cannot create Keypad device: lv display must be initialized and assigned first.");
+			return;
+		}
+
+		lv_indev_drv_t inputDeviceDriver;
+		lv_indev_drv_init(&inputDeviceDriver);
+		inputDeviceDriver.type = LV_INDEV_TYPE_KEYPAD;
+		inputDeviceDriver.read_cb = Keypad::ReadCallback;
+		inputDeviceDriver.user_data = this;
+		keypadDev = lv_indev_drv_register(&inputDeviceDriver);
 
 		inputGroup = lv_group_create();
 		lv_indev_set_group(keypadDev, inputGroup);

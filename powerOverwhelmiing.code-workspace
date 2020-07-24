@@ -51,7 +51,8 @@
 			"streambuf": "cpp",
 			"cinttypes": "cpp",
 			"typeinfo": "cpp",
-			"*.inc": "c"
+			"*.inc": "c",
+			"list": "c"
 		},
 		"C_Cpp.default.includePath": [
 			"${default}",
