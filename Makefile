@@ -136,6 +136,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/log \
   $(SDK_ROOT)/components/libraries/log/src \
   $(SDK_ROOT)/components/libraries/memobj \
+  $(SDK_ROOT)/components/libraries/mutex \
   $(SDK_ROOT)/components/libraries/ringbuf \
   $(SDK_ROOT)/components/libraries/sdcard \
   $(SDK_ROOT)/components/libraries/sortlist \

@@ -5775,11 +5775,11 @@
 #define ILI9341_WIDTH 240
 #endif
 
-// <o> IL9341_RING_BUFFER_SIZE - ILI9341 interal ring buffer size. Must be a power of 2.  <0-8192>
+// <o> ILI9341_RING_BUFFER_SIZE - ILI9341 interal ring buffer size. Must be a power of 2.  <0-8192>
 
 
-#ifndef IL9341_RING_BUFFER_SIZE
-#define IL9341_RING_BUFFER_SIZE 4096
+#ifndef ILI9341_RING_BUFFER_SIZE
+#define ILI9341_RING_BUFFER_SIZE 8192
 #endif
 
 // </e>

@@ -9,4 +9,4 @@
 #endif
 
 void TEST_ReadDirectories();
-C_LINKAGE void TEST_Gfx();
+C_LINKAGE void TEST_lv_demo_widgets();

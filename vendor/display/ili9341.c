@@ -51,6 +51,7 @@
 #include "nrf_ringbuf.h"
 #include "boards.h"
 #include "nrf_log.h"
+#include "nrf_mtx.h"
 
 // Set of commands described in ILI9341 datasheet.
 #define ILI9341_NOP         0x00
@@ -143,11 +144,15 @@
 #endif
 
 static const nrfx_spim_t spi = NRFX_SPIM_INSTANCE(ILI9341_SPI_INSTANCE);
-NRF_RINGBUF_DEF(ili9341RingBuffer, IL9341_RING_BUFFER_SIZE);
-static uint8_t ili9341CmdByteCount = 0;
-static uint32_t ili9341DataByteCount = 0;
+NRF_RINGBUF_DEF(ili9341RingBuffer, ILI9341_RING_BUFFER_SIZE);
+static volatile uint8_t ili9341CmdByteCount = 0;
+static volatile uint32_t ili9341DataByteCount = 0;
 static bool autoCommitOnFullBuffer = true;
-static volatile bool spiTransferInProgress = false;
+static volatile bool spiCommitPending = false;
+static nrf_mtx_t spiCommitMutex;
+
+#define GET_MUTEX() while (nrf_mtx_trylock(&spiCommitMutex) == false) { __WFE(); }
+#define RELEASE_MUTEX() do { nrf_mtx_unlock(&spiCommitMutex); } while (0)
 
 static inline uint32_t spi_buffer_total_size()
 {
@@ -156,7 +161,7 @@ static inline uint32_t spi_buffer_total_size()
 
 static inline uint32_t spi_buffer_total_remaining()
 {
-	return IL9341_RING_BUFFER_SIZE - (ili9341CmdByteCount + ili9341DataByteCount);
+	return ILI9341_RING_BUFFER_SIZE - (ili9341CmdByteCount + ili9341DataByteCount);
 }
 
 static inline void spi_event_handler(nrfx_spim_evt_t const * p_event,
@@ -165,26 +170,25 @@ static inline void spi_event_handler(nrfx_spim_evt_t const * p_event,
 	if (p_event->type == NRFX_SPIM_EVENT_DONE)
 	{
 		// transfer done, we can go about our lives!
-		spiTransferInProgress = false;
+		spiCommitPending = false;
 	}
 }
 
 static inline void spi_commit()
 {
-	static volatile bool internalLock = false;
-	while (spiTransferInProgress || internalLock)
+	GET_MUTEX();
+
+	while (spiCommitPending)
 	{
 		// let the OS handle things while we wait for the current
 		// spi xfer to finish, so we can start a new one.
 		__WFE();
 	}
 
-	internalLock = true;
-
 	while (spi_buffer_total_size() > 0)
 	{
 		// mark a transfer as in progress, so we can't start a new one until our current finishes.
-		spiTransferInProgress = true;
+		spiCommitPending = true;
 
 		// grab data from the buffer
 		uint8_t* data = NULL;
@@ -235,30 +239,45 @@ static inline void spi_commit()
 		APP_ERROR_CHECK(nrf_ringbuf_free(&ili9341RingBuffer, bufferedByteLength));
 	}
 
-	internalLock = false;
+	RELEASE_MUTEX();
 }
 
 static void buffer_command_bytes(const uint8_t* commands, size_t commandsLength)
 {
-	if (ili9341CmdByteCount > 0 || ili9341DataByteCount > 0)
+	GET_MUTEX();
+
+	if (ili9341_is_ready_for_command() == false)
 	{
+		RELEASE_MUTEX();
+
 		NRF_LOG_ERROR("Adding command bytes after the buffer has already been started has not been handled. Please commit before trying to add more command bytes.");
 		return;
 	}
 
 	APP_ERROR_CHECK(nrf_ringbuf_cpy_put(&ili9341RingBuffer, commands, &commandsLength));
 	ili9341CmdByteCount = commandsLength;
+
+	RELEASE_MUTEX();
 }
 
 
 static void buffer_data_bytes(const uint8_t* data, size_t dataLength)
 {
+	ASSERT(dataLength <= ILI9341_RING_BUFFER_SIZE);
+
+	GET_MUTEX();
+
 	if (spi_buffer_total_remaining() < dataLength)
 	{
 		if (autoCommitOnFullBuffer)
 		{
+			RELEASE_MUTEX();
+
 			NRF_LOG_WARNING("SPI Ring Buffer full, committing before adding.");
+			NRF_LOG_DEBUG("Buffer has: %d bytes left (%d taken), %d requested to add.", spi_buffer_total_remaining(), spi_buffer_total_size(), dataLength);
 			spi_commit();
+
+			GET_MUTEX();
 		}
 		else
 		{
@@ -268,6 +287,8 @@ static void buffer_data_bytes(const uint8_t* data, size_t dataLength)
 
 	APP_ERROR_CHECK(nrf_ringbuf_cpy_put(&ili9341RingBuffer, data, &dataLength));
 	ili9341DataByteCount += dataLength;
+
+	RELEASE_MUTEX();
 }
 
 static inline void buffer_command(uint8_t c)
@@ -443,6 +464,8 @@ static ret_code_t hardware_init(void)
 
 	nrfx_spim_config_t spi_config = NRFX_SPIM_DEFAULT_CONFIG;
 
+	nrf_mtx_init(&spiCommitMutex);
+
 	// set frequency to max per spim instance.
 	// 3 will allow us to operate at 32M, others only 8M.
 #if (ILI9341_SPI_INSTANCE == 3) && defined(SPIM_FREQUENCY_FREQUENCY_M32)
@@ -498,6 +521,8 @@ static void ili9341_uninit(void)
     nrf_gpio_pin_clear(ILI9341_BACKLIGHT_CONTROL_PIN);
 
 	nrf_ringbuf_init(&ili9341RingBuffer);
+
+	nrf_mtx_destroy(&spiCommitMutex);
 }
 
 static void ili9341_pixel_draw(uint16_t x, uint16_t y, uint32_t color)
@@ -538,11 +563,12 @@ static void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t h
                 buffer_data_bytes(data, sizeof(data));
         case 1:
                 buffer_data_bytes(data, sizeof(data));
-				spi_commit();
             } while (--i > 0);
         default:
             break;
     }
+
+	spi_commit();
 /*lint -restore */
 }
 
@@ -595,5 +621,24 @@ const nrf_lcd_t lcd_ili9341 = {
     .lcd_display_invert = ili9341_display_invert,
     .p_lcd_cb = &ili9341_cb
 };
+
+//////////////////////////////////////////////////////////////////////////
+// custom functions
+
+volatile bool ili9341_is_ready_for_command()
+{
+	return ili9341CmdByteCount == 0 && ili9341DataByteCount == 0;
+}
+
+void ili9341_raw_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t* colorBuffer)
+{
+    set_addr_window(x, y, x + width - 1, y + height - 1);
+	size_t colorBufferLength = width * height * sizeof(uint16_t);
+	buffer_data_bytes((const uint8_t*)colorBuffer, colorBufferLength);
+	spi_commit();
+}
+
+// end custom functions
+//////////////////////////////////////////////////////////////////////////
 
 #endif // NRF_MODULE_ENABLED(ILI9341)
