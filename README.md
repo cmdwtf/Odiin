@@ -69,6 +69,9 @@ If you'd like license this project or a part of it's code for a specific purpose
 
 *If you've noticed I'm using a piece of code that isn't mentioned here, please make a PR to add it. I want everyone to get the credit they deserve!*
 
+#### Icons/Images
+- [Material Icons](https://material.io/): Apache 2.0 © ? Google
+
 #### Fonts
 
 - [Font Awesome](https://github.com/FortAwesome/Font-Awesome): SIL OFL 1.1 / CC BY 4.0
