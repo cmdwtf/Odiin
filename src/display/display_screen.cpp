@@ -9,6 +9,8 @@
 
 #include "tests/tests.h"
 
+#include "screen_ui/display_screen_ui.h"
+
 APP_TIMER_DEF(display_screen_tick_timer);
 
 namespace Display
@@ -30,6 +32,13 @@ namespace Display
 	}
 
 	bool Screen::initialized = false;
+
+	// #todo move this to app
+	static void UIBootTimeoutFinished(lv_task_t* task)
+	{
+		UI_CREATE(main_menu);
+		UI_ACTIVATE(main_menu, NULL);
+	}
 
 	Screen::Screen(Input::Keypad* _keypad)
 	{
@@ -80,8 +89,10 @@ namespace Display
 		timerResult = app_timer_start(display_screen_tick_timer, ticks, this);
         APP_ERROR_CHECK(timerResult);
 
-		NRF_LOG_INFO("Gfx drawing demo widgets...");
-		TEST_lv_demo_widgets(keypad->GetInputGroup());
+		NRF_LOG_INFO("Gfx setting boot screen...");
+		UI_CREATE(boot);
+		UI_ACTIVATE(boot, keypad->GetInputGroup());
+		UI_FUNCTION(boot, set_timeout)(UIBootTimeoutFinished, 2000);
 
 		NRF_LOG_INFO("Gfx ready!");
 

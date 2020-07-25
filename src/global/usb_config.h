@@ -2,24 +2,25 @@
 
 #include <stdint.h>
 #include "app_usbd_langid.h"
+#include "global_strings.h"
 
-#define USB_VID									0xC001	// 0x1915
-#define USB_PID									0xB4B3	// 0x520D
+#define USB_VID									PRODUCT_USB_VID
+#define USB_PID									PRODUCT_USB_PID
 
-#define USB_DEVICE_VERSION_MAJOR				0
-#define USB_DEVICE_VERSION_MINIOR				0
-#define USB_DEVICE_VERSION_SUB_MINOR			1
+#define USB_DEVICE_VERSION_MAJOR				PRODUCT_VERSION_MAJOR
+#define USB_DEVICE_VERSION_MINIOR				PRODUCT_VERSION_MINOR
+#define USB_DEVICE_VERSION_SUB_MINOR			PRODUCT_VERSION_SUB_MINOR
 
-#define USB_DEVICE_SELF_POWERED					1 // 1 yes, 0 for needs power
+#define USB_DEVICE_SELF_POWERED					1 // 1 for yes 'self powered', 0 for needs power
 #define USB_DEVICE_MAX_POWER					100 // in mA
 
-#define USB_DEVICE_USE_UTF8_STRINGS				1 // 1 yes, 0 for ASCII only
+#define USB_DEVICE_USE_UTF8_STRINGS				1 // 1 for yes 'uses utf8', 0 for ASCII only
 
 #define USB_DEVICE_LANGUAGE_IDS					APP_USBD_LANG_AND_SUBLANG(APP_USBD_LANG_ENGLISH, APP_USBD_SUBLANG_ENGLISH_US)
 
-#define USB_DEVICE_MANUFACTURER					"cmd.wtf"
-#define USB_DEVICE_PRODUCT						"Power Overwhelmiing"
-#define USB_DEVICE_SERIAL						"000000000001"
+#define USB_DEVICE_MANUFACTURER					PRODUCT_MANUFACTURER
+#define USB_DEVICE_PRODUCT						PRODUCT_NAME_SHORT
+#define USB_DEVICE_SERIAL						"000000000001" // #todo generate serial
 #define USB_DEVICE_CONFIGURATION_MODE_STRING	"Default configuration"
 
 // Default values for user strings.
@@ -34,5 +35,5 @@
 //               Then use X(USBD_STRING_WINUSB, =0xEE, (APP_USBD_STRING_DESC(...)))
 //  -  ...     : List of string descriptors for each defined language.
 #define USB_STRINGS_USER \
-	X(APP_USER_1, , APP_USBD_STRING_DESC("https://cmd.wtf")) \
-	X(APP_USER_2, , APP_USBD_STRING_DESC("cmd.wtf"))
+	X(APP_USER_1, , APP_USBD_STRING_DESC(PRODUCT_MANUFACTURER_URL)) \
+	X(APP_USER_2, , APP_USBD_STRING_DESC(PRODUCT_MANUFACTURER))

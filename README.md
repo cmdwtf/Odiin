@@ -1,10 +1,10 @@
-# Power Overwhelmiing
+# Odiin
 
 > An attempt at emulating NFC 14443-A devices on the Nordic Semiconductors nRF52840 SoC platform.
 
 ## Description
 
-PowerOverwhelmiing is a learning project as I explore the nRF52840 platform, as well as the nRF5 SDK as a whole. It's goal is to attempt to emulate different types of common NFC-A tags, to be a bit of a swiss army knife in that sense. I'm starting with the NTAG21X tags, as I actually have a few of them on hand, and it's easy to verify the behavior between actual tags and the emulated one. I'm using the fantastic [NFC Tools](https://apps.apple.com/us/app/nfc-tools/id1252962749) from [wak dev](https://www.wakdev.com/), as it's been able to give my device all sorts of workouts -- including some packets that I'm still not quite sure what to do with! It also displays a good amount of raw data when it does read, so I'm able to diagnose what I'm doing right and wrong. wak dev, if you're reading this, a full communication log, bit by bit would be a fantastic addon that I'd happily buy pro (again) for!
+Odiin is a learning project as I explore the nRF52840 platform, as well as the nRF5 SDK as a whole. It's goal is to attempt to emulate different types of common NFC-A tags, to be a bit of a swiss army knife in that sense. I'm starting with the NTAG21X tags, as I actually have a few of them on hand, and it's easy to verify the behavior between actual tags and the emulated one. I'm using the fantastic [NFC Tools](https://apps.apple.com/us/app/nfc-tools/id1252962749) from [wak dev](https://www.wakdev.com/), as it's been able to give my device all sorts of workouts -- including some packets that I'm still not quite sure what to do with! It also displays a good amount of raw data when it does read, so I'm able to diagnose what I'm doing right and wrong. wak dev, if you're reading this, a full communication log, bit by bit would be a fantastic addon that I'd happily buy pro (again) for!
 
 The order in which I'm adding features is going to be mostly random depending on what I feel like working on. Feel free to open an issue if you've got an idea, question or comment!
 
@@ -25,7 +25,7 @@ The order in which I'm adding features is going to be mostly random depending on
 
 ## Current Hardware
 
-Currently POmiing is being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has so far been wonderful and a great way to dive into the nRF52 family of System on a Chips.
+Currently Odiin is being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has so far been wonderful and a great way to dive into the nRF52 family of System on a Chips.
 
 For debugging and logging, I'm just using a [USB to TTL](https://www.sparkfun.com/products/12977) device for now, so I can maintain the connection through device reboots.
 

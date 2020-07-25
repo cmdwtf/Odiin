@@ -25,7 +25,6 @@
 
 #include "global_usb_msc_class_definition.i"
 
-
 const nrf_block_dev_sdc_t* get_sdc_block_device(void)
 {
 	return &__sdcBlockDevice;

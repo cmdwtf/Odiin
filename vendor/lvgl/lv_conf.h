@@ -385,6 +385,8 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
  *                                LV_FONT_DECLARE(my_font_2)
  */
 #define LV_FONT_CUSTOM_DECLARE \
+			LV_FONT_DECLARE(icons_32) \
+			LV_FONT_DECLARE(icons_64) \
 			LV_FONT_DECLARE(metropolis_12) \
 			LV_FONT_DECLARE(metropolis_16) \
 			LV_FONT_DECLARE(metropolis_20) \
