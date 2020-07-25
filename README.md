@@ -65,7 +65,4 @@ If you'd like license this project or a part of it's code for a specific purpose
 #### Fonts
 
 - [Font Awesome](https://github.com/FortAwesome/Font-Awesome): SIL OFL 1.1 / CC BY 4.0
-- [Font Awesome](https://github.com/FortAwesome/Font-Awesome): SIL OFL 1.1 / CC BY 4.0
-- [PressStart2P](https://fonts.google.com/specimen/Press+Start+2P): SIL OFL 1.1 © 2011,Cody "CodeMan38" Boisclair (cody@zone38.net)
-- [proggyfonts](https://github.com/bluescan/proggyfonts/): MIT © 2004, 2005 Tristan Grimmer
-- [unascii](http://pelulamu.net/unscii/): (8, 8-mcr, 8-fantasy) Public Domain, by Viznut.
+- [Metropolis](https://github.com/chrismsimpson/Metropolis): Unlicense, by Chris Simpson
