@@ -20,13 +20,13 @@
 									STR(PRODUCT_VERSION_SUB_MINOR)
 
 #ifndef PRODUCT_GIT_HASH
-#define PRODUCT_GIT_HASH 			"no-git-hash"
+#define PRODUCT_GIT_HASH 			no-git-hash
 #endif // PRODUCT_GIT_HASH
 
 #define PRODUCT_NAME_SHORT 			PRODUCT_NAME
 #define PRODUCT_NAME_LONG			PRODUCT_NAME_SHORT " v" \
 									PRODUCT_VERSION_STRING "." \
-									PRODUCT_GIT_HASH
+									STR(PRODUCT_GIT_HASH)
 
 #ifdef __cplusplus
 extern "C" {
