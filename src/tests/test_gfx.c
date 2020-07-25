@@ -1,7 +1,11 @@
+
+#include "tests.h"
+
+#if defined(DEBUG)
+
 /*********************
  *      INCLUDES
  *********************/
-#include "tests.h"
 #include "lvgl.h"
 
 /*********************
@@ -827,3 +831,5 @@ static void tab_changer_task_cb(lv_task_t * task)
     }
 }
 #endif
+
+#endif // DEBUG

@@ -1,12 +1,16 @@
 #include "app_utilities.h"
-#include "app_logs.h"
+
 #include "boards.h"
 #include "nrf_delay.h"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 void __PANIC()
 {
-	E("PANIC!");
-	app_log_panic();
+	NRF_LOG_ERROR("PANIC!");
+
+	NRF_LOG_FINAL_FLUSH();
+	nrf_log_panic();
 
 	while (true)
 	{

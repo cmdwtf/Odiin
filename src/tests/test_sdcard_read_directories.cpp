@@ -1,10 +1,15 @@
 #include "tests.h"
 
-#include "app/app_logs.h"
-#include "global/global_data.h"
+#if defined(DEBUG)
+
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+
+#include "app/app_odiin.h"
 
 void readDirectory(const char* dirName, int depth = 0)
 {
+	Files::SdCard* SDCARD = &App::Odiin::GetSdCard();
 	Files::SdCardDirectory dir;
 	if (SDCARD->DirectoryOpen(dir, dirName))
 	{
@@ -41,7 +46,7 @@ void readDirectory(const char* dirName, int depth = 0)
 					NRF_LOG_RAW_INFO("%s/%s %s%s%s%s\r\n", nrf_log_push((char*)dirName), nrf_log_push(info.fname), readOnly, hidden, system, archive);
 				}
 			}
-			app_log_flush();
+			NRF_LOG_FLUSH();
 		}
 
 		SDCARD->DirectoryClose(dir);
@@ -50,6 +55,8 @@ void readDirectory(const char* dirName, int depth = 0)
 
 void TEST_ReadDirectories()
 {
+	Files::SdCard* SDCARD = &App::Odiin::GetSdCard();
+
 	NRF_LOG_INFO("Starting TEST_ReadDirectories().");
 	if (SDCARD->Mount())
 	{
@@ -58,3 +65,5 @@ void TEST_ReadDirectories()
 		NRF_LOG_RAW_INFO("\r\n\r\n");
 	}
 }
+
+#endif // DEBUG

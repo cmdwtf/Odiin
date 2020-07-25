@@ -7,11 +7,12 @@ namespace Usb
 	class MassStorageClass
 	{
 	public:
-		MassStorageClass();
+		MassStorageClass() = default;
 		virtual ~MassStorageClass() = default;
 		MassStorageClass(const MassStorageClass &) = delete;
 		MassStorageClass &operator=(const MassStorageClass &) = delete;
 
+		void RegisterClass();
 	private:
 
 	};

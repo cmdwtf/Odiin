@@ -13,15 +13,3 @@ const app_usbd_msc_t* get_usb_msc_class_definition(void);
 #ifdef __cplusplus
 }
 #endif
-
-// C++ only globals
-#ifdef __cplusplus
-
-#include "files/sdcard.h"
-#include "display/display_screen.h"
-
-// objects declared here are expected to have unlimited lifetime
-extern Files::SdCard* SDCARD;
-extern Display::Screen* SCREEN;
-
-#endif // __cplusplus
