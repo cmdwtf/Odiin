@@ -10,24 +10,29 @@ The order in which I'm adding features is going to be mostly random depending on
 
 ## Key Features
 
-|Feature|Status|
-|:-|:-:|
-|NFC Fourm Type 2 Tag Emulation|*Partial*|
-|NTag21X Emulation|*Partial*|
-|Tag File loading/saving|❌ (Planned)|
-|NDEF Payload Format|❌ (Planned)|
-|NFC Fourm Type 1/3/4/5 Tag Emulation|🎄|
-|Bootloader for easy USB Firmware Updates|✔*|
+|Feature|Status|Notes|
+|:-|:-:|:-|
+|NFC Forum Type 2 Tag Emulation|*Partial*|Implementing a happy path as I go. Lots of functions left to handle.|
+|NTag21X Emulation|*Partial*|As above, just working on "making it work" first.|
+|USB Mass Storage Emulation|✔|Connect via USB, and edit files on the SD Card!|
+|Tag File loading/saving|❌ (Planned)|Soon™!|
+|NDEF Payload Format|❌ (Planned)|Less Soon™!|
+|NFC Forum Type 1/3/4/5 Tag Emulation|🎄|*Maybe!*|
+|Bootloader for easy USB Firmware Updates|✔*|See note below.
 
 🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
-\* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader)
+\* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader). Currently, the NFCT hardware [isn't working](https://github.com/adafruit/Adafruit_nRF52_Bootloader/issues/150) when booting through the bootloader, so I'm skipping it for now until I figure that bug out. Once I do, it'll be uploaded as well, as either part of this project or a separate project.
 
 
 ## Current Hardware
 
 Currently Odiin is being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has so far been wonderful and a great way to dive into the nRF52 family of System on a Chips.
 
-For debugging and logging, I'm just using a [USB to TTL](https://www.sparkfun.com/products/12977) device for now, so I can maintain the connection through device reboots.
+Debugging and logging: I'm just using a [USB to TTL](https://amzn.to/2OSYcJb) (affiliate link) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work.
+
+Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://www.amazon.com/gp/product/B01CZL6QIQ/ref=as_li_tl?ie=UTF8&tag=cmd0ed-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B01CZL6QIQ&linkId=e4fa58ed89551ceb71b44a4eca0320d2) (affiliate link). I'm planning to have the display code abstracted enough that I should be able to swap in different display drivers should I decide to support different ones in the future.
+
+Input: I picked up a small [5-way tactile switch breakout](https://amzn.to/3hy9GxS) (affiliate link) that has a very 'joystick style' feel to it. The breakout I got has two extra buttons that I'm trying not to use at the moment, because the breakout is a little large for what I want.I may end up designing my own PCB for the switch, because I want it to fit nicely with whatever hardware I end up using and fitting into a case. The switches themselves seem to be produced by a number of manufacturers, and are available at all my favorite components distributors (💖DigiKey).
 
 ## Build Environment
 
@@ -35,23 +40,23 @@ A vast majority of the code in this repository is designed to be cross compiled 
 
  I'm currently targeting an ARM device, and making use of the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 9-2020-Q2 on Windows. Look in `BuildSettings.mk`, and set your paths in there accordingly. If you're using VS Code, you may want to update the path to your install in `.vscode/c_cpp_properties.json` as well, as it's used for the C++ plugin to generate error squigglies. You may very well have luck building with other tools or on other platforms, but at this point in the project life-cycle, that's an exercise left to the reader.
 
-I'm using Visual Studio Code as my primary editor, and have provided a .vscode folder with tasks I'm performing often to build/flash/etc. Those tasks use the GNU `make` to run. You'll need `make` on your path (I'm using the latest from [chocolatey](https://chocolatey.org/packages/make)), as well as the [nRF5x-Command-Line-Tools for Win32](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
+I'm using Visual Studio Code as my primary editor, and have provided a .vscode folder with tasks I'm performing often to build/flash/etc. There's also a `.code-workspace` file, though that's just more for continence than anything.
+
+The vscode tasks (and building in general) use the GNU `make` to run. You'll need `make` on your path (I'm using the latest from [chocolatey](https://chocolatey.org/packages/make)). As well, you'll need the [nRF5x-Command-Line-Tools for Win32](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
 
 You'll need `python` 3, and a few tools to finish building and flash. Where you install Python from is not important as long as it's on your path (and probably your Scripts directory, too.) In either user space or in a venv, you'll want to `pip install` at least `pyocd`, `intelhex`, and maybe `adafruit-nrfutil` if you're tinkering with the bootloader.
 
-###### Make sure to `git submodule update --init` after checking out this repo!
+##### Make sure to `git submodule update --init --recursive` after checking out this repo, or using `--recurse-submodules` when you clone!
 
 ## Contributing
 
 Contributions are absolutely welcome. In this early state, the project is majorly in flux. Things are mostly added ad-hoc and without planning right now, as this has been mostly a learning exercise as much as it has been to share.
 
-That said, everyone is more than welcome to report issues, make suggestions, or if it fancies you to fork and make a PR, go for it! Even if it's just for a typo.
+That said, everyone is more than welcome to report issues, make suggestions, or if it fancies you to fork and make a PR, go for it! Even if it's just for a typo. If you're looking for discussions to start: I'm very open to look at project organization
 
 ## Acknowledgments & Licenses
 
-Several bits in this project are directly from the [makerdiary M.2 Developer Kit SDK](https://github.com/makerdiary/nrf52840-m2-devkit), which was licensed under the MIT license. See the LICENSE file in it's folder.
-
-If you'd like license this project or a part of it's code for a specific purpose or under specific terms, please get in touch!
+If you'd like license this project or a part of it's code for a specific purpose or under specific terms, please get in touch and let's see what we can work out!
 
 ### Third-Party Licensed Software
 
@@ -61,6 +66,8 @@ If you'd like license this project or a part of it's code for a specific purpose
 - [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx ChaN (See LICENSE.txt in vendor/fatfs for details)
 - [ILI9341 Colors](https://github.com/adafruit/Adafruit_ILI9341): MIT © ? Limor Fried/Ladyada for Adafruit Industries.
 - [lvgl](https://github.com/lvgl/lvgl): MIT © 2020 LVGL LLC
+
+*If you've noticed I'm using a piece of code that isn't mentioned here, please make a PR to add it. I want everyone to get the credit they deserve!*
 
 #### Fonts
 
