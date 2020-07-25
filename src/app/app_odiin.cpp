@@ -72,10 +72,12 @@ namespace App
 
 	Odiin::Odiin()
 	{
-		NRF_LOG_RAW_INFO("=====================================");
+		NRF_LOG_RAW_INFO("=====================================\n");
 		NRF_LOG_INFO("Odiin initializing...");
 
 		InitializeLogs();
+		InitializeClocks();
+		InitializeTimers();
 		InitializeBsp();
 		InitializeUsbDevice();
 		InitializeSdCard();
@@ -84,7 +86,7 @@ namespace App
 		InitializeNfcTag();
 
 		NRF_LOG_INFO("Odiin initialization complete. Ready.");
-		NRF_LOG_RAW_INFO("=====================================");
+		NRF_LOG_RAW_INFO("=====================================\n");
 	}
 
 	void Odiin::InitializeLogs()
