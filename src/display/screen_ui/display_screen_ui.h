@@ -17,6 +17,8 @@ extern "C" {
 
 	UI_DECLARE(main_menu);
 
+	UI_DECLARE(nfct_active);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

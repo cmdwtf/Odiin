@@ -36,8 +36,8 @@ namespace Display
 	// #todo move this to app
 	static void UIBootTimeoutFinished(lv_task_t* task)
 	{
-		UI_CREATE(main_menu);
-		UI_ACTIVATE(main_menu, NULL);
+		UI_CREATE(nfct_active);
+		UI_ACTIVATE(nfct_active, NULL);
 	}
 
 	Screen::Screen(Input::Keypad* _keypad)

@@ -25,6 +25,9 @@ extern "C" {
 		const char* title;
 		const char* instruction;
 		const char* icon;
+		const lv_img_dsc_t* image;
+		const char* header_button_text;
+		lv_event_cb_t header_button_cb;
 	} splash_window_desc_t;
 
 	lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* desc);

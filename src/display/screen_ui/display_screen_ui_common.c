@@ -1,6 +1,15 @@
 #include "display_screen_ui_common.h"
 
 //////////////////////////////////////////////////////////////////////////
+// Static Helpers
+
+static void display_screen_ui_event_noop(lv_obj_t* obj, lv_event_t e)
+{
+	(void)obj;
+	(void)e;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // MessageBox
 
 static void msgbox_event_cb(lv_obj_t* msgbox, lv_event_t e)
@@ -52,17 +61,25 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 {
 	lv_obj_t* screen = lv_obj_create(NULL, NULL);
 
+	// window
 	lv_obj_t* window = lv_win_create(screen, NULL);
 	lv_win_set_title(window, desc->title);
 
-	lv_obj_t* content = lv_win_get_content(window);
+	// window button
+	if (desc->header_button_text != NULL)
+	{
+		// Add button to the header
+		lv_obj_t* btn = lv_win_add_btn(window, desc->header_button_text);
 
-	// Add settings button to the header
-	//lv_win_add_btn(window, LV_SYMBOL_SETTINGS);
-
-	// Add close button to the header
-	//lv_obj_t* close_btn = lv_win_add_btn(window, LV_SYMBOL_CLOSE);
-	//lv_obj_set_event_cb(close_btn, lv_win_close_event_cb);
+		if (desc->header_button_cb != NULL)
+		{
+			lv_obj_set_event_cb(btn, desc->header_button_cb);
+		}
+		else
+		{
+			lv_obj_set_event_cb(btn, display_screen_ui_event_noop);
+		}
+	}
 
 	// main content
 	lv_obj_t* labelInstructions = lv_label_create(window, NULL);
@@ -70,12 +87,26 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 	lv_obj_set_width(labelInstructions, lv_win_get_width(window));
 	lv_label_set_text(labelInstructions, desc->instruction);
 
-	lv_obj_t* labelIcon = lv_label_create(window, NULL);
-	ui_common_set_label_font_icons64(labelIcon);
-	lv_obj_set_width(labelIcon, lv_win_get_width(window));
-	lv_label_set_text(labelIcon, desc->icon);
-	lv_obj_align(labelIcon, NULL, LV_ALIGN_CENTER, 0, 0);
-	lv_obj_set_y(labelIcon, (lv_obj_get_height(content) / 3) * 2);
+	// icon or image
+	lv_obj_t* content = lv_win_get_content(window);
+
+	if (desc->icon != NULL)
+	{
+		lv_obj_t* labelIcon = lv_label_create(window, NULL);
+		ui_common_set_label_font_icons64(labelIcon);
+		lv_obj_set_width(labelIcon, lv_win_get_width(window));
+		lv_label_set_text(labelIcon, desc->icon);
+		lv_obj_align(labelIcon, NULL, LV_ALIGN_CENTER, 0, 0);
+		lv_obj_set_y(labelIcon, (lv_obj_get_height(content) / 3) * 2);
+	}
+
+	if (desc->image != NULL)
+	{
+		lv_obj_t* image = lv_img_create(window, NULL);
+		lv_img_set_src(image, desc->image);
+		lv_obj_align(image, NULL, LV_ALIGN_CENTER, 0, 0);
+		lv_obj_set_y(image, (lv_obj_get_height(content) / 2));
+	}
 
 	return screen;
 }

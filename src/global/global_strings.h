@@ -12,7 +12,9 @@
 #define PRODUCT_USB_VID				0xC001
 #define PRODUCT_USB_PID				0xB4B3
 
-#define STR(x) #x
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
 #define PRODUCT_VERSION_STRING		STR(PRODUCT_VERSION_MAJOR) "." \
 									STR(PRODUCT_VERSION_MINOR) "." \
 									STR(PRODUCT_VERSION_SUB_MINOR)
