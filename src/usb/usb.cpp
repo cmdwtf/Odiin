@@ -21,6 +21,7 @@ namespace Usb
 			bool supportsPowerDetection = false;
 			map<const app_usbd_class_inst_t*, const class_info_t*> classRegistry;
 			void UsbdEventHandler(app_usbd_event_type_t event);
+			void UsbdAppendAllClasses();
 			static const app_usbd_config_t usbd_config = {
 				.ev_state_proc = UsbdEventHandler
 			};
@@ -62,6 +63,8 @@ namespace Usb
 				return true;
 			}
 
+			UsbdAppendAllClasses();
+
 			if (supportsPowerDetection)
 			{
 				ret_code_t ret = app_usbd_power_events_enable();
@@ -100,6 +103,7 @@ namespace Usb
 
 			app_usbd_stop();
 			app_usbd_disable();
+			app_usbd_class_remove_all();
 
 			NRF_LOG_INFO("USB disabled.");
 
@@ -126,18 +130,9 @@ namespace Usb
 				return false;
 			}
 
-			ret_code_t ret = app_usbd_class_append(deviceClass->classInstance);
-			APP_ERROR_CHECK(ret);
-
-			if (ret == NRF_SUCCESS)
-			{
-				classRegistry[deviceClass->classInstance] = deviceClass;
-				NRF_LOG_INFO("Registered USB device class `%s`.", deviceClass->name);
-				return true;
-			}
-
-			NRF_LOG_WARNING("Failed to registered USB device class `%s`.", deviceClass->name);
-			return false;
+			// store the class in the registry to append later
+			classRegistry[deviceClass->classInstance] = deviceClass;
+			return true;
 		}
 
 		bool RegisterListener(Listener* listener)
@@ -207,6 +202,29 @@ namespace Usb
 				}
 
 				//USB_RAISE_LISTENER_EVENT(PostUsbEvent);
+			}
+
+			void UsbdAppendAllClasses()
+			{
+				auto it = classRegistry.begin();
+
+				while (it != classRegistry.end())
+				{
+					const class_info_t* deviceClass = (*it).second;
+					ret_code_t ret = app_usbd_class_append(deviceClass->classInstance);
+					APP_ERROR_CHECK(ret);
+
+					if (ret == NRF_SUCCESS)
+					{
+						NRF_LOG_INFO("Registered USB device class `%s`.", deviceClass->name);
+					}
+					else
+					{
+						NRF_LOG_WARNING("Failed to registered USB device class `%s`.", deviceClass->name);
+					}
+
+					it++;
+				}
 			}
 		}
 

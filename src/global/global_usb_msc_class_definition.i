@@ -21,7 +21,7 @@ static void usb_msc_class_event_handler(app_usbd_class_inst_t const *classInstan
     NRF_BLOCKDEV_BASE_ADDR(SDC_BLOCK_DEVICE, block_dev)		\
 )
 
-#define MSC_WORKBUFFER_SIZE (2048)
+#define MSC_WORKBUFFER_SIZE (1024)
 
 // create class instance
 APP_USBD_MSC_GLOBAL_DEF(USB_MSC_CLASS_DEFINITION,
