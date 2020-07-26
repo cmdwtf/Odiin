@@ -15,7 +15,10 @@ extern "C" {
 
 	UI_DECLARE(usb);
 
-	UI_DECLARE(main_menu);
+	UI_DECLARE(list_menu);
+	void UI_DECLARE_FUNCTION(list_menu, set_options)(menu_option_desc_t options[], size_t numOptions);
+	void UI_DECLARE_FUNCTION(list_menu, set_title)(const char* title);
+	void UI_DECLARE_FUNCTION(list_menu, set_option_selected_cb)(lv_event_cb_t callback);
 
 	UI_DECLARE(nfct_active);
 

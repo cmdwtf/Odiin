@@ -35,6 +35,19 @@ extern "C" {
 	lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* desc);
 
 	//////////////////////////////////////////////////////////////////////////
+	// Menu Option List
+	typedef struct menu_option_desc_s menu_option_desc_t; // c is weird
+	typedef void (*menu_option_cb_t)(menu_option_desc_t*, lv_group_t*);
+	typedef struct menu_option_desc_s {
+		const char* option;
+		const void* prefix;
+		menu_option_cb_t click_cb;
+#if LV_USE_USER_DATA
+		lv_obj_user_data_t user_data;
+#endif // LV_USE_USER_DATA
+	} menu_option_desc_t;
+
+	//////////////////////////////////////////////////////////////////////////
 	// Label Font switching
 	void ui_common_set_label_font_icons64(lv_obj_t* label);
 	void ui_common_set_label_font_theme_small(lv_obj_t* label);

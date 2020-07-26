@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Static Helpers
 
-static void display_screen_ui_event_noop(lv_obj_t* obj, lv_event_t e)
+static void display_screen_ui_list_menu_button_click(lv_obj_t* obj, lv_event_t e)
 {
 	(void)obj;
 	(void)e;
@@ -15,12 +15,12 @@ static void display_screen_ui_event_noop(lv_obj_t* obj, lv_event_t e)
 static void msgbox_event_cb(lv_obj_t* msgbox, lv_event_t e)
 {
 	if (e == LV_EVENT_CLICKED) {
-		uint16_t b = lv_msgbox_get_active_btn(msgbox);
-		if (b == 0 || b == 1) {
-			lv_obj_del(msgbox);
-			lv_obj_reset_style_list(lv_layer_top(), LV_OBJ_PART_MAIN);
-			lv_obj_set_click(lv_layer_top(), false);
-		}
+		//uint16_t b = lv_msgbox_get_active_btn(msgbox);
+		msgbox_desc_t* desc = (msgbox_desc_t*)msgbox->user_data;
+		lv_group_focus_freeze(desc->group, false);
+		lv_obj_del(msgbox);
+		//lv_obj_reset_style_list(lv_layer_top(), LV_OBJ_PART_MAIN);
+		//lv_obj_set_click(lv_layer_top(), false);
 	}
 }
 
@@ -47,8 +47,9 @@ lv_obj_t* ui_common_msgbox_show(msgbox_desc_t* desc)
 
 	if (desc->group != NULL) {
 		lv_group_add_obj(desc->group, messageBox);
-		lv_group_focus_freeze(desc->group, true);
 		lv_group_focus_obj(messageBox);
+		lv_btnmatrix_set_focused_btn(lv_msgbox_get_btnmatrix(messageBox), 0);
+		lv_group_focus_freeze(desc->group, true);
 	}
 
 	return messageBox;
@@ -77,7 +78,7 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 		}
 		else
 		{
-			lv_obj_set_event_cb(btn, display_screen_ui_event_noop);
+			lv_obj_set_event_cb(btn, display_screen_ui_list_menu_button_click);
 		}
 
 		desc->return_header_button_obj = btn;

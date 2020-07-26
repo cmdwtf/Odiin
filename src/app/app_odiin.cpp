@@ -24,9 +24,9 @@ namespace App
 		return &instance;
 	}
 
-	Files::SdCard& Odiin::GetSdCard()
+	Files::SdCard* Odiin::GetSdCard()
 	{
-		return *(GetInstance()->sdCard);
+		return GetInstance()->sdCard;
 	}
 
 	Odiin::~Odiin()

@@ -16,7 +16,7 @@ namespace App
 	{
 	public:
 		static Odiin* GetInstance();
-		static Files::SdCard& GetSdCard();
+		static Files::SdCard* GetSdCard();
 
 		~Odiin();
 		void Update();

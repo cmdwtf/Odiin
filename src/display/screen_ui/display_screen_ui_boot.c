@@ -8,6 +8,12 @@ static lv_obj_t* screen = NULL;
 
 UI_DECLARE_CREATE(UI_NAME)
 {
+	if (screen != NULL)
+	{
+		// #todo #refresh screen
+		return screen;
+	}
+
 	screen = lv_obj_create(NULL, NULL);
 
 	lv_obj_t* container = lv_cont_create(screen, NULL);

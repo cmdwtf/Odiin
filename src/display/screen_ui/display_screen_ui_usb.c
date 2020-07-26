@@ -10,6 +10,7 @@ UI_DECLARE_CREATE(UI_NAME)
 {
 	if (screen != NULL)
 	{
+		// nothing to refresh.
 		return screen;
 	}
 

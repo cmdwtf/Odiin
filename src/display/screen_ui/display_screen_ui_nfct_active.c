@@ -14,14 +14,22 @@ static void nfct_cancel_pressed(lv_obj_t* obj, lv_event_t e)
 	{
 		cancel_callback(obj, e);
 	}
-
-	lv_win_close_event_cb(obj, e);
+	else
+	{
+		// they aren't handling cancel,
+		// we will delete our window
+		// so we can be created again in the future.
+		lv_win_close_event_cb(obj, e);
+		lv_obj_del(screen);
+		screen = NULL;
+	}
 }
 
 UI_DECLARE_CREATE(UI_NAME)
 {
 	if (screen != NULL)
 	{
+		// #todo #refresh screen
 		return screen;
 	}
 
