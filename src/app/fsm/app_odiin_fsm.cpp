@@ -1,9 +1,11 @@
 #include "app_odiin_fsm.h"
 
-#include "display/screen_ui/display_screen_ui.h"
-#include "input/input_keypad.h"
-
 #include "nrf_log.h"
+
+#include "app/app_settings.h"
+#include "display/screen_ui/display_screen_ui.h"
+#include "global/global_strings.h"
+#include "input/input_keypad.h"
 
 #define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
 #define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
@@ -31,12 +33,12 @@ namespace App
 				UI_CREATE(boot);
 				UI_ACTIVATE(boot, Keypad->GetInputGroup());
 				UI_FUNCTION(boot, set_timeout)([](lv_task_t*){
-					BootScreenTimeout timeout;
-					dispatch<BootScreenTimeout>(timeout);
-				}, 2000);
+					BootScreenTimeoutEvent timeout;
+					dispatch(timeout);
+				}, BOOT_SCREEN_TIMEOUT_MS);
 			}
 
-			void react(BootScreenTimeout const &) override
+			void react(BootScreenTimeoutEvent const &) override
 			{
 				transit<MainMenu>();
 			}
@@ -88,7 +90,21 @@ namespace App
 		// Base state: default implementations
 
 		void OdiinState::react(::tinyfsm::Event const &) { }
-		void OdiinState::react(BootScreenTimeout const &) { }
+		void OdiinState::react(BootScreenTimeoutEvent const &) { }
+
+		void OdiinState::react(UsbConnectionEvent const &e)
+		{
+			if (e.IsConnected)
+			{
+				// #todo: store current state to pop back to when we disable.
+				transit<UsbConnected>();
+			}
+			else
+			{
+				// #todo: use stored state to pop back to instead of hardcoding main menu.
+				transit<MainMenu>();
+			}
+		}
 
 		void OdiinState::entry() { }
 		void OdiinState::exit() { }

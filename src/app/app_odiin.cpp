@@ -59,6 +59,23 @@ namespace App
 			nfcTagEmulator->DisableTag();
 		}
 	}
+	//////////////////////////////////////////////////////////////////////////
+	// USB Listener interface
+	void Odiin::UsbWillEnable(app_usbd_event_type_t event)
+	{
+		App::Fsm::UsbConnectionEvent uce = {
+			.IsConnected = true
+		};
+		App::Fsm::OdiinState::dispatch(uce);
+	}
+
+	void Odiin::UsbDidDisable(app_usbd_event_type_t event)
+	{
+		App::Fsm::UsbConnectionEvent uce = {
+			.IsConnected = false
+		};
+		App::Fsm::OdiinState::dispatch(uce);
+	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Private interface
@@ -154,6 +171,9 @@ namespace App
 
 		// SDCARD will want to listen for USB events.
 		Usb::Device::RegisterListener(sdCard);
+
+		// So do we
+		Usb::Device::RegisterListener(this);
 	}
 
 	void Odiin::InitializeInput()

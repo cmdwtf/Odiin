@@ -12,7 +12,7 @@ using NtagPayload = nfc_tag_emulation::nxp_ntag21x::Ntag21XPayload;
 
 namespace App
 {
-	class Odiin
+	class Odiin : public Usb::Listener
 	{
 	public:
 		static Odiin* GetInstance();
@@ -23,6 +23,9 @@ namespace App
 
 		void SetNfcTagPayload(nfc_tag_emulation::Payload* pl);
 		void SetNfcTagEnabled(bool enabled);
+
+		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
+		virtual void UsbDidDisable(app_usbd_event_type_t event) override;
 	private:
 		Odiin();
 		Odiin(const Odiin&) = delete;

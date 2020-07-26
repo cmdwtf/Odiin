@@ -12,7 +12,11 @@ namespace App
 		// Events
 		struct OdiinBaseEvent			: tinyfsm::Event { };
 		struct ScreenChangeEvent	 	: OdiinBaseEvent { };
-		struct BootScreenTimeout 	: ScreenChangeEvent { };
+		struct BootScreenTimeoutEvent	: ScreenChangeEvent { };
+		struct UsbConnectionEvent		: OdiinBaseEvent
+		{
+			bool IsConnected;
+		 };
 
 		//////////////////////////////////////////////////////////////////////////
 		// State Machine
@@ -23,7 +27,8 @@ namespace App
 			// unhandled event reaction
 			void react(::tinyfsm::Event const &);
 
-			virtual void react(BootScreenTimeout const &);
+			virtual void react(BootScreenTimeoutEvent const &);
+			virtual void react(UsbConnectionEvent const &);
 
 			virtual void entry();
 			virtual void exit();
