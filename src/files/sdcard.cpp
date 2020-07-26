@@ -303,16 +303,22 @@ namespace Files
 			return false;
 		}
 
-		NRF_LOG_INFO("Initializing SDC...");
-
 		// #hardcode -- we only support one disk right now.
 		diskIndex = 0;
 
-		DSTATUS status = disk_initialize(diskIndex);
+		NRF_LOG_INFO("Initializing disk %d (SDC)...", diskIndex);
 
-		if (status == STA_NOINIT)
+		// trying 3 times, cause that's what they did in the example
+		// and here: https://devzone.nordicsemi.com/f/nordic-q-a/59811/fatfs-example-bug
+		DSTATUS diskStatus = STA_NOINIT;
+		for (uint32_t retries = 3; retries && diskStatus; --retries)
 		{
-			NRF_LOG_ERROR("Failed to initialize SDC (disk %d) with error: %d.", diskIndex, status);
+			diskStatus = disk_initialize(0);
+		}
+
+		if (diskStatus)
+		{
+			NRF_LOG_ERROR("Failed to initialize SDC (disk %d) with error: %d.", diskIndex, diskStatus);
 			return false;
 		}
 
