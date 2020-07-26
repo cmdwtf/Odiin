@@ -2,9 +2,11 @@
 #include <cstdint>
 
 #include "usb/usb_msc.h"
-#include "files/sdcard.h"
-#include "input/input_keypad.h"
+
 #include "display/display_screen.h"
+#include "files/sdcard.h"
+#include "fsm/app_odiin_fsm.h"
+#include "input/input_keypad.h"
 #include "nfc_tag_emulation/nxp_ntag21x_emulator.h"
 
 using NfcTagEmulator = nfc_tag_emulation::nxp_ntag21x::Ntag21xEmulator;
@@ -14,12 +16,16 @@ namespace App
 {
 	class Odiin : public Usb::Listener
 	{
+		using StateMachine = Fsm::OdiinState;
 	public:
 		static Odiin* GetInstance();
 		static Files::SdCard* GetSdCard();
 
 		~Odiin();
 		void Update();
+
+    	template<typename E>
+		inline void SendEvent(E const& ev) { StateMachine::dispatch(ev); }
 
 		void SetNfcTagPayload(nfc_tag_emulation::Payload* pl);
 		void SetNfcTagEnabled(bool enabled);

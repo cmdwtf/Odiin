@@ -42,7 +42,6 @@ namespace App
 		screen->Update();
 	}
 
-
 	void Odiin::SetNfcTagPayload(nfc_tag_emulation::Payload* pl)
 	{
 		nfcTagEmulator->SetPayload(pl);
@@ -66,7 +65,7 @@ namespace App
 		App::Fsm::UsbConnectionEvent uce = {
 			.IsConnected = true
 		};
-		App::Fsm::OdiinState::dispatch(uce);
+		StateMachine::dispatch(uce);
 	}
 
 	void Odiin::UsbDidDisable(app_usbd_event_type_t event)
@@ -74,7 +73,7 @@ namespace App
 		App::Fsm::UsbConnectionEvent uce = {
 			.IsConnected = false
 		};
-		App::Fsm::OdiinState::dispatch(uce);
+		StateMachine::dispatch(uce);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -180,7 +179,7 @@ namespace App
 	{
 		static Input::Keypad kp;
 		keypad = &kp;
-		Fsm::OdiinState::Keypad = keypad;
+		StateMachine::Keypad = keypad;
 	}
 
 	void Odiin::InitializeScreen()
@@ -203,7 +202,7 @@ namespace App
 		// let's get down to business!
 		// to defeat
 		// the punssss.
-		Fsm::OdiinState::start();
+		StateMachine::start();
 	}
 
 	namespace

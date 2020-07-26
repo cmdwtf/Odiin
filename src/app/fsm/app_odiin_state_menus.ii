@@ -1,0 +1,282 @@
+#ifdef __VSCODE__CPP__
+
+// these files aren't included here in the actual build.
+// it just makes the vscode linter a little happier.
+#include "app_odiin_fsm.h"
+
+#include "nrf_assert.h"
+#include "nrf_log.h"
+
+#include "app/app_odiin.h"
+#include "app/app_settings.h"
+#include "display/screen_ui/display_screen_ui.h"
+#include "files/sdcard.h"
+#include "global/global_strings.h"
+#include "input/input_keypad.h"
+#endif // __VSCODE_CPP__
+
+
+namespace
+{
+	void MenuOptionPressedCallback(menu_option_desc_t* o, lv_group_t* group)
+	{
+		App::Fsm::MenuOptionPressedEvent ev;
+		ev.Option = o;
+		App::Odiin::GetInstance()->SendEvent(ev);
+	};
+
+	void MenuOptionPressedCallbackNyi(menu_option_desc_t* o, lv_group_t* group)
+	{
+		NRF_LOG_INFO("Menu Option `%s` clicked, NYI", NRF_LOG_PUSH((char*)o->option));
+
+		static const char* buttonMap[] = { "Aw, man.", "" };
+
+		static msgbox_desc_t desc;
+		desc.parent = lv_scr_act();
+		desc.group = group;
+		desc.message_text = "Oof, this feature isn't implemented yet. Sorry!";
+		desc.button_map = buttonMap;
+
+		ui_common_msgbox_show(&desc);
+	};
+}
+
+template<size_t OPT_COUNT_MAX, size_t OPTION_STR_LEN>
+class MenuBase
+	: public OdiinState
+{
+protected:
+	MenuBase()
+	{
+		// line up pointers for ease of use.
+		for (size_t scan = 0; scan < OPT_COUNT_MAX; ++scan)
+		{
+			menuStrings[scan] = menuStringsData[scan];
+			menuOptions[scan].option = menuStrings[scan];
+		}
+	}
+	static constexpr size_t MENU_OPTIONS_LENGTH = OPT_COUNT_MAX;
+	static constexpr size_t MENU_OPTION_STRING_LENGTH = OPTION_STR_LEN;
+	menu_option_desc_t menuOptions[OPT_COUNT_MAX];
+	char menuStringsData[OPT_COUNT_MAX][OPTION_STR_LEN];
+	char* menuStrings[OPT_COUNT_MAX];
+	size_t menuOptionCount = 0;
+};
+
+class MenuMain
+	: public MenuBase<8, 24>
+{
+	static const uint8_t NEXT_STATE_FILES = 1;
+	static const uint8_t NEXT_STATE_SETTINGS = 2;
+	static const uint8_t NEXT_STATE_ABOUT = 3;
+	static const uint8_t NEXT_STATE_REBOOT = 4;
+	static const uint8_t NEXT_STATE_POWEROFF = 5;
+
+	size_t CreateOptions(menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
+	{
+		ASSERT(outputLength >= 4)
+
+		size_t index = 0;
+
+		output[index].option = "Load Payload";
+		output[index].prefix = LV_SYMBOL_SD_CARD;
+		output[index].click_cb = MenuOptionPressedCallback;
+		output[index].user_flags = NEXT_STATE_FILES;
+		++index;
+
+		output[index].option = "Settings";
+		output[index].prefix = LV_SYMBOL_SETTINGS;
+		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].user_flags = NEXT_STATE_SETTINGS;
+		++index;
+
+		output[index].option = "About";
+		output[index].prefix = LV_SYMBOL_CHARGE;
+		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].user_flags = NEXT_STATE_ABOUT;
+		++index;
+
+		output[index].option = "Reboot";
+		output[index].prefix = LV_SYMBOL_REFRESH;
+		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].user_flags = NEXT_STATE_REBOOT;
+		++index;
+
+		output[index].option = "Power Off";
+		output[index].prefix = LV_SYMBOL_POWER;
+		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].user_flags = NEXT_STATE_POWEROFF;
+		++index;
+
+		return index;
+	}
+
+	void entry() override
+	{
+		LOG_STATE_ENTER(MenuMain);
+		menuOptionCount = CreateOptions(menuOptions, MENU_OPTIONS_LENGTH,
+			menuStrings, MENU_OPTION_STRING_LENGTH);
+		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
+		UI_FUNCTION(list_menu, set_title)(PRODUCT_NAME_LONG);
+		UI_CREATE(list_menu);
+		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
+	}
+
+	void exit() override
+	{
+		LOG_STATE_EXIT(MenuMain);
+	}
+
+	void react(MenuOptionPressedEvent const& event) override
+	{
+		if (event.Option->user_flags == NEXT_STATE_FILES)
+		{
+			transit<MenuFiles>();
+		}
+	}
+};
+
+class MenuFiles
+	: public MenuBase<64, 32>
+{
+	static const uint8_t FLAG_DEFAULT_SELECT_FILE = 0;
+	static const uint8_t FLAG_DEFAULT_SELECT_DIR = 1;
+	static const uint8_t FLAG_DIR_UP = 2;
+	static const uint8_t FLAG_PAGE_NEXT = 3;
+	static const uint8_t FLAG_PAGE_PREV = 4;
+
+	size_t AppendDirectoryMenu(const char *path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength, size_t directoryOffset)
+	{
+		ASSERT(path != nullptr);
+		ASSERT(output != nullptr);
+		ASSERT(stringBuffers != nullptr);
+
+		Files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		Files::SdCardDirectory dir;
+
+		size_t outputIndex = 0;
+
+		if (sd.DirectoryOpen(dir, path))
+		{
+			Files::SdCardFileInfo info;
+			while (sd.DirectoryRead(dir, info))
+			{
+				//bool readOnly = (info.fattrib & AM_RDO);
+				bool hidden = (info.fattrib & AM_HID);
+				bool system = (info.fattrib & AM_SYS);
+				bool directory = (info.fattrib & AM_DIR);
+				//bool archive = (info.fattrib & AM_ARC);
+
+				if (hidden || system)
+				{
+					// no interest in hidden or system files
+					continue;
+				}
+
+				// skip to the offset they requested.
+				if (directoryOffset > 0)
+				{
+					directoryOffset--;
+					continue;
+				}
+
+				// copy file name to the buffer
+				snprintf(stringBuffers[outputIndex], stringBufferLength, "%s", info.fname);
+
+				// give the buffer to the option
+				output[outputIndex].option = stringBuffers[outputIndex];
+				output[outputIndex].click_cb = MenuOptionPressedCallback;
+
+				if (directory)
+				{
+					output[outputIndex].prefix = (const void*)LV_SYMBOL_DIRECTORY;
+					output[outputIndex].user_flags = FLAG_DEFAULT_SELECT_DIR;
+				}
+				else
+				{
+					output[outputIndex].prefix = (const void*)LV_SYMBOL_FILE; // I need better symbols.
+					output[outputIndex].user_flags = FLAG_DEFAULT_SELECT_FILE;
+				}
+
+				++outputIndex;
+				if (outputIndex >= outputLength)
+				{
+					break;
+				}
+			}
+		}
+
+		return outputIndex;
+	}
+
+	size_t AppendDirectoryTopper(const char* path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
+	{
+		ASSERT(outputLength >= 1);
+
+		size_t index = 0;
+
+		// todo: show "main menu" or the sort if we are at root level
+
+		output[index].option = "..";
+		output[index].prefix = LV_SYMBOL_NEW_LINE;
+		output[index].click_cb = MenuOptionPressedCallback;
+		output[index].user_flags = FLAG_DIR_UP;
+		++index;
+
+		// todo: previous page button if offset > 0
+
+		return index;
+	}
+
+	void entry() override
+	{
+		LOG_STATE_ENTER(MenuFiles);
+		const char* path = Files::SdCard::RootDirectory;
+
+		size_t topperCount = AppendDirectoryTopper(path,
+			menuOptions, MENU_OPTIONS_LENGTH,
+			menuStrings, MENU_OPTION_STRING_LENGTH);
+
+		size_t fileCount = AppendDirectoryMenu(path,
+			menuOptions + topperCount, MENU_OPTIONS_LENGTH - topperCount,
+			menuStrings, MENU_OPTION_STRING_LENGTH,
+			0);
+
+		menuOptionCount = topperCount + fileCount;
+
+		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
+		UI_FUNCTION(list_menu, set_title)(path);
+		UI_CREATE(list_menu);
+		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
+	}
+
+	void exit() override
+	{
+		LOG_STATE_EXIT(MenuFiles);
+	}
+
+	void react(MenuOptionPressedEvent const& event) override
+	{
+		switch (event.Option->user_flags)
+		{
+			case FLAG_DEFAULT_SELECT_FILE:
+				NRF_LOG_INFO("Select file!");
+				break;
+			case FLAG_DEFAULT_SELECT_DIR:
+				NRF_LOG_INFO("Select directory!");
+				break;
+			case FLAG_DIR_UP:
+				NRF_LOG_INFO("Returning to previous directory.");
+				break;
+			case FLAG_PAGE_NEXT:
+				NRF_LOG_INFO("Pagenation Next");
+				break;
+			case FLAG_PAGE_PREV:
+				NRF_LOG_INFO("Pagenation Previous");
+				break;
+			default:
+				NRF_LOG_WARNING("Unhandled menu option flag. (%d)", event.Option->user_flags);
+				break;
+		}
+	}
+};

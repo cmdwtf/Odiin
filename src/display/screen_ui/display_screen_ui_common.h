@@ -43,7 +43,7 @@ extern "C" {
 		const void* prefix;
 		menu_option_cb_t click_cb;
 #if LV_USE_USER_DATA
-		lv_obj_user_data_t user_data;
+		uint32_t user_flags;
 #endif // LV_USE_USER_DATA
 	} menu_option_desc_t;
 

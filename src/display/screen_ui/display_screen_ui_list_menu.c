@@ -8,7 +8,7 @@ static lv_obj_t* options = NULL;
 lv_event_cb_t option_clicked = NULL;
 static menu_option_desc_t* menuOptions = NULL;
 static size_t menuOptionsCount = 0;
-static const char* menuTitle = "<Untitled Menu>";
+static char menuTitle[LV_FS_MAX_PATH_LENGTH] = "<Untitled Menu>";
 
 static void display_screen_ui_list_menu_refresh_options();
 static void display_screen_ui_list_menu_button_click(lv_obj_t* obj, lv_event_t e);
@@ -51,14 +51,14 @@ void UI_DECLARE_FUNCTION(UI_NAME, set_options)(menu_option_desc_t options[], siz
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_title)(const char* title)
 {
-	menuTitle = title;
+	lv_snprintf(menuTitle, LV_FS_MAX_PATH_LENGTH, "%s", title);
 
 	if (window == NULL)
 	{
 		return;
 	}
 
-	lv_win_set_title(window, title);
+	lv_win_set_title(window, menuTitle);
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_option_clicked_cb)(lv_event_cb_t callback)
