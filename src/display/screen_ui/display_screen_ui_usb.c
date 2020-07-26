@@ -15,7 +15,7 @@ UI_DECLARE_CREATE(UI_NAME)
 
 	static splash_window_desc_t desc = {
 		.title = "USB Connected",
-		.instruction = PRODUCT_NAME_SHORT " is currently connect as a "
+		.instruction = PRODUCT_NAME_SHORT " is currently connected as a "
 		"USB device.\n\n"
 		"Please disconnect the USB cable when you're "
 		"ready to use " PRODUCT_NAME_SHORT " again!",
