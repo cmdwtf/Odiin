@@ -33,13 +33,6 @@ namespace Display
 
 	bool Screen::initialized = false;
 
-	// #todo move this to app
-	static void UIBootTimeoutFinished(lv_task_t* task)
-	{
-		UI_CREATE(nfct_active);
-		UI_ACTIVATE(nfct_active, NULL);
-	}
-
 	Screen::Screen(Input::Keypad* _keypad)
 	{
 		if (initialized)
@@ -87,12 +80,7 @@ namespace Display
 		NRF_LOG_INFO("Starting gfx timer...");
 		uint32_t ticks = APP_TIMER_TICKS(GraphicsTickMs);
 		timerResult = app_timer_start(display_screen_tick_timer, ticks, this);
-        APP_ERROR_CHECK(timerResult);
-
-		NRF_LOG_INFO("Gfx setting boot screen...");
-		UI_CREATE(boot);
-		UI_ACTIVATE(boot, keypad->GetInputGroup());
-		UI_FUNCTION(boot, set_timeout)(UIBootTimeoutFinished, 2000);
+		APP_ERROR_CHECK(timerResult);
 
 		NRF_LOG_INFO("Gfx ready!");
 

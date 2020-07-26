@@ -28,6 +28,8 @@ extern "C" {
 		const lv_img_dsc_t* image;
 		const char* header_button_text;
 		lv_event_cb_t header_button_cb;
+		// variables below are filled by the api
+		lv_obj_t* return_header_button_obj;
 	} splash_window_desc_t;
 
 	lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* desc);

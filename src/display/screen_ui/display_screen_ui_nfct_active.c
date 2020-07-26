@@ -6,6 +6,7 @@
 
 static lv_obj_t* screen = NULL;
 static lv_event_cb_t cancel_callback = NULL;
+static lv_obj_t* cancel_button = NULL;
 
 static void nfct_cancel_pressed(lv_obj_t* obj, lv_event_t e)
 {
@@ -28,7 +29,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	static splash_window_desc_t desc = {
 		.title = "NFC Tag Active",
 		.instruction = PRODUCT_NAME_SHORT " is currently emulating the "
-		"NFC Tag you chose!.\n\n"
+		"NFC Tag you chose!\n\n"
 		"Place " PRODUCT_NAME_SHORT " close to the reader, or press "
 		"the X to exit!",
 		.icon = NULL,
@@ -39,13 +40,17 @@ UI_DECLARE_CREATE(UI_NAME)
 
 	screen = display_screen_ui_create_splash_window_screen(&desc);
 
+	cancel_button = desc.return_header_button_obj;
+
 	return screen;
 }
 
 UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(screen);
-	// this screen has no intractable parts, no groups to set.
+	lv_group_remove_all_objs(group);
+	lv_group_add_obj(group, cancel_button);
+	lv_group_focus_obj(cancel_button);
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_cancel_callback)(lv_event_cb_t callback)

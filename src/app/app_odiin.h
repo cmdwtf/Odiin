@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 
 #include "usb/usb_msc.h"
@@ -16,6 +17,7 @@ namespace App
 	public:
 		static Odiin* GetInstance();
 		static Files::SdCard& GetSdCard();
+
 		~Odiin();
 		void Update();
 
@@ -35,6 +37,7 @@ namespace App
 		void InitializeInput();
 		void InitializeScreen();
 		void InitializeNfcTag();
+		void StartApplication();
 
 		Usb::MassStorageClass* usbMassStorageClass;
 		Files::SdCard* sdCard;

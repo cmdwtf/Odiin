@@ -11,6 +11,8 @@
 #include "usb/usb.h"
 #include "global/global_data.h"
 
+#include "fsm/app_odiin_fsm.h"
+
 namespace App
 {
 	//////////////////////////////////////////////////////////////////////////
@@ -85,7 +87,10 @@ namespace App
 		InitializeScreen();
 		InitializeNfcTag();
 
-		NRF_LOG_INFO("Odiin initialization complete. Ready.");
+		NRF_LOG_INFO("Odiin initialization complete. Starting application.");
+
+		StartApplication();
+
 		NRF_LOG_RAW_INFO("=====================================\n");
 	}
 
@@ -155,6 +160,7 @@ namespace App
 	{
 		static Input::Keypad kp;
 		keypad = &kp;
+		Fsm::OdiinState::Keypad = keypad;
 	}
 
 	void Odiin::InitializeScreen()
@@ -169,6 +175,15 @@ namespace App
 		nfcTagEmulator = &tagEmu;
 
 		nfcTagEmulator->Initialize();
+	}
+
+	void Odiin::StartApplication()
+	{
+		// and then...
+		// let's get down to business!
+		// to defeat
+		// the punssss.
+		Fsm::OdiinState::start();
 	}
 
 	namespace

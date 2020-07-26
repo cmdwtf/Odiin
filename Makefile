@@ -23,6 +23,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
+  $(wildcard $(SOURCE_DIR)/app/fsm/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/fonts/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/images/*.c*) \
@@ -192,6 +193,17 @@ SRC_FILES += \
 INC_FOLDERS += \
    $(LVGL_BASE_DIR) \
    $(LVGL_DIR) \
+
+########################################################
+## Vendor: TinyFSM
+########################################################
+
+TFSM_DIR := $(VENDOR_ROOT)/TinyFSM/include
+
+# No source files, header only library.
+
+INC_FOLDERS += \
+   $(TFSM_DIR) \
 
 ########################################################
 ## Other Vendor Files

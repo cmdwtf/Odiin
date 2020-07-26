@@ -79,6 +79,8 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 		{
 			lv_obj_set_event_cb(btn, display_screen_ui_event_noop);
 		}
+
+		desc->return_header_button_obj = btn;
 	}
 
 	// main content

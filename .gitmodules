@@ -10,3 +10,6 @@
 [submodule "lvgl"]
 	path = vendor/lvgl/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "TinyFSM"]
+	path = .\\vendor\\TinyFSM
+	url = https://github.com/digint/tinyfsm.git
