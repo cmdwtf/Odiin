@@ -42,21 +42,22 @@ namespace Files
 		inline const char* GetDriveLabel() { return driveLabel; }
 		inline uint32_t GetDriveSerial() { return driveSerial; }
 
-		virtual void OnUsbEvent(app_usbd_event_type_t event) override;
+		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
+		virtual void UsbDidDisable(app_usbd_event_type_t event) override;
 
 		inline bool IsInitialized() { return initialized; }
 		inline bool IsMounted() { return mounted; }
 
 	private:
 		FATFS fileSystem; // #todo: abstract out the fs.
-		static bool registered;
 		uint8_t diskIndex = -1;
+		bool registered = false;
 		bool initialized = false;
 		bool mounted = false;
 		bool autoRemountAfterUsbDisconnect = true;
 		uint32_t driveSerial = 0;
 		char driveLabel[16] = { 0 };
-		void RegisterBlockDevice();
+		bool RegisterBlockDevice();
 		bool Initialize();
 		bool Uninitialize();
 	};

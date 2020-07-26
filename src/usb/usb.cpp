@@ -162,6 +162,14 @@ namespace Usb
 		{
 			void UsbdEventHandler(app_usbd_event_type_t event)
 			{
+#define USB_RAISE_LISTENER_EVENT(eventFn) \
+	if (eventListeners.size() > 0) { \
+		auto it = eventListeners.begin(); \
+		while (it != eventListeners.end()) { \
+			(*it++)->eventFn(event); } }
+
+				//USB_RAISE_LISTENER_EVENT(PreUsbEvent);
+
 				switch (event)
 				{
 					case APP_USBD_EVT_DRV_SUSPEND:
@@ -173,12 +181,14 @@ namespace Usb
 					case APP_USBD_EVT_STOPPED:
 						NRF_LOG_INFO("USB stopped, disabling driver.");
 						app_usbd_disable();
+						USB_RAISE_LISTENER_EVENT(UsbDidDisable);
 						break;
 					case APP_USBD_EVT_POWER_DETECTED:
 						NRF_LOG_INFO("USB power detected, enabling driver.");
 
 						if (!nrf_drv_usbd_is_enabled())
 						{
+							USB_RAISE_LISTENER_EVENT(UsbWillEnable);
 							app_usbd_enable();
 						}
 						break;
@@ -196,14 +206,7 @@ namespace Usb
 						break;
 				}
 
-				if (eventListeners.size() > 0)
-				{
-					auto it = eventListeners.begin();
-					while (it != eventListeners.end())
-					{
-						(*it++)->OnUsbEvent(event);
-					}
-				}
+				//USB_RAISE_LISTENER_EVENT(PostUsbEvent);
 			}
 		}
 

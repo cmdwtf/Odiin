@@ -19,11 +19,9 @@ namespace Files
 		const nrf_block_dev_sdc_t* sdCardBlockDevice = nullptr;
 	}
 
-	bool SdCard::registered = false;
-
 	SdCard::SdCard()
 	{
-		RegisterBlockDevice();
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -259,28 +257,32 @@ namespace Files
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Operations
 
-	void SdCard::OnUsbEvent(app_usbd_event_type_t event)
+	// USB Handlers
+
+	void SdCard::UsbDidDisable(app_usbd_event_type_t event)
 	{
-		switch (event)
+		if (mounted == false && autoRemountAfterUsbDisconnect)
 		{
-			case APP_USBD_EVT_STOPPED:
-				if (mounted == false && autoRemountAfterUsbDisconnect)
-				{
-					NRF_LOG_INFO("USB stopped, automatically remounting SDC.");
-					Initialize();
-					Mount();
-				}
-				break;
-			case APP_USBD_EVT_POWER_DETECTED:
-				if (initialized)
-				{
-					NRF_LOG_INFO("USB got power, uninitializing SDC to give it priority.");
-					Uninitialize();
-				}
-				break;
-			default:
-				// everything else is an uninteresting event.
-				break;
+			NRF_LOG_INFO("USB stopped, automatically remounting SDC.");
+			Initialize();
+			Mount();
+		}
+		else
+		{
+			NRF_LOG_INFO("USB stopped, but we don't care about remounting.");
+		}
+	}
+
+	void SdCard::UsbWillEnable(app_usbd_event_type_t event)
+	{
+		if (initialized)
+		{
+			NRF_LOG_INFO("USB got power, uninitializing SDC to give it priority.");
+			Uninitialize();
+		}
+		else
+		{
+			NRF_LOG_INFO("USB got power, but we were not initialized, ignoring.");
 		}
 	}
 
@@ -291,10 +293,13 @@ namespace Files
 			return true;
 		}
 
-		if (registered == false)
+		// zero filesystem
+		memset(&fileSystem, 0, sizeof(FATFS));
+
+		if (registered == false && RegisterBlockDevice() == false)
 		{
 			// we weren't able to register, can't init.
-			NRF_LOG_ERROR("Cannot initialize SDC, previous registration failed.");
+			NRF_LOG_ERROR("Cannot initialize SDC, registration failed.");
 			return false;
 		}
 
@@ -307,14 +312,14 @@ namespace Files
 
 		if (status == STA_NOINIT)
 		{
-			NRF_LOG_ERROR("Failed to initialize SDC %d with error: %d.", diskIndex, status);
+			NRF_LOG_ERROR("Failed to initialize SDC (disk %d) with error: %d.", diskIndex, status);
 			return false;
 		}
 
 		uint32_t blocks_per_mb = (1024uL * 1024uL) / sdCardBlockDevice->block_dev.p_ops->geometry(&sdCardBlockDevice->block_dev)->blk_size;
 		uint32_t capacity = sdCardBlockDevice->block_dev.p_ops->geometry(&sdCardBlockDevice->block_dev)->blk_count / blocks_per_mb;
 
-		NRF_LOG_INFO("Initialized SDC with a capacity of %d MB", capacity);
+		NRF_LOG_INFO("Initialized SDC (disk %d) with a capacity of %d MB", diskIndex, capacity);
 
 		initialized = true;
 
@@ -346,17 +351,19 @@ namespace Files
 
 		diskIndex = -1;
 		initialized = false;
+		registered = false;
+		memset(&fileSystem, 0, sizeof(FATFS));
 
 		NRF_LOG_INFO("Uninitialized.");
 
 		return true;
 	}
 
-	void SdCard::RegisterBlockDevice()
+	bool SdCard::RegisterBlockDevice()
 	{
 		if (registered)
 		{
-			return;
+			return true;
 		}
 
 		NRF_LOG_INFO("Registering SDC Block Device...");
@@ -367,18 +374,19 @@ namespace Files
 		{
 			// uh oh.
 			NRF_LOG_ERROR("Failed to get valid SDC block device. Cannot register drive.");
-			return;
+			return false;
 		}
 
-		static diskio_blkdev_t drives[] =
-			{
-				DISKIO_BLOCKDEV_CONFIG(NRF_BLOCKDEV_BASE_ADDR(*sdCardBlockDevice, block_dev), NULL)
-			};
+		static diskio_blkdev_t drives[] = {
+			DISKIO_BLOCKDEV_CONFIG(NRF_BLOCKDEV_BASE_ADDR(*sdCardBlockDevice, block_dev), NULL)
+		};
 
 		diskio_blockdev_register(drives, ARRAY_SIZE(drives));
 
 		NRF_LOG_INFO("Registered.");
 
 		registered = true;
+
+		return true;
 	}
 } // namespace Files

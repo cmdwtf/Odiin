@@ -32,6 +32,6 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
 	{
 	NRF_LOG_ERROR("Received a fault! id: 0x%08x, pc: 0x%08x, info: 0x%08x", id, pc, info);
 	error_info_t errInfo = *((error_info_t*)info);
-	NRF_LOG_ERROR("Error Code: 0x%04X - %s:%d", errInfo.err_code, errInfo.p_file_name, errInfo.line_num);
+	NRF_LOG_ERROR("Error Code: 0x%08X - %s:%d", errInfo.err_code, errInfo.p_file_name, errInfo.line_num);
 	__PANIC();
 }

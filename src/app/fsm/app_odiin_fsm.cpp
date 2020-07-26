@@ -5,8 +5,8 @@
 
 #include "nrf_log.h"
 
-#define LOG_STATE_ENTER(state) NRF_LOG_INFO("=> Enter: %s", #state)
-#define LOG_STATE_EXIT(state) NRF_LOG_INFO("Exit: %s =>", #state)
+#define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
+#define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
 
 namespace App
 {
