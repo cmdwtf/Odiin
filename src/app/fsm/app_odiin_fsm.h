@@ -27,6 +27,13 @@ namespace App::Fsm
 		menu_option_desc_t* Option;
 	};
 
+	struct GoHomeEvent				: ScreenChangeEvent { };
+
+	struct ActivatePayloadEvent		: ScreenChangeEvent
+	{
+		// todo: file path
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 	// State Machine
 	class OdiinState
@@ -39,6 +46,7 @@ namespace App::Fsm
 		virtual void react(BootScreenTimeoutEvent const &);
 		virtual void react(MenuOptionPressedEvent const &);
 		virtual void react(UsbConnectionEvent const &);
+		virtual void react(GoHomeEvent const &);
 
 		virtual void entry();
 		virtual void exit();

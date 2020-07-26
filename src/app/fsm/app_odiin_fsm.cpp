@@ -1,5 +1,9 @@
 #include "app_odiin_fsm.h"
 
+#include <deque>
+#include <string>
+#include <sstream>
+
 #include "nrf_assert.h"
 #include "nrf_log.h"
 
@@ -96,6 +100,11 @@ namespace App::Fsm
 			// #todo: use stored state to pop back to instead of hardcoding main menu.
 			transit<MenuMain>();
 		}
+	}
+
+	void OdiinState::react(GoHomeEvent const &)
+	{
+		transit<MenuMain>();
 	}
 
 	void OdiinState::entry() { }

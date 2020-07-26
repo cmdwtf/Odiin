@@ -2,6 +2,9 @@
 
 // these files aren't included here in the actual build.
 // it just makes the vscode linter a little happier.
+#include <stack>
+#include <string>
+
 #include "app_odiin_fsm.h"
 
 #include "nrf_assert.h"
@@ -137,13 +140,21 @@ class MenuMain
 };
 
 class MenuFiles
-	: public MenuBase<64, 32>
+	: public MenuBase<64, 64>
 {
 	static const uint8_t FLAG_DEFAULT_SELECT_FILE = 0;
 	static const uint8_t FLAG_DEFAULT_SELECT_DIR = 1;
 	static const uint8_t FLAG_DIR_UP = 2;
 	static const uint8_t FLAG_PAGE_NEXT = 3;
 	static const uint8_t FLAG_PAGE_PREV = 4;
+	static const uint8_t FLAG_GO_HOME = 5;
+
+	size_t paginationOffset = 0;
+
+	// okay I didn't want to use std::string, but
+	// this is just easier for now.
+	std::deque<std::string> activePath;
+	bool isRoot = false;
 
 	size_t AppendDirectoryMenu(const char *path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength, size_t directoryOffset)
 	{
@@ -209,45 +220,111 @@ class MenuFiles
 		return outputIndex;
 	}
 
-	size_t AppendDirectoryTopper(const char* path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
+	size_t AppendDirectoryTopper(bool isRoot, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
 	{
 		ASSERT(outputLength >= 1);
 
 		size_t index = 0;
 
-		// todo: show "main menu" or the sort if we are at root level
+		if (isRoot)
+		{
+			output[index].option = "<Main Menu>";
+			output[index].prefix = LV_SYMBOL_HOME;
+			output[index].click_cb = MenuOptionPressedCallback;
+			output[index].user_flags = FLAG_GO_HOME;
+		}
+		else
+		{
+			output[index].option = "..";
+			output[index].prefix = LV_SYMBOL_NEW_LINE;
+			output[index].click_cb = MenuOptionPressedCallback;
+			output[index].user_flags = FLAG_DIR_UP;
+		}
 
-		output[index].option = "..";
-		output[index].prefix = LV_SYMBOL_NEW_LINE;
-		output[index].click_cb = MenuOptionPressedCallback;
-		output[index].user_flags = FLAG_DIR_UP;
 		++index;
+
 
 		// todo: previous page button if offset > 0
 
 		return index;
 	}
 
-	void entry() override
-	{
-		LOG_STATE_ENTER(MenuFiles);
-		const char* path = Files::SdCard::RootDirectory;
+	char PathSeperator = '/';
 
-		size_t topperCount = AppendDirectoryTopper(path,
+	inline std::string StackToPath(std::deque<std::string>& pathStack)
+	{
+		// if we're at the root,
+		// just return that value
+		if (pathStack.size() == 1)
+		{
+			return pathStack[0];
+		}
+
+		std::stringstream oss;
+		size_t pathPartCount = pathStack.size();
+		for (size_t scan = 0; scan < pathPartCount; ++scan)
+		{
+			oss << pathStack[scan];
+
+			// add a seperator if there's more path, and
+			// we don't already end with one.
+			if (scan + 1 < pathPartCount && pathStack[scan].back() != PathSeperator)
+			{
+				oss << PathSeperator;
+			}
+		}
+
+		return oss.str();
+	}
+
+	void UpdateUI()
+	{
+		menuOptionCount = 0;
+
+		size_t topperCount = AppendDirectoryTopper(isRoot,
 			menuOptions, MENU_OPTIONS_LENGTH,
 			menuStrings, MENU_OPTION_STRING_LENGTH);
 
-		size_t fileCount = AppendDirectoryMenu(path,
+		size_t fileCount = AppendDirectoryMenu(StackToPath(activePath).c_str(),
 			menuOptions + topperCount, MENU_OPTIONS_LENGTH - topperCount,
 			menuStrings, MENU_OPTION_STRING_LENGTH,
-			0);
+			paginationOffset);
 
 		menuOptionCount = topperCount + fileCount;
 
 		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
-		UI_FUNCTION(list_menu, set_title)(path);
+		UI_FUNCTION(list_menu, set_title)(StackToPath(activePath).c_str());
+	}
+
+	void PushDirectory(const char* directoryName)
+	{
+		activePath.emplace_back(directoryName);
+		isRoot = activePath.size() == 1;
+		UpdateUI();
+	}
+
+	void PopDirectory()
+	{
+		if (isRoot)
+		{
+			NRF_LOG_WARNING("Tried to PopDirectory() while we are at the root.");
+			return;
+		}
+
+		activePath.pop_back();
+		isRoot = activePath.size() == 1;
+		UpdateUI();
+	}
+
+	void entry() override
+	{
+		LOG_STATE_ENTER(MenuFiles);
+
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
+
+		activePath = { };
+		PushDirectory(Files::SdCard::RootDirectory);
 	}
 
 	void exit() override
@@ -263,16 +340,19 @@ class MenuFiles
 				NRF_LOG_INFO("Select file!");
 				break;
 			case FLAG_DEFAULT_SELECT_DIR:
-				NRF_LOG_INFO("Select directory!");
+				PushDirectory(event.Option->option);
 				break;
 			case FLAG_DIR_UP:
-				NRF_LOG_INFO("Returning to previous directory.");
+				PopDirectory();
 				break;
 			case FLAG_PAGE_NEXT:
 				NRF_LOG_INFO("Pagenation Next");
 				break;
 			case FLAG_PAGE_PREV:
 				NRF_LOG_INFO("Pagenation Previous");
+				break;
+			case FLAG_GO_HOME:
+				App::Odiin::GetInstance()->SendEvent(App::Fsm::GoHomeEvent());
 				break;
 			default:
 				NRF_LOG_WARNING("Unhandled menu option flag. (%d)", event.Option->user_flags);
