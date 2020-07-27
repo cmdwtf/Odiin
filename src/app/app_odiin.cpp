@@ -8,10 +8,10 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#include "usb/usb.h"
+#include "app_settings.h"
 #include "global/global_data.h"
-
 #include "fsm/app_odiin_fsm.h"
+#include "usb/usb.h"
 
 namespace App
 {
@@ -42,9 +42,24 @@ namespace App
 		screen->Update();
 	}
 
-	void Odiin::SetNfcTagPayload(nfc_tag_emulation::Payload* pl)
+	void Odiin::SetNfcTagPayload(const char* filename)
 	{
-		nfcTagEmulator->SetPayload(pl);
+		if (nfcTagEmulator->IsEnabled())
+		{
+			NRF_LOG_ERROR("Cannot set payload while NFCT is enabled!");
+			return;
+		}
+		Files::SdCardFile file;
+		sdCard->FileOpen(file, filename, FA_READ);
+
+		size_t amountRead = 0;
+		if (sdCard->FileRead(file, payload.GetRawTagMemory(), payload.TagMemoryCapacity, &amountRead))
+		{
+			// read successful. load it up and away we go!
+			nfcTagEmulator->SetPayload(&payload);
+			NRF_LOG_INFO("NFCT payload set!");
+			SendEvent(App::Fsm::NfctActivateEvent());
+		}
 	}
 
 	void Odiin::SetNfcTagEnabled(bool enabled)
@@ -58,6 +73,7 @@ namespace App
 			nfcTagEmulator->DisableTag();
 		}
 	}
+
 	//////////////////////////////////////////////////////////////////////////
 	// USB Listener interface
 	void Odiin::UsbWillEnable(app_usbd_event_type_t event)
@@ -190,10 +206,12 @@ namespace App
 
 	void Odiin::InitializeNfcTag()
 	{
-		NfcTagEmulator tagEmu;
+		static NfcTagEmulator tagEmu;
 		nfcTagEmulator = &tagEmu;
 
 		nfcTagEmulator->Initialize();
+		nfcTagEmulator->SetPasswordAuthenticationAckResponse(
+			SETTINGS.ntag_215_default_password_authentication_acknowledgement);
 	}
 
 	void Odiin::StartApplication()

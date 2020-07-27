@@ -27,7 +27,7 @@ namespace App
     	template<typename E>
 		inline void SendEvent(E const& ev) { StateMachine::dispatch(ev); }
 
-		void SetNfcTagPayload(nfc_tag_emulation::Payload* pl);
+		void SetNfcTagPayload(const char* filename);
 		void SetNfcTagEnabled(bool enabled);
 
 		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
@@ -53,6 +53,10 @@ namespace App
 		Input::Keypad* keypad;
 		Display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
+
+		// #todo: this is not where this should live.
+		// but it will do as a kludge for now.
+		nfc_tag_emulation::nxp_ntag21x::Ntag215Payload payload;
 	};
 } // namespace App
 

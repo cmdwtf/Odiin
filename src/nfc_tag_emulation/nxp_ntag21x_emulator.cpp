@@ -27,6 +27,12 @@ namespace nfc_tag_emulation::nxp_ntag21x
 		return true;
 	}
 
+	// phew that's a function name.
+	void Ntag21xEmulator::SetPasswordAuthenticationAckResponse(uint8_t newAck[password::ResponseLength])
+	{
+		passwordAuthenticationAck.SetData(newAck, password::ResponseLength);
+	}
+
 	void Ntag21xEmulator::OnFieldLost()
 	{
 		authState = false;
@@ -61,7 +67,7 @@ namespace nfc_tag_emulation::nxp_ntag21x
 			case Commands::GET_VERSION:
 			{
 				NRF_LOG_DEBUG("[CMD.NTAG21X] GET_VERSION");
-				TxRawPayload(defaultVersionPayload);
+				TxRawPayload(versionPayload);
 				return;
 			}
 
@@ -126,7 +132,7 @@ namespace nfc_tag_emulation::nxp_ntag21x
 				// for now we'll just accept whatever password they gave us.
 				authState = true;
 
-				TxRawPayload(defaultPasswordAuthenticationAck);
+				TxRawPayload(passwordAuthenticationAck);
 				return;
 			}
 
@@ -137,7 +143,7 @@ namespace nfc_tag_emulation::nxp_ntag21x
 				// the other byte with READ_SIG is just 0, as it's RFU, ignore it. [ref:NTAG 10.8]
 
 				// give them our signature
-				TxRawPayload(defaultDeviceSignaturePayload);
+				TxRawPayload(deviceSignaturePayload);
 				return;
 			}
 

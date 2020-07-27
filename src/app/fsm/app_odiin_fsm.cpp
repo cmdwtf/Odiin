@@ -13,6 +13,7 @@
 #include "files/sdcard.h"
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
+#include "nfc_tag_emulation/nxp_ntag21x_payloads.hpp"
 
 namespace App::Fsm
 {
@@ -44,9 +45,8 @@ namespace App::Fsm
 			UI_CREATE(boot);
 			UI_ACTIVATE(boot, Keypad->GetInputGroup());
 			UI_FUNCTION(boot, set_timeout)([](lv_task_t*){
-				BootScreenTimeoutEvent timeout;
-				dispatch(timeout);
-			}, BOOT_SCREEN_TIMEOUT_MS);
+				dispatch(BootScreenTimeoutEvent());
+			}, SETTINGS.boot_screen_timeout_ms);
 		}
 
 		void react(BootScreenTimeoutEvent const &) override
@@ -65,9 +65,24 @@ namespace App::Fsm
 	{
 		void entry() override
 		{
+			App::Odiin::GetInstance()->SetNfcTagEnabled(true);
 			LOG_STATE_ENTER(NfctActive);
 			UI_CREATE(nfct_active);
 			UI_ACTIVATE(nfct_active, Keypad->GetInputGroup());
+			UI_FUNCTION(nfct_active, set_cancel_callback)([](lv_obj_t*, lv_event_t) {
+				dispatch(NfctDeactivateEvent());
+			});
+		}
+
+		void exit() override
+		{
+			App::Odiin::GetInstance()->SetNfcTagEnabled(false);
+			LOG_STATE_EXIT(NfctActive);
+		}
+
+		void react(NfctDeactivateEvent const &) override
+		{
+			transit<MenuFiles>();
 		}
 	};
 
@@ -79,6 +94,11 @@ namespace App::Fsm
 			LOG_STATE_ENTER(UsbConnected);
 			UI_CREATE(usb);
 			UI_ACTIVATE(usb, Keypad->GetInputGroup());
+		}
+
+		void exit() override
+		{
+			LOG_STATE_EXIT(UsbConnected);
 		}
 	};
 	//////////////////////////////////////////////////////////////////////////
@@ -106,6 +126,13 @@ namespace App::Fsm
 	{
 		transit<MenuMain>();
 	}
+
+	void OdiinState::react(NfctActivateEvent const &)
+	{
+		transit<NfctActive>();
+	}
+
+	void OdiinState::react(NfctDeactivateEvent const &) { }
 
 	void OdiinState::entry() { }
 	void OdiinState::exit() { }

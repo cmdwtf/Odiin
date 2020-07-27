@@ -2,8 +2,9 @@
 
 // these files aren't included here in the actual build.
 // it just makes the vscode linter a little happier.
-#include <stack>
+#include <deque>
 #include <string>
+#include <sstream>
 
 #include "app_odiin_fsm.h"
 
@@ -117,12 +118,14 @@ class MenuMain
 	void entry() override
 	{
 		LOG_STATE_ENTER(MenuMain);
-		menuOptionCount = CreateOptions(menuOptions, MENU_OPTIONS_LENGTH,
-			menuStrings, MENU_OPTION_STRING_LENGTH);
-		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
-		UI_FUNCTION(list_menu, set_title)(PRODUCT_NAME_LONG);
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
+
+		menuOptionCount = CreateOptions(menuOptions, MENU_OPTIONS_LENGTH,
+			menuStrings, MENU_OPTION_STRING_LENGTH);
+
+		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
+		UI_FUNCTION(list_menu, set_title)(PRODUCT_NAME_LONG);
 	}
 
 	void exit() override
@@ -140,7 +143,7 @@ class MenuMain
 };
 
 class MenuFiles
-	: public MenuBase<64, 64>
+	: public MenuBase<32, 64>
 {
 	static const uint8_t FLAG_DEFAULT_SELECT_FILE = 0;
 	static const uint8_t FLAG_DEFAULT_SELECT_DIR = 1;
@@ -154,6 +157,8 @@ class MenuFiles
 	// okay I didn't want to use std::string, but
 	// this is just easier for now.
 	std::deque<std::string> activePath;
+	size_t activePathItemCount = 0;
+	size_t displayedFileCount = 0;
 	bool isRoot = false;
 
 	size_t AppendDirectoryMenu(const char *path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength, size_t directoryOffset)
@@ -220,9 +225,40 @@ class MenuFiles
 		return outputIndex;
 	}
 
+	size_t CountDirectoryItems(const char* path)
+	{
+		ASSERT(path != nullptr);
+
+		Files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		Files::SdCardDirectory dir;
+
+		size_t count = 0;
+
+		if (sd.DirectoryOpen(dir, path))
+		{
+			Files::SdCardFileInfo info;
+			while (sd.DirectoryRead(dir, info))
+			{
+				bool hidden = (info.fattrib & AM_HID);
+				bool system = (info.fattrib & AM_SYS);
+
+				if (hidden || system)
+				{
+					// no interest in hidden or system files
+					continue;
+				}
+
+				++count;
+			}
+		}
+
+		return count;
+	}
+
 	size_t AppendDirectoryTopper(bool isRoot, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
 	{
-		ASSERT(outputLength >= 1);
+		const size_t maxUpperPagecount = 3;
+		ASSERT(outputLength >= maxUpperPagecount);
 
 		size_t index = 0;
 
@@ -243,13 +279,28 @@ class MenuFiles
 
 		++index;
 
+		if (paginationOffset > 0)
+		{
+			// we have paged in, show 'previous page' button
+			output[index].option = "<Previous Page>";
+			output[index].prefix = LV_SYMBOL_PREV;
+			output[index].click_cb = MenuOptionPressedCallback;
+			output[index].user_flags = FLAG_PAGE_PREV;
+			++index;
+		}
 
-		// todo: previous page button if offset > 0
+		if (activePathItemCount - paginationOffset > (MENU_OPTIONS_LENGTH - maxUpperPagecount))
+		{
+			// check to see if we have more items than we can display
+			output[index].option = "<Next Page>";
+			output[index].prefix = LV_SYMBOL_NEXT;
+			output[index].click_cb = MenuOptionPressedCallback;
+			output[index].user_flags = FLAG_PAGE_NEXT;
+			++index;
+		}
 
 		return index;
 	}
-
-	char PathSeperator = '/';
 
 	inline std::string StackToPath(std::deque<std::string>& pathStack)
 	{
@@ -268,9 +319,9 @@ class MenuFiles
 
 			// add a seperator if there's more path, and
 			// we don't already end with one.
-			if (scan + 1 < pathPartCount && pathStack[scan].back() != PathSeperator)
+			if (scan + 1 < pathPartCount && pathStack[scan].back() != SETTINGS.path_seperator)
 			{
-				oss << PathSeperator;
+				oss << SETTINGS.path_seperator;
 			}
 		}
 
@@ -285,21 +336,38 @@ class MenuFiles
 			menuOptions, MENU_OPTIONS_LENGTH,
 			menuStrings, MENU_OPTION_STRING_LENGTH);
 
-		size_t fileCount = AppendDirectoryMenu(StackToPath(activePath).c_str(),
+		displayedFileCount = AppendDirectoryMenu(StackToPath(activePath).c_str(),
 			menuOptions + topperCount, MENU_OPTIONS_LENGTH - topperCount,
 			menuStrings, MENU_OPTION_STRING_LENGTH,
 			paginationOffset);
 
-		menuOptionCount = topperCount + fileCount;
+		menuOptionCount = topperCount + displayedFileCount;
 
 		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
 		UI_FUNCTION(list_menu, set_title)(StackToPath(activePath).c_str());
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Menu Option Handlers
+
+	void SelectFile(const char* filename)
+	{
+		// build our path
+		activePath.emplace_back(filename);
+
+		// set the payload
+		App::Odiin::GetInstance()->SetNfcTagPayload(StackToPath(activePath).c_str());
+
+		// we can put active path back now that the application has acted we are all done!
+		activePath.pop_back();
+	}
+
 	void PushDirectory(const char* directoryName)
 	{
+		paginationOffset = 0;
 		activePath.emplace_back(directoryName);
 		isRoot = activePath.size() == 1;
+		activePathItemCount = CountDirectoryItems(StackToPath(activePath).c_str());
 		UpdateUI();
 	}
 
@@ -311,10 +379,27 @@ class MenuFiles
 			return;
 		}
 
+		paginationOffset = 0;
 		activePath.pop_back();
 		isRoot = activePath.size() == 1;
+		activePathItemCount = CountDirectoryItems(StackToPath(activePath).c_str());
 		UpdateUI();
 	}
+
+	void PageChange(int8_t deltaPages)
+	{
+		paginationOffset += displayedFileCount * deltaPages;
+
+		if (paginationOffset > activePathItemCount)
+		{
+			paginationOffset = 0;
+		}
+
+		UpdateUI();
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// State events
 
 	void entry() override
 	{
@@ -323,8 +408,14 @@ class MenuFiles
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
 
-		activePath = { };
-		PushDirectory(Files::SdCard::RootDirectory);
+		if (activePath.size() == 0)
+		{
+			PushDirectory(Files::SdCard::RootDirectory);
+		}
+		else
+		{
+			UpdateUI();
+		}
 	}
 
 	void exit() override
@@ -337,7 +428,7 @@ class MenuFiles
 		switch (event.Option->user_flags)
 		{
 			case FLAG_DEFAULT_SELECT_FILE:
-				NRF_LOG_INFO("Select file!");
+				SelectFile(event.Option->option);
 				break;
 			case FLAG_DEFAULT_SELECT_DIR:
 				PushDirectory(event.Option->option);
@@ -346,10 +437,10 @@ class MenuFiles
 				PopDirectory();
 				break;
 			case FLAG_PAGE_NEXT:
-				NRF_LOG_INFO("Pagenation Next");
+				PageChange(1);
 				break;
 			case FLAG_PAGE_PREV:
-				NRF_LOG_INFO("Pagenation Previous");
+				PageChange(-1);
 				break;
 			case FLAG_GO_HOME:
 				App::Odiin::GetInstance()->SendEvent(App::Fsm::GoHomeEvent());

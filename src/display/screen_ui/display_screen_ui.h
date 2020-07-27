@@ -21,6 +21,7 @@ extern "C" {
 	void UI_DECLARE_FUNCTION(list_menu, set_option_selected_cb)(lv_event_cb_t callback);
 
 	UI_DECLARE(nfct_active);
+	void UI_DECLARE_FUNCTION(nfct_active, set_cancel_callback)(lv_event_cb_t callback);
 
 #ifdef __cplusplus
 } /* extern "C" */

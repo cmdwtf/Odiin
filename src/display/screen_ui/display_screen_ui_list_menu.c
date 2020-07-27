@@ -23,13 +23,14 @@ UI_DECLARE_CREATE(UI_NAME)
 
 	screen = lv_obj_create(NULL, NULL);
 
-	// main content
+	// window
 	window = lv_win_create(screen, NULL);
+
+	// header
 	lv_win_set_title(window, menuTitle);
 
-    lv_page_set_scrl_layout(lv_win_get_content(window), LV_LAYOUT_PRETTY_MID);
-
 	// main content
+    lv_page_set_scrl_layout(lv_win_get_content(window), LV_LAYOUT_PRETTY_MID);
 	display_screen_ui_list_menu_refresh_options();
 
 	return screen;

@@ -12,7 +12,7 @@ namespace nfc_tag_emulation::nxp_ntag21x
 		virtual bool GetUniqueIdBytes(uint8_t* idOutput, size_t* idOutputLength) const override;
 	};
 
-	template<int capacity>
+	template<size_t capacity>
 	class Ntag21XContainedPayload : public Ntag21XPayload
 	{
 		// if we are containing the whole payload, we need to adhere to one of the standard capacities
@@ -21,10 +21,14 @@ namespace nfc_tag_emulation::nxp_ntag21x
 						capacity == capacities::ntag216::TotalCapacity);
 	public:
 
-		Ntag21XContainedPayload() : Ntag21XContainedPayload(tagMemory, capacity)
+		Ntag21XContainedPayload() : Ntag21XPayload(tagMemory, capacity)
 		{
 
 		}
+
+		static constexpr size_t TagMemoryCapacity = capacity;
+
+		uint8_t* GetRawTagMemory() { return tagMemory; }
 
 	protected:
 		uint8_t tagMemory[capacity] = { 0 };

@@ -133,12 +133,17 @@ namespace nfc_tag_emulation::nxp_ntag21x
 				0xD3, 0xC0, 0xD3, 0x00, 0xC0, 0x01, 0xBA, 0xBE,
 		};
 
-		// #cleanup: find a better home for this that makes more sense.
-		constexpr uint8_t GenericPasswordAck[2] = {
+	} // namespace signature
+
+	namespace password
+	{
+		// [ref:NTAG 10.7]
+		constexpr size_t ResponseLength = 2;
+
+		constexpr uint8_t GenericPasswordAck[ResponseLength] = {
 			0x00, 0x00,
 		};
-
-	} // namespace signature
+	}
 
 	// [ref:NTAG 2.1]
 	// #cleanup: this could probably be organized better/elsewhere

@@ -28,11 +28,8 @@ namespace App::Fsm
 	};
 
 	struct GoHomeEvent				: ScreenChangeEvent { };
-
-	struct ActivatePayloadEvent		: ScreenChangeEvent
-	{
-		// todo: file path
-	};
+	struct NfctActivateEvent		: ScreenChangeEvent { };
+	struct NfctDeactivateEvent		: ScreenChangeEvent { };
 
 	//////////////////////////////////////////////////////////////////////////
 	// State Machine
@@ -47,6 +44,8 @@ namespace App::Fsm
 		virtual void react(MenuOptionPressedEvent const &);
 		virtual void react(UsbConnectionEvent const &);
 		virtual void react(GoHomeEvent const &);
+		virtual void react(NfctActivateEvent const &);
+		virtual void react(NfctDeactivateEvent const &);
 
 		virtual void entry();
 		virtual void exit();

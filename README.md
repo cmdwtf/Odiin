@@ -23,6 +23,11 @@ The order in which I'm adding features is going to be mostly random depending on
 🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
 \* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader). Currently, the NFCT hardware [isn't working](https://github.com/adafruit/Adafruit_nRF52_Bootloader/issues/150) when booting through the bootloader, so I'm skipping it for now until I figure that bug out. Once I do, it'll be uploaded as well, as either part of this project or a separate project.
 
+## What's it look like in action?
+
+Okay, this project is still in the very early stages, but if you want to get a quick look of it working, check out this [video I put on YouTube](https://youtu.be/bRNZewXajJM)!
+
+[![Sometimes it takes a little lightning to make magic.](http://img.youtube.com/vi/bRNZewXajJM/0.jpg)](http://www.youtube.com/watch?v=bRNZewXajJM "Odiin in very rough action!")
 
 ## Current Hardware
 
