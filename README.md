@@ -20,7 +20,7 @@ The order in which I'm adding features is going to be mostly random depending on
 |NFC Forum Type 1/3/4/5 Tag Emulation|🎄|*Maybe!*|
 |Bootloader for easy USB Firmware Updates|✔*|See note below.|
 
-🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
+🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.  
 \* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader). Currently, the NFCT hardware [isn't working](https://github.com/adafruit/Adafruit_nRF52_Bootloader/issues/150) when booting through the bootloader, so I'm skipping it for now until I figure that bug out. Once I do, it'll be uploaded as well, as either part of this project or a separate project.  
 \*\* Right now it just loads up tags of a specific size. There will be issues if the file isn't the expected size, or the expected format. It's on the list to handle this a little better, there's just a few laundry list items that are above it.
 
