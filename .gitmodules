@@ -11,5 +11,8 @@
 	path = vendor/lvgl/lvgl
 	url = https://github.com/lvgl/lvgl.git
 [submodule "TinyFSM"]
-	path = .\\vendor\\TinyFSM
+	path = vendor/TinyFSM
 	url = https://github.com/digint/tinyfsm.git
+[submodule "Biifrost"]
+	path = hardware/Biifrost
+	url = https://github.com/nitz/Biifrost.git
