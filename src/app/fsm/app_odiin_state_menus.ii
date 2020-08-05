@@ -339,7 +339,7 @@ class MenuFiles
 	{
 		paginationOffset = 0;
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, directoryName, activePath, PATH_SIZE_MAX));
-		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) != 0);
+		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) == 0);
 		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
@@ -354,7 +354,7 @@ class MenuFiles
 
 		paginationOffset = 0;
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, files::SdCard::RelativeParentDirectory, activePath, PATH_SIZE_MAX));
-		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) != 0);
+		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) == 0);
 		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
