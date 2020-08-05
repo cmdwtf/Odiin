@@ -67,6 +67,33 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/block_dev/sdc/nrf_block_dev_sdc.c \
   $(SDK_ROOT)/components/libraries/bsp/bsp.c \
   $(SDK_ROOT)/components/libraries/button/app_button.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_aes.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_aes_aead.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_chacha_poly_aead.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecc.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdh.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdsa.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_eddsa.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hash.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hmac.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_init.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_mutex.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_rng.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_shared.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aead.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aes.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aes_shared.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecc.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecdh.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecdsa.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_eddsa.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_error.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hash.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hkdf.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hmac.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_init.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_rng.c \
+  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_shared.c \
   $(SDK_ROOT)/components/libraries/fifo/app_fifo.c \
   $(SDK_ROOT)/components/libraries/gfx/nrf_gfx.c \
   $(SDK_ROOT)/components/libraries/hardfault/hardfault_implementation.c \
@@ -137,6 +164,16 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/block_dev/sdc \
   $(SDK_ROOT)/components/libraries/bsp \
   $(SDK_ROOT)/components/libraries/button \
+  $(SDK_ROOT)/components/libraries/crypto \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310 \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cc310_bl \
+  $(SDK_ROOT)/components/libraries/crypto/backend/cifra \
+  $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls \
+  $(SDK_ROOT)/components/libraries/crypto/backend/micro_ecc \
+  $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw \
+  $(SDK_ROOT)/components/libraries/crypto/backend/nrf_sw \
+  $(SDK_ROOT)/components/libraries/crypto/backend/oberon \
+  $(SDK_ROOT)/components/libraries/crypto/backend/optiga \
   $(SDK_ROOT)/components/libraries/delay \
   $(SDK_ROOT)/components/libraries/experimental_section_vars \
   $(SDK_ROOT)/components/libraries/fifo \
@@ -151,6 +188,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/ringbuf \
   $(SDK_ROOT)/components/libraries/sdcard \
   $(SDK_ROOT)/components/libraries/sortlist \
+  $(SDK_ROOT)/components/libraries/stack_info \
   $(SDK_ROOT)/components/libraries/strerror \
   $(SDK_ROOT)/components/libraries/timer \
   $(SDK_ROOT)/components/libraries/uart \
@@ -164,6 +202,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/nfc/t2t_lib \
   $(SDK_ROOT)/components/toolchain/cmsis/include \
   $(SDK_ROOT)/external/fprintf \
+  $(SDK_ROOT)/external/nrf_cc310/include \
   $(SDK_ROOT)/external/protothreads \
   $(SDK_ROOT)/external/protothreads/pt-1.4 \
   $(SDK_ROOT)/external/thedotfactory_fonts \
@@ -233,8 +272,8 @@ INC_FOLDERS += \
 ########################################################
 
 # Libraries common to all targets
-#LIB_FILES += \
-#  $(SDK_ROOT)/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a \
+LIB_FILES += \
+  $(SDK_ROOT)/external/nrf_cc310/lib/cortex-m4/hard-float/libnrf_cc310_0.9.13.a \
 
 
 ########################################################
