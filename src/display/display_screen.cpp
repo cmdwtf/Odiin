@@ -13,7 +13,7 @@
 
 APP_TIMER_DEF(display_screen_tick_timer);
 
-namespace Display
+namespace display
 {
 	namespace
 	{
@@ -152,4 +152,4 @@ namespace Display
 		}
 	}
 
-} // namespace Display
+} // namespace display

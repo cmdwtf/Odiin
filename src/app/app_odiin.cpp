@@ -207,7 +207,7 @@ namespace App
 
 	void Odiin::InitializeScreen()
 	{
-		static Display::Screen scr(keypad);
+		static display::Screen scr(keypad);
 		screen = &scr;
 	}
 

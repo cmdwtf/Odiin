@@ -52,7 +52,7 @@ namespace App
 		usb::MassStorageClass* usbMassStorageClass;
 		files::SdCard* sdCard;
 		input::Keypad* keypad;
-		Display::Screen* screen;
+		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 
 		// #todo: this is not where this should live.

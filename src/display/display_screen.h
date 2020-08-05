@@ -4,7 +4,7 @@
 #include "ili9341.h"
 #include "input/input_keypad.h"
 
-namespace Display
+namespace display
 {
 	using color_t = uint32_t;
 	using coord_t = uint16_t;
@@ -25,4 +25,4 @@ namespace Display
 		static void Tick(void* context);
 		input::Keypad* keypad;
 	};
-} // namespace Display
+} // namespace display
