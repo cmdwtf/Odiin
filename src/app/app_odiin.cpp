@@ -24,7 +24,7 @@ namespace App
 		return &instance;
 	}
 
-	Files::SdCard* Odiin::GetSdCard()
+	files::SdCard* Odiin::GetSdCard()
 	{
 		return GetInstance()->sdCard;
 	}
@@ -49,7 +49,7 @@ namespace App
 			NRF_LOG_ERROR("Cannot set payload while NFCT is enabled!");
 			return;
 		}
-		Files::SdCardFile file;
+		files::SdCardFile file;
 		sdCard->FileOpen(file, filename, FA_READ);
 
 		size_t amountRead = 0;
@@ -178,7 +178,7 @@ namespace App
 
 	void Odiin::InitializeSdCard()
 	{
-		static Files::SdCard sdc;
+		static files::SdCard sdc;
 		sdCard = &sdc;
 
 		// we will go ahead and start mounted

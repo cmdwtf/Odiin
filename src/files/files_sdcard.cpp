@@ -1,4 +1,4 @@
-#include "sdcard.h"
+#include "files_sdcard.h"
 
 #include "diskio.h"
 #include "diskio_blkdev.h"
@@ -7,7 +7,7 @@
 
 #include "files_log_module.ii"
 
-namespace Files
+namespace files
 {
 	namespace
 	{
@@ -395,4 +395,4 @@ namespace Files
 
 		return true;
 	}
-} // namespace Files
+} // namespace files

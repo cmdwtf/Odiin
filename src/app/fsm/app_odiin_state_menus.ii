@@ -14,7 +14,7 @@
 #include "app/app_odiin.h"
 #include "app/app_settings.h"
 #include "display/screen_ui/display_screen_ui.h"
-#include "files/sdcard.h"
+#include "files/files_sdcard.h"
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
 #endif // __VSCODE_CPP__
@@ -167,14 +167,14 @@ class MenuFiles
 		ASSERT(output != nullptr);
 		ASSERT(stringBuffers != nullptr);
 
-		Files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
-		Files::SdCardDirectory dir;
+		files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		files::SdCardDirectory dir;
 
 		size_t outputIndex = 0;
 
 		if (sd.DirectoryOpen(dir, path))
 		{
-			Files::SdCardFileInfo info;
+			files::SdCardFileInfo info;
 			while (sd.DirectoryRead(dir, info))
 			{
 				//bool readOnly = (info.fattrib & AM_RDO);
@@ -229,14 +229,14 @@ class MenuFiles
 	{
 		ASSERT(path != nullptr);
 
-		Files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
-		Files::SdCardDirectory dir;
+		files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		files::SdCardDirectory dir;
 
 		size_t count = 0;
 
 		if (sd.DirectoryOpen(dir, path))
 		{
-			Files::SdCardFileInfo info;
+			files::SdCardFileInfo info;
 			while (sd.DirectoryRead(dir, info))
 			{
 				bool hidden = (info.fattrib & AM_HID);
@@ -410,7 +410,7 @@ class MenuFiles
 
 		if (activePath.size() == 0)
 		{
-			PushDirectory(Files::SdCard::RootDirectory);
+			PushDirectory(files::SdCard::RootDirectory);
 		}
 		else
 		{

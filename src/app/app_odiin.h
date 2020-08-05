@@ -4,7 +4,7 @@
 #include "usb/usb_msc.h"
 
 #include "display/display_screen.h"
-#include "files/sdcard.h"
+#include "files/files_sdcard.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
 #include "nfc_tag_emulation/nxp_ntag21x_emulator.h"
@@ -19,7 +19,7 @@ namespace App
 		using StateMachine = Fsm::OdiinState;
 	public:
 		static Odiin* GetInstance();
-		static Files::SdCard* GetSdCard();
+		static files::SdCard* GetSdCard();
 
 		~Odiin();
 		void Update();
@@ -49,7 +49,7 @@ namespace App
 		void StartApplication();
 
 		Usb::MassStorageClass* usbMassStorageClass;
-		Files::SdCard* sdCard;
+		files::SdCard* sdCard;
 		Input::Keypad* keypad;
 		Display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;

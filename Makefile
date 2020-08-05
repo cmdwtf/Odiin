@@ -176,6 +176,68 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/mdk \
 
 ########################################################
+## Vendor: Cie1931
+########################################################
+
+CIE1931_DIR := $(VENDOR_ROOT)/cie1931
+
+# No source files, header only library.
+
+INC_FOLDERS += \
+   $(CIE1931_DIR) \
+
+########################################################
+## Vendor: cwalk
+########################################################
+
+CWALK_DIR := $(VENDOR_ROOT)/cwalk
+CWALK_SRC_DIR := $(CWALK_DIR)/src
+
+SRC_FILES += \
+   $(CWALK_SRC_DIR)/cwalk.c \
+
+INC_FOLDERS += \
+   $(CWALK_DIR)/include \
+
+########################################################
+## Vendor: fatfs
+########################################################
+
+FATFS_DIR := $(VENDOR_ROOT)/fatfs
+
+SRC_FILES += \
+  $(wildcard $(FATFS_DIR)/port/*.c) \
+  $(wildcard $(FATFS_DIR)/source/ff.c) \
+  $(wildcard $(FATFS_DIR)/source/ffunicode.c) \
+
+INC_FOLDERS += \
+   $(FATFS_DIR)/port \
+   $(FATFS_DIR)/source \
+
+########################################################
+## Vendor: IlI9341 Display Driver <not external>
+########################################################
+
+SRC_FILES += \
+  $(wildcard $(VENDOR_ROOT)/display/*.c) \
+
+INC_FOLDERS += \
+   $(VENDOR_ROOT)/display \
+
+########################################################
+## Vendor: littlefs
+########################################################
+
+LITTLEFS_DIR := $(VENDOR_ROOT)/littlefs
+
+SRC_FILES += \
+  $(wildcard $(LITTLEFS_DIR)/*.c) \
+  $(wildcard $(LITTLEFS_DIR)/bd/*.c) \
+
+INC_FOLDERS += \
+   $(LITTLEFS_DIR) \
+
+########################################################
 ## Vendor: lvgl
 ########################################################
 
@@ -208,38 +270,6 @@ TFSM_DIR := $(VENDOR_ROOT)/TinyFSM/include
 
 INC_FOLDERS += \
    $(TFSM_DIR) \
-
-########################################################
-## Vendor: cwalk
-########################################################
-
-CWALK_DIR := $(VENDOR_ROOT)/cwalk
-CWALK_SRC_DIR := $(CWALK_DIR)/src
-
-SRC_FILES += \
-   $(CWALK_SRC_DIR)/cwalk.c \
-
-INC_FOLDERS += \
-   $(CWALK_DIR)/include \
-
-########################################################
-## Other Vendor Files
-########################################################
-
-SRC_FILES += \
-  $(wildcard $(VENDOR_ROOT)/display/*.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/port/*.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/source/ff.c) \
-  $(wildcard $(VENDOR_ROOT)/fatfs/source/ffunicode.c) \
-  $(wildcard $(VENDOR_ROOT)/littlefs/*.c) \
-  $(wildcard $(VENDOR_ROOT)/littlefs/bd/*.c) \
-
-INC_FOLDERS += \
-   $(VENDOR_ROOT)/cie1931 \
-   $(VENDOR_ROOT)/display \
-   $(VENDOR_ROOT)/fatfs/source \
-   $(VENDOR_ROOT)/fatfs/port \
-   $(VENDOR_ROOT)/littlefs \
 
 ########################################################
 ## Library Files

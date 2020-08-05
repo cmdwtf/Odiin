@@ -9,13 +9,13 @@
 
 void readDirectory(const char* dirName, int depth = 0)
 {
-	Files::SdCard* SDCARD = App::Odiin::GetSdCard();
-	Files::SdCardDirectory dir;
+	files::SdCard* SDCARD = App::Odiin::GetSdCard();
+	files::SdCardDirectory dir;
 	if (SDCARD->DirectoryOpen(dir, dirName))
 	{
 		NRF_LOG_RAW_INFO("%s\t<dir>\r\n", nrf_log_push((char*)dirName));
 
-		Files::SdCardFileInfo info;
+		files::SdCardFileInfo info;
 		while (SDCARD->DirectoryRead(dir, info))
 		{
 			const char* readOnly = (info.fattrib & AM_RDO) ? "R" : " ";
@@ -55,13 +55,13 @@ void readDirectory(const char* dirName, int depth = 0)
 
 void TEST_ReadDirectories()
 {
-	Files::SdCard* SDCARD = App::Odiin::GetSdCard();
+	files::SdCard* SDCARD = App::Odiin::GetSdCard();
 
 	NRF_LOG_INFO("Starting TEST_ReadDirectories().");
 	if (SDCARD->Mount())
 	{
 		NRF_LOG_RAW_INFO("\r\n\r\n");
-		readDirectory(Files::SdCard::RootDirectory);
+		readDirectory(files::SdCard::RootDirectory);
 		NRF_LOG_RAW_INFO("\r\n\r\n");
 	}
 }

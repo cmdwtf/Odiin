@@ -7,7 +7,7 @@
 
 #include "usb/usb_listener.h"
 
-namespace Files
+namespace files
 {
 	// #todo: actual abstraction
 	using SdCardFile = FIL;
@@ -61,4 +61,4 @@ namespace Files
 		bool Initialize();
 		bool Uninitialize();
 	};
-} // namespace Files
+} // namespace files
