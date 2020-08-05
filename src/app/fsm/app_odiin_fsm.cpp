@@ -1,9 +1,6 @@
 #include "app_odiin_fsm.h"
 
-#include <deque>
-#include <string>
-#include <sstream>
-
+#include "cwalk.h"
 #include "nrf_assert.h"
 #include "nrf_log.h"
 

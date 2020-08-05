@@ -8,6 +8,7 @@
 
 #include "app_odiin_fsm.h"
 
+#include "cwalk.h"
 #include "nrf_assert.h"
 #include "nrf_log.h"
 
@@ -154,9 +155,8 @@ class MenuFiles
 
 	size_t paginationOffset = 0;
 
-	// okay I didn't want to use std::string, but
-	// this is just easier for now.
-	std::deque<std::string> activePath;
+	static constexpr size_t PATH_SIZE_MAX = FF_LFN_BUF + 1;
+	char activePath[PATH_SIZE_MAX] = { 0 };
 	size_t activePathItemCount = 0;
 	size_t displayedFileCount = 0;
 	bool isRoot = false;
@@ -271,7 +271,7 @@ class MenuFiles
 		}
 		else
 		{
-			output[index].option = "..";
+			output[index].option = files::SdCard::RelativeParentDirectory;
 			output[index].prefix = LV_SYMBOL_NEW_LINE;
 			output[index].click_cb = MenuOptionPressedCallback;
 			output[index].user_flags = FLAG_DIR_UP;
@@ -302,32 +302,6 @@ class MenuFiles
 		return index;
 	}
 
-	inline std::string StackToPath(std::deque<std::string>& pathStack)
-	{
-		// if we're at the root,
-		// just return that value
-		if (pathStack.size() == 1)
-		{
-			return pathStack[0];
-		}
-
-		std::stringstream oss;
-		size_t pathPartCount = pathStack.size();
-		for (size_t scan = 0; scan < pathPartCount; ++scan)
-		{
-			oss << pathStack[scan];
-
-			// add a seperator if there's more path, and
-			// we don't already end with one.
-			if (scan + 1 < pathPartCount && pathStack[scan].back() != SETTINGS.path_seperator)
-			{
-				oss << SETTINGS.path_seperator;
-			}
-		}
-
-		return oss.str();
-	}
-
 	void UpdateUI()
 	{
 		menuOptionCount = 0;
@@ -336,7 +310,7 @@ class MenuFiles
 			menuOptions, MENU_OPTIONS_LENGTH,
 			menuStrings, MENU_OPTION_STRING_LENGTH);
 
-		displayedFileCount = AppendDirectoryMenu(StackToPath(activePath).c_str(),
+		displayedFileCount = AppendDirectoryMenu(activePath,
 			menuOptions + topperCount, MENU_OPTIONS_LENGTH - topperCount,
 			menuStrings, MENU_OPTION_STRING_LENGTH,
 			paginationOffset);
@@ -344,7 +318,7 @@ class MenuFiles
 		menuOptionCount = topperCount + displayedFileCount;
 
 		UI_FUNCTION(list_menu, set_options)(menuOptions, menuOptionCount);
-		UI_FUNCTION(list_menu, set_title)(StackToPath(activePath).c_str());
+		UI_FUNCTION(list_menu, set_title)(activePath);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -352,22 +326,21 @@ class MenuFiles
 
 	void SelectFile(const char* filename)
 	{
-		// build our path
-		activePath.emplace_back(filename);
+		char fullPathBuffer[PATH_SIZE_MAX] = { 0 };
+
+		// build our full path to the file
+		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, filename, fullPathBuffer, PATH_SIZE_MAX));
 
 		// set the payload
-		App::Odiin::GetInstance()->SetNfcTagPayload(StackToPath(activePath).c_str());
-
-		// we can put active path back now that the application has acted we are all done!
-		activePath.pop_back();
+		App::Odiin::GetInstance()->SetNfcTagPayload(fullPathBuffer);
 	}
 
 	void PushDirectory(const char* directoryName)
 	{
 		paginationOffset = 0;
-		activePath.emplace_back(directoryName);
-		isRoot = activePath.size() == 1;
-		activePathItemCount = CountDirectoryItems(StackToPath(activePath).c_str());
+		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, directoryName, activePath, PATH_SIZE_MAX));
+		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) != 0);
+		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
 
@@ -380,9 +353,9 @@ class MenuFiles
 		}
 
 		paginationOffset = 0;
-		activePath.pop_back();
-		isRoot = activePath.size() == 1;
-		activePathItemCount = CountDirectoryItems(StackToPath(activePath).c_str());
+		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, files::SdCard::RelativeParentDirectory, activePath, PATH_SIZE_MAX));
+		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) != 0);
+		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
 
@@ -408,12 +381,15 @@ class MenuFiles
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
 
-		if (activePath.size() == 0)
+		// push the root path if we don't have one set.
+		if (strlen(activePath) == 0)
 		{
 			PushDirectory(files::SdCard::RootDirectory);
 		}
 		else
 		{
+			// we entered from a state where we had a path
+			// already set, just update the UI for it.
 			UpdateUI();
 		}
 	}

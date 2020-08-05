@@ -9,7 +9,6 @@ extern "C" {
 typedef struct app_settings_s {
 	uint32_t boot_screen_timeout_ms;
 	uint8_t ntag_215_default_password_authentication_acknowledgement[2];
-	char path_seperator;
 } app_settings_t;
 
 extern app_settings_t SETTINGS;
