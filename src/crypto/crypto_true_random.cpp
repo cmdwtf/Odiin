@@ -9,9 +9,10 @@ namespace crypto
 	{
 	}
 
-	float TrueRandom::Value()
+	void Bytes(uint8_t* output, size_t size)
 	{
-		return Range(0.0f, 1.0f);
+		ret_code_t ret = nrf_crypto_rng_vector_generate(output, size);
+		APP_ERROR_CHECK(ret);
 	}
 
 	uint32_t TrueRandom::Range(uint32_t min, uint32_t max)
@@ -43,5 +44,10 @@ namespace crypto
 		// scale our resultant random by our range min/max
 		// (just a normal lerp with our new magnitude!)
 		return ((1.0f - magnitude) * min) + (max * magnitude);
+	}
+
+	float TrueRandom::Value()
+	{
+		return Range(0.0f, 1.0f);
 	}
 } // namespace crypto

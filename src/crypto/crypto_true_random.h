@@ -1,15 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace crypto
 {
 	class TrueRandom
 	{
 	public:
-		static float Value();
+		static void Bytes(uint8_t* output, size_t size);
 		static uint32_t Range(uint32_t min, uint32_t max);
 		static float Range(float min, float max);
+		static float Value();
 	private:
 		TrueRandom() = delete;
 		virtual ~TrueRandom() = delete;
