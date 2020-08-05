@@ -10,6 +10,7 @@ SOURCE_DIR := src
 # lvgl suggets at least 16K, and examples
 # for nRF52 have shipped with 8K.
 HEAP_SIZE_BYTES := 32768
+STACK_SIZE_BYTES := 32768
 
 GIT_VERSION != git describe --dirty --always --tags
 
@@ -299,9 +300,9 @@ LDFLAGS += -Wl,--gc-sections
 LDFLAGS += --specs=nano.specs
 
 nrf52840_xxaa: CFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
-nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=$(HEAP_SIZE_BYTES)
+nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
 nrf52840_xxaa: ASMFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
-nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=$(HEAP_SIZE_BYTES)
+nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
 
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
