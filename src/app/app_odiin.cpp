@@ -9,6 +9,7 @@
 #include "nrf_log_default_backends.h"
 
 #include "app_settings.h"
+#include "crypto/crypto_shared.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "usb/usb.h"
@@ -113,6 +114,7 @@ namespace App
 		InitializeClocks();
 		InitializeTimers();
 		InitializeBsp();
+		InitializeCrypto();
 		InitializeUsbDevice();
 		InitializeSdCard();
 		InitializeInput();
@@ -165,6 +167,11 @@ namespace App
 
 		err_code = bsp_init(bspFlags, BspEventHandler);
 		APP_ERROR_CHECK(err_code);
+	}
+
+	void Odiin::InitializeCrypto() // crypto means cryptography
+	{
+		crypto::Initialize();
 	}
 
 	void Odiin::InitializeUsbDevice()

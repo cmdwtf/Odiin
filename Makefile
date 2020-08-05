@@ -27,6 +27,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/*.c*) \
   $(wildcard $(SOURCE_DIR)/app/fsm/*.c*) \
+  $(wildcard $(SOURCE_DIR)/crypto/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/fonts/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/images/*.c*) \

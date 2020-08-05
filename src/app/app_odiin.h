@@ -41,6 +41,7 @@ namespace App
 		void InitializeClocks();
 		void InitializeTimers();
 		void InitializeBsp();
+		void InitializeCrypto();
 		void InitializeUsbDevice();
 		void InitializeSdCard();
 		void InitializeInput();
