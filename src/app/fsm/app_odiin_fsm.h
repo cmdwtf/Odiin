@@ -10,7 +10,7 @@
 #define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
 #define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
 
-namespace App::Fsm
+namespace app::fsm
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Events
@@ -52,4 +52,4 @@ namespace App::Fsm
 
 		static input::Keypad* Keypad;
 	};
-} // namespace App::Fsm
+} // namespace app::fsm

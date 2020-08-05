@@ -12,11 +12,11 @@
 using NfcTagEmulator = nfc::nxp::ntag21x::Ntag21xEmulator;
 using NtagPayload = nfc::nxp::ntag21x::Ntag21XPayload;
 
-namespace App
+namespace app
 {
 	class Odiin : public usb::Listener
 	{
-		using StateMachine = Fsm::OdiinState;
+		using StateMachine = fsm::OdiinState;
 	public:
 		static Odiin* GetInstance();
 		static files::SdCard* GetSdCard();
@@ -59,6 +59,6 @@ namespace App
 		// but it will do as a kludge for now.
 		nfc::nxp::ntag21x::Ntag215Payload payload;
 	};
-} // namespace App
+} // namespace app
 
 

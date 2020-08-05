@@ -14,7 +14,7 @@
 #include "fsm/app_odiin_fsm.h"
 #include "usb/usb.h"
 
-namespace App
+namespace app
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Public interface
@@ -59,7 +59,7 @@ namespace App
 			// read successful. load it up and away we go!
 			nfcTagEmulator->SetPayload(&payload);
 			NRF_LOG_INFO("NFCT payload set!");
-			SendEvent(App::Fsm::NfctActivateEvent());
+			SendEvent(app::fsm::NfctActivateEvent());
 		}
 	}
 
@@ -79,7 +79,7 @@ namespace App
 	// USB Listener interface
 	void Odiin::UsbWillEnable(app_usbd_event_type_t event)
 	{
-		App::Fsm::UsbConnectionEvent uce = {
+		app::fsm::UsbConnectionEvent uce = {
 			.IsConnected = true
 		};
 		StateMachine::dispatch(uce);
@@ -87,7 +87,7 @@ namespace App
 
 	void Odiin::UsbDidDisable(app_usbd_event_type_t event)
 	{
-		App::Fsm::UsbConnectionEvent uce = {
+		app::fsm::UsbConnectionEvent uce = {
 			.IsConnected = false
 		};
 		StateMachine::dispatch(uce);
@@ -246,4 +246,4 @@ namespace App
 		}
 	}
 
-} // namespace App
+} // namespace app

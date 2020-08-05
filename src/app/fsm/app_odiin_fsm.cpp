@@ -12,7 +12,7 @@
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x.h"
 
-namespace App::Fsm
+namespace app::fsm
 {
 	//////////////////////////////////////////////////////////////////////////
 	// State forward declarations
@@ -62,7 +62,7 @@ namespace App::Fsm
 	{
 		void entry() override
 		{
-			App::Odiin::GetInstance()->SetNfcTagEnabled(true);
+			app::Odiin::GetInstance()->SetNfcTagEnabled(true);
 			LOG_STATE_ENTER(NfctActive);
 			UI_CREATE(nfct_active);
 			UI_ACTIVATE(nfct_active, Keypad->GetInputGroup());
@@ -73,7 +73,7 @@ namespace App::Fsm
 
 		void exit() override
 		{
-			App::Odiin::GetInstance()->SetNfcTagEnabled(false);
+			app::Odiin::GetInstance()->SetNfcTagEnabled(false);
 			LOG_STATE_EXIT(NfctActive);
 		}
 
@@ -135,8 +135,8 @@ namespace App::Fsm
 	void OdiinState::exit() { }
 
 	input::Keypad* OdiinState::Keypad = nullptr;
-} // namespace App::Fsm
+} // namespace app::fsm
 
 //////////////////////////////////////////////////////////////////////////
 // Initial state definition
-FSM_INITIAL_STATE(App::Fsm::OdiinState, App::Fsm::Boot)
+FSM_INITIAL_STATE(app::fsm::OdiinState, app::fsm::Boot)

@@ -25,9 +25,9 @@ namespace
 {
 	void MenuOptionPressedCallback(menu_option_desc_t* o, lv_group_t* group)
 	{
-		App::Fsm::MenuOptionPressedEvent ev;
+		app::fsm::MenuOptionPressedEvent ev;
 		ev.Option = o;
-		App::Odiin::GetInstance()->SendEvent(ev);
+		app::Odiin::GetInstance()->SendEvent(ev);
 	};
 
 	void MenuOptionPressedCallbackNyi(menu_option_desc_t* o, lv_group_t* group)
@@ -167,7 +167,7 @@ class MenuFiles
 		ASSERT(output != nullptr);
 		ASSERT(stringBuffers != nullptr);
 
-		files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		files::SdCard& sd = *app::Odiin::GetInstance()->GetSdCard();
 		files::SdCardDirectory dir;
 
 		size_t outputIndex = 0;
@@ -229,7 +229,7 @@ class MenuFiles
 	{
 		ASSERT(path != nullptr);
 
-		files::SdCard& sd = *App::Odiin::GetInstance()->GetSdCard();
+		files::SdCard& sd = *app::Odiin::GetInstance()->GetSdCard();
 		files::SdCardDirectory dir;
 
 		size_t count = 0;
@@ -332,7 +332,7 @@ class MenuFiles
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, filename, fullPathBuffer, PATH_SIZE_MAX));
 
 		// set the payload
-		App::Odiin::GetInstance()->SetNfcTagPayload(fullPathBuffer);
+		app::Odiin::GetInstance()->SetNfcTagPayload(fullPathBuffer);
 	}
 
 	void PushDirectory(const char* directoryName)
@@ -419,7 +419,7 @@ class MenuFiles
 				PageChange(-1);
 				break;
 			case FLAG_GO_HOME:
-				App::Odiin::GetInstance()->SendEvent(App::Fsm::GoHomeEvent());
+				app::Odiin::GetInstance()->SendEvent(app::fsm::GoHomeEvent());
 				break;
 			default:
 				NRF_LOG_WARNING("Unhandled menu option flag. (%d)", event.Option->user_flags);

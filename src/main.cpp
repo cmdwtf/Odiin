@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-	App::Odiin* odiin = App::Odiin::GetInstance();
+	app::Odiin* odiin = app::Odiin::GetInstance();
 
     while (1)
     {
