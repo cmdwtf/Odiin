@@ -16,3 +16,6 @@
 [submodule "Biifrost"]
 	path = hardware/Biifrost
 	url = https://github.com/nitz/Biifrost.git
+[submodule "cwalk"]
+	path = vendor/cwalk
+	url = https://github.com/likle/cwalk.git

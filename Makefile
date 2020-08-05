@@ -210,6 +210,19 @@ INC_FOLDERS += \
    $(TFSM_DIR) \
 
 ########################################################
+## Vendor: cwalk
+########################################################
+
+CWALK_DIR := $(VENDOR_ROOT)/cwalk
+CWALK_SRC_DIR := $(CWALK_DIR)/src
+
+SRC_FILES += \
+   $(CWALK_SRC_DIR)/cwalk.c \
+
+INC_FOLDERS += \
+   $(CWALK_DIR)/include \
+
+########################################################
 ## Other Vendor Files
 ########################################################
 

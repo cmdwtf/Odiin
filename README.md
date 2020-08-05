@@ -73,6 +73,7 @@ If you'd like license this project or a part of it's code for a specific purpose
 - [ILI9341 Colors](https://github.com/adafruit/Adafruit_ILI9341): MIT © ? Limor Fried/Ladyada for Adafruit Industries.
 - [lvgl](https://github.com/lvgl/lvgl): MIT © 2020 LVGL LLC
 - [TinyFSM](https://github.com/digint/tinyfsm): MIT © 2012-2018 Axel Burri
+- [libcwalk](https://github.com/likle/cwalk): MIT © 2020 Leonard Iklé
 
 *If you've noticed I'm using a piece of code that isn't mentioned here, please make a PR/issue to add it. I want everyone to get the credit they deserve!*
 
