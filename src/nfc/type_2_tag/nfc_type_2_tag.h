@@ -1,9 +1,9 @@
 #pragma once
 
-#include "iso14443.h"
-#include "nfc_digital_protocol.h"
+#include "../iso14443.h"
+#include "../nfc_digital_protocol.h"
 
-namespace nfc_tag_emulation::nfc_type_2_tag
+namespace nfc::type_2_tag
 {
 	using NfcDpCmd = nfc_digital_protocol::Commands;
 	enum class Commands : NfcCmdType
@@ -50,4 +50,4 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 	// helpers
 	inline constexpr size_t GetBlockCountFromByteLength(size_t len) { return (len / BytesPerBlock); }
 	inline constexpr size_t GetMemoryAddressFromBlockNumber(size_t block) { return block * BytesPerBlock; }
-} // namespace nfc_tag_emulation::nfc_type_2_tag
+} // namespace nfc::type_2_tag

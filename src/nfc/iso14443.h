@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace nfc_tag_emulation
+namespace nfc
 {
 	using NfcCmdType = uint8_t;
 
@@ -23,4 +23,4 @@ namespace nfc_tag_emulation
 		};
 	} // namespace Iso14443A
 
-} // namespace nfc_tag_emulation
+} // namespace nfc

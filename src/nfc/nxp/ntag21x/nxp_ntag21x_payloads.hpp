@@ -1,8 +1,9 @@
 #pragma once
 
 #include "nxp_ntag21x.h"
+#include "../../nfc_payload.h"
 
-namespace nfc_tag_emulation::nxp_ntag21x
+namespace nfc::nxp::ntag21x
 {
 	class Ntag21XPayload : public Payload
 	{
@@ -37,4 +38,4 @@ namespace nfc_tag_emulation::nxp_ntag21x
 	class Ntag213Payload : public Ntag21XContainedPayload<capacities::ntag213::TotalCapacity> {};
 	class Ntag215Payload : public Ntag21XContainedPayload<capacities::ntag215::TotalCapacity> {};
 	class Ntag216Payload : public Ntag21XContainedPayload<capacities::ntag216::TotalCapacity> {};
-} // namespace nfc_tag_emulation::nxp_ntag21x
+} // namespace nfc::nxp::ntag21x

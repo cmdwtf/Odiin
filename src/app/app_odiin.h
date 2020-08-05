@@ -7,10 +7,10 @@
 #include "files/files_sdcard.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
-#include "nfc_tag_emulation/nxp_ntag21x_emulator.h"
+#include "nfc/nxp/ntag21x/nxp_ntag21x_emulator.h"
 
-using NfcTagEmulator = nfc_tag_emulation::nxp_ntag21x::Ntag21xEmulator;
-using NtagPayload = nfc_tag_emulation::nxp_ntag21x::Ntag21XPayload;
+using NfcTagEmulator = nfc::nxp::ntag21x::Ntag21xEmulator;
+using NtagPayload = nfc::nxp::ntag21x::Ntag21XPayload;
 
 namespace App
 {
@@ -57,7 +57,7 @@ namespace App
 
 		// #todo: this is not where this should live.
 		// but it will do as a kludge for now.
-		nfc_tag_emulation::nxp_ntag21x::Ntag215Payload payload;
+		nfc::nxp::ntag21x::Ntag215Payload payload;
 	};
 } // namespace App
 

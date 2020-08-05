@@ -10,7 +10,7 @@
 #include "files/files_sdcard.h"
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
-#include "nfc_tag_emulation/nxp_ntag21x_payloads.hpp"
+#include "nfc/nxp/ntag21x/nxp_ntag21x.h"
 
 namespace App::Fsm
 {

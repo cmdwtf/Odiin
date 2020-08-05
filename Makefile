@@ -35,8 +35,11 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/global/*.c*) \
   $(wildcard $(SOURCE_DIR)/input/*.c*) \
-  $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/*.c*) \
-  $(wildcard $(SOURCE_DIR)/nfc_tag_emulation/nfrx_extensions/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc/nfrx_extensions/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc/nxp/mifare_ultralight_c/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc/nxp/ntag21x/*.c*) \
+  $(wildcard $(SOURCE_DIR)/nfc/type_2_tag/*.c*) \
   $(wildcard $(SOURCE_DIR)/platform/*.c*) \
   $(wildcard $(SOURCE_DIR)/tests/*.c*) \
   $(wildcard $(SOURCE_DIR)/usb/*.c*) \

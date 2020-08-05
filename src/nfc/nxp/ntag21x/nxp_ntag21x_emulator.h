@@ -2,11 +2,11 @@
 
 #include "nxp_ntag21x.h"
 #include "nxp_ntag21x_payloads.hpp"
-#include "nfc_type_2_tag_emulator.h"
+#include "../../type_2_tag/nfc_type_2_tag_emulator.h"
 
-namespace nfc_tag_emulation::nxp_ntag21x
+namespace nfc::nxp::ntag21x
 {
-	class Ntag21xEmulator : public nfc_type_2_tag::NfcType2TagEmulator
+	class Ntag21xEmulator : public type_2_tag::NfcType2TagEmulator
 	{
 		public:
 			virtual bool SetPayload(Payload* payload) override;

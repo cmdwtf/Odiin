@@ -13,8 +13,6 @@
 #include "app_usbd_msc.h"
 #include "app_sdcard.h"
 
-#include "usb_config.h"
-
 // This code is in a C file instead of C++, (in addition to in a single file)
 // because "app_usbd_msc.h" uses a C-only enum forward declaration.
 // Currently, I've just moved the actual enum up in the header, to

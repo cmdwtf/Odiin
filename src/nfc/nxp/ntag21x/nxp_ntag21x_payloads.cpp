@@ -1,8 +1,8 @@
 #include "nxp_ntag21x_payloads.hpp"
 
-#include "nfc_log_module.ii"
+#include "../../nfc_log_module.ii"
 
-namespace nfc_tag_emulation::nxp_ntag21x
+namespace nfc::nxp::ntag21x
 {
 	bool Ntag21XPayload::GetUniqueIdBytes(uint8_t* idOutput, size_t* idOutputLength) const
 	{
@@ -11,9 +11,9 @@ namespace nfc_tag_emulation::nxp_ntag21x
 			NRF_LOG_ERROR("A NTAG21X payload needs at least 8 bytes to extract an ID from.");
 		}
 
-		if (*idOutputLength < nxp_ntag21x::UniqueIdLength)
+		if (*idOutputLength < nxp::ntag21x::UniqueIdLength)
 		{
-			NRF_LOG_ERROR("Please allocate at least %d bytes for a double length ID (NRF_NFCT_SENSRES_NFCID1_SIZE_DOUBLE).", nxp_ntag21x::UniqueIdLength);
+			NRF_LOG_ERROR("Please allocate at least %d bytes for a double length ID (NRF_NFCT_SENSRES_NFCID1_SIZE_DOUBLE).", nxp::ntag21x::UniqueIdLength);
 			return false;
 		}
 

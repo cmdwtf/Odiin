@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace nfc_tag_emulation
+namespace nfc
 {
 	class Payload
 	{
@@ -50,4 +50,4 @@ namespace nfc_tag_emulation
 		uint8_t payloadMemory[capacity] = { 0 };
 	};
 
-} // namespace nfc_tag_emulation
+} // namespace nfc

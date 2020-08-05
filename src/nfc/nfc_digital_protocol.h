@@ -3,7 +3,7 @@
 
 #include "iso14443.h"
 
-namespace nfc_tag_emulation::nfc_digital_protocol
+namespace nfc::nfc_digital_protocol
 {
 	using IsoCmd = iso_14443a::Commands;
 
@@ -20,4 +20,4 @@ namespace nfc_tag_emulation::nfc_digital_protocol
 		SLP_REQ_B1 = (NfcCmdType)IsoCmd::HLTA_B1,					  // [ref:NFCDP 4.9]
 		SLP_REQ_B2 = (NfcCmdType)IsoCmd::HLTA_B2,					  // [ref:NFCDP 4.9]
 	};
-} // namespace nfc_tag_emulation::nfc_digital_protocol
+} // namespace nfc::nfc_digital_protocol

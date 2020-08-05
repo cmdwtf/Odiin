@@ -2,13 +2,12 @@
 
 #include <cstddef>
 
-#include "nfc_type_2_tag.h"
-#include "payload.h"
+#include "../../type_2_tag/nfc_type_2_tag.h"
 
-namespace nfc_tag_emulation::nxp_ntag21x
+namespace nfc::nxp::ntag21x
 {
-	using Type2TagCmd = nfc_type_2_tag::Commands;
-	using Type2TagRsp = nfc_type_2_tag::Responses;
+	using Type2TagCmd = type_2_tag::Commands;
+	using Type2TagRsp = type_2_tag::Responses;
 
 	// Commands specific to NTAG21X [ref:NTAG 9.1]
 	enum class Commands : NfcCmdType
@@ -153,21 +152,21 @@ namespace nfc_tag_emulation::nxp_ntag21x
 		{
 			constexpr size_t TotalCapacity = 180;
 			constexpr size_t AvailableMemory = 144;
-			constexpr size_t TotalPages = nfc_type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
+			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
 		}
 
 		namespace ntag215
 		{
 			constexpr size_t TotalCapacity = 540;
 			constexpr size_t AvailableMemory = 504;
-			constexpr size_t TotalPages = nfc_type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
+			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
 		}
 
 		namespace ntag216
 		{
 			constexpr size_t TotalCapacity = 924;
 			constexpr size_t AvailableMemory = 888;
-			constexpr size_t TotalPages = nfc_type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
+			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
 		}
 	} // namespace capacities
 
@@ -176,7 +175,9 @@ namespace nfc_tag_emulation::nxp_ntag21x
 
 	// [ref:NTAG 2.1]
 	// NTAGs refer to blocks as pages, so these are provided as aliases for the block names in nfc_type_2_tag.
-	constexpr size_t BytesPerPage = nfc_type_2_tag::BytesPerBlock;
-	inline constexpr size_t GetPageCountFromByteLength(size_t len) { return nfc_type_2_tag::GetBlockCountFromByteLength(len); }
-	inline constexpr size_t GetMemoryAddressFromPageNumber(size_t page) { return nfc_type_2_tag::GetMemoryAddressFromBlockNumber(page); }
-} // namespace nfc_tag_emulation::nxp_ntag21x
+	constexpr size_t BytesPerPage = type_2_tag::BytesPerBlock;
+	inline constexpr size_t GetPageCountFromByteLength(size_t len) { return type_2_tag::GetBlockCountFromByteLength(len); }
+	inline constexpr size_t GetMemoryAddressFromPageNumber(size_t page) { return type_2_tag::GetMemoryAddressFromBlockNumber(page); }
+} // namespace nfc::nxp::ntag21x
+
+#include "nxp_ntag21x_payloads.hpp"

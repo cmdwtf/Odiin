@@ -3,10 +3,10 @@
 #include "nfc_digital_protocol.h"
 #include "nfc_type_2_tag.h"
 
-namespace nfc_tag_emulation::nxp_mifare_ultralight_c
+namespace nfc::nxp::mifare_ultralight_c
 {
-	using Type2TagCmd = nfc_type_2_tag::Commands;
-	using Type2TagRsp = nfc_type_2_tag::Responses;
+	using Type2TagCmd = type_2_tag::Commands;
+	using Type2TagRsp = type_2_tag::Responses;
 
 	enum class Commands : NfcCmdType
 	{
@@ -24,4 +24,4 @@ namespace nfc_tag_emulation::nxp_mifare_ultralight_c
 		NAK_OTHER_ERROR = (NfcCmdType)Type2TagRsp::NACK,
 		// #nyi: this isn't usable yet.
 	};
-} // namespace nfc_tag_emulation::nxp_mifare_ultralight_c
+} // namespace nfc::nxp::mifare_ultralight_c

@@ -2,9 +2,9 @@
 
 #include "nrf_nfct.h"
 
-#include "nfc_log_module.ii"
+#include "../../nfc_log_module.ii"
 
-namespace nfc_tag_emulation::nxp_ntag21x
+namespace nfc::nxp::ntag21x
 {
 	bool Ntag21xEmulator::SetPayload(Payload* payload)
 	{
@@ -156,4 +156,4 @@ namespace nfc_tag_emulation::nxp_ntag21x
 #undef RETURN_IF_NO_DATA_LEFT
 	}
 
-} // namespace nfc_tag_emulation::nxp_ntag21x
+} // namespace nfc::nxp::ntag21x

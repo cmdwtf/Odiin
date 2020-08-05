@@ -1,7 +1,8 @@
-#include "payload.h"
+#include "nfc_payload.h"
+
 #include "nfc_log_module.ii"
 
-namespace nfc_tag_emulation
+namespace nfc
 {
 	size_t Payload::GetDataLength() const
 	{
@@ -27,4 +28,4 @@ namespace nfc_tag_emulation
 		// a payload by default doesn't have a unique id!
 		return false;
 	}
-} // namespace nfc_tag_emulation
+} // namespace nfc

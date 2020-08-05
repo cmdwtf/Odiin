@@ -3,10 +3,11 @@
 #include <cstring>
 #include <algorithm>
 
-#include "nfc_log_module.ii"
-#include "./nfrx_extensions/nrfx_extensions.h"
+#include "../nfrx_extensions/nrfx_extensions.h"
 
-namespace nfc_tag_emulation::nfc_type_2_tag
+#include "../nfc_log_module.ii"
+
+namespace nfc::type_2_tag
 {
 	NfcType2TagEmulator* NfcType2TagEmulator::eventCallbackTarget = nullptr;
 
@@ -232,8 +233,8 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 				NAK_IF_NOT_ENOUGH_DATA(1);
 				uint8_t startBlock = data[index++];
 				uint8_t endBlock = startBlock + 3;
-				size_t startAddress = nfc_type_2_tag::GetMemoryAddressFromBlockNumber(startBlock);
-				size_t endAddress = nfc_type_2_tag::GetMemoryAddressFromBlockNumber(endBlock+1) - 1;
+				size_t startAddress = type_2_tag::GetMemoryAddressFromBlockNumber(startBlock);
+				size_t endAddress = type_2_tag::GetMemoryAddressFromBlockNumber(endBlock+1) - 1;
 				NRF_LOG_DEBUG("[CMD.T2T] CMD_READ: Blocks %d-%d (0x%04X-0x%04X)", startBlock, endBlock, startAddress, endAddress);
 				TxPayloadPages(startBlock, endBlock);
 				return;
@@ -385,8 +386,8 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 		static uint8_t payloadBuffer[NFCTAGEMU_TX_BUFFER_SIZE] = { 0 };
 		memset(payloadBuffer, 0, NFCTAGEMU_TX_BUFFER_SIZE);
 
-		size_t dataStart = nfc_type_2_tag::GetMemoryAddressFromBlockNumber(startPage);
-		size_t dataEnd = nfc_type_2_tag::GetMemoryAddressFromBlockNumber(endPage) + nfc_type_2_tag::BytesPerBlock;
+		size_t dataStart = type_2_tag::GetMemoryAddressFromBlockNumber(startPage);
+		size_t dataEnd = type_2_tag::GetMemoryAddressFromBlockNumber(endPage) + type_2_tag::BytesPerBlock;
 		size_t requestedBytes = dataEnd - dataStart;
 		size_t dataLeft = currentPayload->GetDataLength() - dataStart;
 
@@ -451,4 +452,4 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 		return true;
 	}
 
-} // namespace nfc_tag_emulation::nfc_type_2_tag
+} // namespace nfc::type_2_tag

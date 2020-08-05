@@ -1,11 +1,10 @@
 #pragma once
 
-#include "nfc_tag_emulation_config.h"
+#include "../nfc_payload.h"
 #include "nfc_type_2_tag.h"
-#include "payload.h"
 #include "nrfx_nfct.h"
 
-namespace nfc_tag_emulation::nfc_type_2_tag
+namespace nfc::type_2_tag
 {
 	class NfcType2TagEmulator
 	{
@@ -61,4 +60,4 @@ namespace nfc_tag_emulation::nfc_type_2_tag
 			eventCallbackTarget->NfcEventCallback(event);
 		}
 	};
-} // namespace nfc_tag_emulation::nfc_type_2_tag
+} // namespace nfc::type_2_tag
