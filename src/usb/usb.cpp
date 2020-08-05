@@ -5,9 +5,10 @@
 using std::list;
 using std::map;
 
-#include "usb_log_module.ii"
-
+#include "app_usbd_serial_num.h"
 #include "nrf_drv_clock.h"
+
+#include "usb_log_module.ii"
 
 namespace Usb
 {
@@ -34,6 +35,9 @@ namespace Usb
 			{
 				return true;
 			}
+
+			app_usbd_serial_num_generate();
+			app_usbd_product_strings_generate();
 
 			ret_code_t ret = app_usbd_init(&usbd_config);
     		APP_ERROR_CHECK(ret);
@@ -147,6 +151,12 @@ namespace Usb
 			{
 				/* Nothing to do */
 			}
+		}
+
+		const uint8_t* const GetSerialNumber()
+		{
+			extern uint8_t g_extern_serial_number[];
+			return g_extern_serial_number;
 		}
 
 		///

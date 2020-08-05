@@ -26,5 +26,7 @@ namespace Usb
 		// Update should be called in the main loop before or after __WFE.
 		void Update();
 
+		const uint8_t* const GetSerialNumber();
+
 	} // namespace Device
 } // namespace Usb

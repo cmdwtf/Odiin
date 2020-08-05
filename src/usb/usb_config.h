@@ -2,7 +2,11 @@
 
 #include <stdint.h>
 #include "app_usbd_langid.h"
-#include "global_strings.h"
+#include "global/global_strings.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define USB_VID									PRODUCT_USB_VID
 #define USB_PID									PRODUCT_USB_PID
@@ -18,9 +22,13 @@
 
 #define USB_DEVICE_LANGUAGE_IDS					APP_USBD_LANG_AND_SUBLANG(APP_USBD_LANG_ENGLISH, APP_USBD_SUBLANG_ENGLISH_US)
 
-#define USB_DEVICE_MANUFACTURER					PRODUCT_MANUFACTURER
-#define USB_DEVICE_PRODUCT						PRODUCT_NAME_SHORT
-#define USB_DEVICE_SERIAL						"000000000001" // #todo generate serial
+extern uint8_t g_extern_usb_device_manufacturer[];
+extern uint8_t g_extern_usb_device_product[];
+extern uint8_t g_extern_serial_number[];
+
+#define USB_DEVICE_MANUFACTURER					g_extern_usb_device_manufacturer
+#define USB_DEVICE_PRODUCT						g_extern_usb_device_product
+#define USB_DEVICE_SERIAL						g_extern_serial_number
 #define USB_DEVICE_CONFIGURATION_MODE_STRING	"Default configuration"
 
 // Default values for user strings.
@@ -37,3 +45,10 @@
 #define USB_STRINGS_USER \
 	X(APP_USER_1, , APP_USBD_STRING_DESC(PRODUCT_MANUFACTURER_URL)) \
 	X(APP_USER_2, , APP_USBD_STRING_DESC(PRODUCT_MANUFACTURER))
+
+
+void app_usbd_product_strings_generate(void);
+
+#ifdef __cplusplus
+}
+#endif

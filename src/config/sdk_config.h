@@ -47,7 +47,7 @@
 #include "app_config.h"
 #endif
 
-#include "global/usb_config.h"
+#include "usb/usb_config.h"
 
 // <h> nRF_Drivers
 
@@ -4857,7 +4857,7 @@
 
 
 #ifndef APP_USBD_STRINGS_MANUFACTURER_EXTERN
-#define APP_USBD_STRINGS_MANUFACTURER_EXTERN 0
+#define APP_USBD_STRINGS_MANUFACTURER_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRINGS_MANUFACTURER - String descriptor for the manufacturer name.
@@ -4871,7 +4871,7 @@
 // <i> Setting string to NULL disables that string.
 // <i> The order of manufacturer names must be the same like in @ref APP_USBD_STRINGS_LANGIDS.
 #ifndef APP_USBD_STRINGS_MANUFACTURER
-#define APP_USBD_STRINGS_MANUFACTURER APP_USBD_STRING_DESC(USB_DEVICE_MANUFACTURER)
+#define APP_USBD_STRINGS_MANUFACTURER USB_DEVICE_MANUFACTURER
 #endif
 
 // </e>
@@ -4887,7 +4887,7 @@
 
 
 #ifndef APP_USBD_STRINGS_PRODUCT_EXTERN
-#define APP_USBD_STRINGS_PRODUCT_EXTERN 0
+#define APP_USBD_STRINGS_PRODUCT_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRINGS_PRODUCT - String descriptor for the product name.
@@ -4895,7 +4895,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> List of product names that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRINGS_PRODUCT
-#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC(USB_DEVICE_PRODUCT)
+#define APP_USBD_STRINGS_PRODUCT USB_DEVICE_PRODUCT
 #endif
 
 // </e>
@@ -4911,7 +4911,7 @@
 
 
 #ifndef APP_USBD_STRING_SERIAL_EXTERN
-#define APP_USBD_STRING_SERIAL_EXTERN 0
+#define APP_USBD_STRING_SERIAL_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRING_SERIAL - String descriptor for the serial number.
@@ -4919,7 +4919,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Serial number that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRING_SERIAL
-#define APP_USBD_STRING_SERIAL APP_USBD_STRING_DESC(USB_DEVICE_SERIAL)
+#define APP_USBD_STRING_SERIAL USB_DEVICE_SERIAL
 #endif
 
 // </e>
