@@ -1,6 +1,5 @@
 PROJECT				:= odiin
 TARGETS				:= nrf52840_xxaa
-FIRMWARE_DIRECTORY	:= _firmware
 OUTPUT_DIRECTORY 	:= _build
 
 VENDOR_ROOT ?= vendor
@@ -368,6 +367,7 @@ help:
 
 include BuildSettings.mk
 
+# TEMPLATE_PATH is used in the common makefile.
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
 include $(TEMPLATE_PATH)/Makefile.common
 
@@ -399,16 +399,13 @@ flash_all: merge
 erase:
 	pyocd erase -t nrf52840 --chip
 
-# Release the built firmware, copying it to the $(FIRMWARE_DIRECTORY)
+# Create the UF2 release file that doesn't contain the default MBR.
 release: merge
-	@if not exist "$(FIRMWARE_DIRECTORY)" mkdir "$(FIRMWARE_DIRECTORY)"
 	@echo Creating UF2 format file from produced hex...
-	python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_UF2) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
-	@echo Copying: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to $(FIRMWARE_DIRECTORY) directory.
-	copy /B /Y $(OUTPUT_DIRECTORY)\$(FILENAME_OUTPUT_MERGED_HEX) $(FIRMWARE_DIRECTORY)\$(FILENAME_OUTPUT_MERGED_HEX)
+	@python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
 	@echo.
-	@echo Use $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_UF2) to flash via UF2 like standard keeping the bootloader,
-	@echo or $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to use basic MBR (removes custom bootloader!)
+	@echo Use $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2) to flash via UF2 like standard keeping the bootloader,
+	@echo or $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to use basic MBR (removes custom bootloader!)
 
 SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
