@@ -12,7 +12,10 @@ SOURCE_DIR := src
 HEAP_SIZE_BYTES := 32768
 STACK_SIZE_BYTES := 32768
 
+# File names
 GIT_VERSION != git describe --dirty --always --tags
+FILENAME_OUTPUT_MERGED_HEX := $(PROJECT)-$(GIT_VERSION).hex
+FILENAME_OUTPUT_UF2 := $(PROJECT)-$(GIT_VERSION).uf2
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := $(SOURCE_DIR)/link/nrf52.ld
@@ -341,13 +344,13 @@ flash_mbr:
 
 # Merge the MBR and application
 merge: default
-	@echo Merging: $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex
-	mergehex -m $(SDK_ROOT)/components/softdevice/mbr/hex/mbr_nrf52_2.4.1_mbr.hex $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex -o $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex
+	@echo Merging: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
+	mergehex -m $(SDK_ROOT)/components/softdevice/mbr/hex/mbr_nrf52_2.4.1_mbr.hex $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
 
 # Flash MBR and application
 flash_all: merge
-	@echo Flashing: $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex
-	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex
+	@echo Flashing: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
+	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
 
 # Erase the chip
 erase:
@@ -357,12 +360,12 @@ erase:
 release: merge
 	@if not exist "$(FIRMWARE_DIRECTORY)" mkdir "$(FIRMWARE_DIRECTORY)"
 	@echo Creating UF2 format file from produced hex...
-	python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
-	@echo Copying: $(OUTPUT_DIRECTORY)/nrf52840_xxaa_mbr.hex to $(FIRMWARE_DIRECTORY) directory.
-	copy /B /Y $(OUTPUT_DIRECTORY)\nrf52840_xxaa_mbr.hex $(FIRMWARE_DIRECTORY)\$(PROJECT)_mbr.hex
+	python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_UF2) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
+	@echo Copying: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to $(FIRMWARE_DIRECTORY) directory.
+	copy /B /Y $(OUTPUT_DIRECTORY)\$(FILENAME_OUTPUT_MERGED_HEX) $(FIRMWARE_DIRECTORY)\$(FILENAME_OUTPUT_MERGED_HEX)
 	@echo.
-	@echo Use $(FIRMWARE_DIRECTORY)/$(PROJECT).uf2 to flash via UF2 like standard keeping the bootloader,
-	@echo or $(FIRMWARE_DIRECTORY)/nrf52840_xxaa_mbr.hex to use basic bootloader (removes custom bootloader!)
+	@echo Use $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_UF2) to flash via UF2 like standard keeping the bootloader,
+	@echo or $(FIRMWARE_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to use basic MBR (removes custom bootloader!)
 
 SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
