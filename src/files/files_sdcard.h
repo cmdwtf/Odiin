@@ -38,6 +38,8 @@ namespace files
 		bool FileStat(const char* path, SdCardFileInfo& fileInfo);
 
 		static constexpr const char* RootDirectory = "/";
+		static constexpr const char* RelativeCurrentDirectory = ".";
+		static constexpr const char* RelativeParentDirectory = "..";
 
 		inline const char* GetDriveLabel() { return driveLabel; }
 		inline uint32_t GetDriveSerial() { return driveSerial; }

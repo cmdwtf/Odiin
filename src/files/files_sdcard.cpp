@@ -2,6 +2,7 @@
 
 #include "diskio.h"
 #include "diskio_blkdev.h"
+#include "cwalk.h"
 
 #include "global/global_data.h"
 
@@ -302,6 +303,9 @@ namespace files
 			NRF_LOG_ERROR("Cannot initialize SDC, registration failed.");
 			return false;
 		}
+
+		// we'll stick to unix-style paths for now.
+		cwk_path_set_style(CWK_STYLE_UNIX);
 
 		// #hardcode -- we only support one disk right now.
 		diskIndex = 0;
