@@ -14,7 +14,7 @@ namespace files
 	using SdCardFileInfo = FILINFO;
 	using SdCardDirectory = DIR;
 
-	class SdCard : public Usb::Listener
+	class SdCard : public usb::Listener
 	{
 	public:
 		SdCard();

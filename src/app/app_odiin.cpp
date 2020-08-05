@@ -39,7 +39,7 @@ namespace App
 	{
         NRF_LOG_FLUSH();
 
-		Usb::Device::Update();
+		usb::device::Update();
 		screen->Update();
 	}
 
@@ -176,11 +176,11 @@ namespace App
 
 	void Odiin::InitializeUsbDevice()
 	{
-		Usb::Device::Initialize();
-		static Usb::MassStorageClass msc;
+		usb::device::Initialize();
+		static usb::MassStorageClass msc;
 		usbMassStorageClass = &msc;
 		usbMassStorageClass->RegisterClass();
-		Usb::Device::Enable();
+		usb::device::Enable();
 	}
 
 	void Odiin::InitializeSdCard()
@@ -192,10 +192,10 @@ namespace App
 		sdCard->Mount();
 
 		// SDCARD will want to listen for USB events.
-		Usb::Device::RegisterListener(sdCard);
+		usb::device::RegisterListener(sdCard);
 
 		// So do we
-		Usb::Device::RegisterListener(this);
+		usb::device::RegisterListener(this);
 	}
 
 	void Odiin::InitializeInput()

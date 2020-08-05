@@ -14,7 +14,7 @@ using NtagPayload = nfc::nxp::ntag21x::Ntag21XPayload;
 
 namespace App
 {
-	class Odiin : public Usb::Listener
+	class Odiin : public usb::Listener
 	{
 		using StateMachine = Fsm::OdiinState;
 	public:
@@ -49,7 +49,7 @@ namespace App
 		void InitializeNfcTag();
 		void StartApplication();
 
-		Usb::MassStorageClass* usbMassStorageClass;
+		usb::MassStorageClass* usbMassStorageClass;
 		files::SdCard* sdCard;
 		input::Keypad* keypad;
 		Display::Screen* screen;

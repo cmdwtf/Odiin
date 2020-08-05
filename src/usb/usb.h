@@ -3,9 +3,9 @@
 #include "app_usbd.h"
 #include "usb_listener.h"
 
-namespace Usb
+namespace usb
 {
-	namespace Device
+	namespace device
 	{
 		struct class_info_t
 		{
@@ -28,5 +28,5 @@ namespace Usb
 
 		const uint8_t* const GetSerialNumber();
 
-	} // namespace Device
+	} // namespace device
 } // namespace Usb

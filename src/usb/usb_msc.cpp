@@ -17,19 +17,19 @@
 
 #include "global/global_data.h"
 
-namespace Usb
+namespace usb
 {
 	void MassStorageClass::RegisterClass()
 	{
     	app_usbd_class_inst_t const * classInstance = app_usbd_msc_class_inst_get(get_usb_msc_class_definition());
-		static Device::class_info_t classInfo =
+		static device::class_info_t classInfo =
 		{
 			.classInstance = classInstance,
 			.context = this,
 			.name = "Mass Storage",
 		};
 
-		Usb::Device::RegisterDeviceClass(&classInfo);
+		usb::device::RegisterDeviceClass(&classInfo);
 	}
 
 } // namespace Usb

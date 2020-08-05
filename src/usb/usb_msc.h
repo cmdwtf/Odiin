@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Usb
+namespace usb
 {
 	class MassStorageClass
 	{

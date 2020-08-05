@@ -2,7 +2,7 @@
 
 #include "app_usbd_types.h"
 
-namespace Usb
+namespace usb
 {
 	class Listener
 	{

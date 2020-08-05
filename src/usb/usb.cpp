@@ -10,9 +10,9 @@ using std::map;
 
 #include "usb_log_module.ii"
 
-namespace Usb
+namespace usb
 {
-	namespace Device
+	namespace device
 	{
 		namespace
 		{
@@ -238,5 +238,5 @@ namespace Usb
 			}
 		}
 
-	} // namespace Device
+	} // namespace device
 } // namespace Usb
