@@ -5,7 +5,7 @@
 #include "lvgl.h"
 #include "input_hal.h"
 
-namespace Input
+namespace input
 {
 	class Keypad
 	{
@@ -24,4 +24,4 @@ namespace Input
 
 		static bool ReadCallback(lv_indev_drv_t* driver, lv_indev_data_t*data);
 	};
-} // namespace Input
+} // namespace input

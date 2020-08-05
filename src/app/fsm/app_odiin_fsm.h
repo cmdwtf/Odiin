@@ -50,6 +50,6 @@ namespace App::Fsm
 		virtual void entry();
 		virtual void exit();
 
-		static Input::Keypad* Keypad;
+		static input::Keypad* Keypad;
 	};
 } // namespace App::Fsm

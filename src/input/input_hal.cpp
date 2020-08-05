@@ -1,6 +1,6 @@
 #include "input_hal.h"
 
-namespace Input
+namespace input
 {
 	namespace
 	{

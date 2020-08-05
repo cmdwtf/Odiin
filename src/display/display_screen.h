@@ -12,7 +12,7 @@ namespace Display
 	class Screen
 	{
 	public:
-		Screen(Input::Keypad* keypad);
+		Screen(input::Keypad* keypad);
 		virtual ~Screen();
 		Screen(const Screen &) = delete;
 		Screen &operator=(const Screen &) = delete;
@@ -23,6 +23,6 @@ namespace Display
 	private:
 		static bool initialized;
 		static void Tick(void* context);
-		Input::Keypad* keypad;
+		input::Keypad* keypad;
 	};
 } // namespace Display

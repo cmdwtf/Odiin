@@ -134,7 +134,7 @@ namespace App::Fsm
 	void OdiinState::entry() { }
 	void OdiinState::exit() { }
 
-	Input::Keypad* OdiinState::Keypad = nullptr;
+	input::Keypad* OdiinState::Keypad = nullptr;
 } // namespace App::Fsm
 
 //////////////////////////////////////////////////////////////////////////

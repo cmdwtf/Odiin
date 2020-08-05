@@ -33,7 +33,7 @@ namespace Display
 
 	bool Screen::initialized = false;
 
-	Screen::Screen(Input::Keypad* _keypad)
+	Screen::Screen(input::Keypad* _keypad)
 	{
 		if (initialized)
 		{

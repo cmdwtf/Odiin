@@ -2,7 +2,7 @@
 
 #include "input_log_module.ii"
 
-namespace Input
+namespace input
 {
 	bool Keypad::ReadCallback(lv_indev_drv_t* driver, lv_indev_data_t*data)
 	{
@@ -46,7 +46,7 @@ namespace Input
 
 	Keypad::Keypad()
 	{
-		Input::InitializeHal();
+		input::InitializeHal();
 	}
 
 	Keypad::~Keypad()

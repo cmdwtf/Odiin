@@ -5,7 +5,7 @@
 
 #include "nrf_gpio.h"
 
-namespace Input
+namespace input
 {
 	using std::map;
 

@@ -200,7 +200,7 @@ namespace App
 
 	void Odiin::InitializeInput()
 	{
-		static Input::Keypad kp;
+		static input::Keypad kp;
 		keypad = &kp;
 		StateMachine::Keypad = keypad;
 	}
