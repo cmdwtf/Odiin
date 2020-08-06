@@ -3,24 +3,28 @@
 #include "app_error.h"
 #include "nrf_crypto_rng.h"
 
+#include "crypto_shared.h"
+
+#include "crypto_log_module.ii"
+
 namespace crypto
 {
 	namespace
 	{
 	}
 
-	void Bytes(uint8_t* output, size_t size)
+	void TrueRandom::Bytes(uint8_t* output, size_t size)
 	{
 		ret_code_t ret = nrf_crypto_rng_vector_generate(output, size);
-		APP_ERROR_CHECK(ret);
+		CryptoErrorCheck(ret);
 	}
 
 	uint32_t TrueRandom::Range(uint32_t min, uint32_t max)
 	{
 		static_assert(sizeof(uint32_t) == 4);
 		uint32_t result = 0;
-		ret_code_t ret = nrf_crypto_rng_vector_generate_in_range((uint8_t*)result, (const uint8_t*)&min, (const uint8_t*)&max, sizeof(uint32_t));
-		APP_ERROR_CHECK(ret);
+		ret_code_t ret = nrf_crypto_rng_vector_generate_in_range((uint8_t*)&result, (const uint8_t*)&min, (const uint8_t*)&max, sizeof(uint32_t));
+		CryptoErrorCheck(ret);
 
 		return result;
 	}
