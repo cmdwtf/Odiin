@@ -387,6 +387,8 @@ LDFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 LDFLAGS += -Wl,--gc-sections
 # use newlib in nano version
 LDFLAGS += --specs=nano.specs
+# Ask linker to produce cross references to investigate later.
+LDFLAGS += -Xlinker --cref
 
 nrf52840_xxaa: CFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
 nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
