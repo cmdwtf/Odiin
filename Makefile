@@ -42,6 +42,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/nfc/type_2_tag/*.c*) \
   $(wildcard $(SOURCE_DIR)/platform/*.c*) \
   $(wildcard $(SOURCE_DIR)/tests/*.c*) \
+  $(wildcard $(SOURCE_DIR)/timer/*.c*) \
   $(wildcard $(SOURCE_DIR)/usb/*.c*) \
 
 INC_FOLDERS += \
@@ -141,6 +142,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_nfct.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_qspi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rtc.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spi.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spim.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_systick.c \
