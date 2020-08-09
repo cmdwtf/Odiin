@@ -41,13 +41,13 @@ namespace files
 			return false;
 		}
 
-		NRF_LOG_INFO("Mounting SDC...");
+		NRF_LOG_INFO("Mounting FAT filesystem on SDC...");
 
 		FRESULT mountResult = f_mount(&fileSystem, DriveRoot, MountOptionImmediate);
 
 		if (mountResult != FR_OK)
 		{
-			NRF_LOG_ERROR("Failed to mount SDC! (%d)", mountResult);
+			NRF_LOG_ERROR("Failed to mount filesystem on SDC! (%d)", mountResult);
 			return false;
 		}
 
@@ -96,7 +96,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_opendir(&dir, directoryPath);
+		FRESULT status = f_opendir(&dir, directoryPath);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to DirectoryOpen `%s`: %d", nrf_log_push((char*)directoryPath), status);
@@ -114,7 +114,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_readdir(&dir, &info);
+		FRESULT status = f_readdir(&dir, &info);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to DirectoryRead: %d", status);
@@ -134,7 +134,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_closedir(&dir);
+		FRESULT status = f_closedir(&dir);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to DirectoryClose: %d", status);
@@ -155,7 +155,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_open(&file, filePath, mode);
+		FRESULT status = f_open(&file, filePath, mode);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileOpen `%s`: %d", filePath, status);
@@ -173,7 +173,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_read(&file, buffer, amountToRead, amountRead);
+		FRESULT status = f_read(&file, buffer, amountToRead, amountRead);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileRead: %d", status);
@@ -191,7 +191,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_write(&file, buffer, bufferLength, amountWritten);
+		FRESULT status = f_write(&file, buffer, bufferLength, amountWritten);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileWrite: %d", status);
@@ -209,7 +209,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_lseek(&file, offset);
+		FRESULT status = f_lseek(&file, offset);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileSeek: %d", status);
@@ -227,7 +227,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_close(&file);
+		FRESULT status = f_close(&file);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileClose: %d", status);
@@ -237,7 +237,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileStat(const char *path, SdCardFileInfo& fileInfo)
+	bool SdCard::FileStat(SdCardFileInfo& fileInfo, const char *path)
 	{
 		if (mounted == false)
 		{
@@ -245,7 +245,7 @@ namespace files
 			return false;
 		}
 
-		DSTATUS status = f_stat(path, &fileInfo);
+		FRESULT status = f_stat(path, &fileInfo);
 		if (status != FR_OK)
 		{
 			NRF_LOG_WARNING("Failed to FileStat: %d", status);
@@ -295,7 +295,7 @@ namespace files
 		}
 
 		// zero filesystem
-		memset(&fileSystem, 0, sizeof(FATFS));
+		memset(&fileSystem, 0, sizeof(SdCardFileSystem));
 
 		if (registered == false && RegisterBlockDevice() == false)
 		{
@@ -362,7 +362,7 @@ namespace files
 		diskIndex = -1;
 		initialized = false;
 		registered = false;
-		memset(&fileSystem, 0, sizeof(FATFS));
+		memset(&fileSystem, 0, sizeof(SdCardFileSystem));
 
 		NRF_LOG_INFO("Uninitialized.");
 

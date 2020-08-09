@@ -50,16 +50,31 @@ namespace app
 			NRF_LOG_ERROR("Cannot set payload while NFCT is enabled!");
 			return;
 		}
+
 		files::SdCardFile file;
-		sdCard->FileOpen(file, filename, FA_READ);
+		if (sdCard->FileOpen(file, filename, FA_READ) == false)
+		{
+			nfcTagEmulator->SetPayload(nullptr);
+			memset(activeNfctFilename, 0, FF_MAX_LFN);
+			NRF_LOG_WARNING("Failed to open `%s` to set payload data!", NRF_LOG_PUSH((char*)filename));
+			// todo: dispatch an error event
+		}
 
 		size_t amountRead = 0;
 		if (sdCard->FileRead(file, payload.GetRawTagMemory(), payload.TagMemoryCapacity, &amountRead))
 		{
 			// read successful. load it up and away we go!
 			nfcTagEmulator->SetPayload(&payload);
-			NRF_LOG_INFO("NFCT payload set!");
+			snprintf(activeNfctFilename, FF_MAX_LFN, "%s", filename);
+			NRF_LOG_INFO("NFCT payload set to `%s`", NRF_LOG_PUSH(activeNfctFilename));
 			SendEvent(app::fsm::NfctActivateEvent());
+		}
+		else
+		{
+			nfcTagEmulator->SetPayload(nullptr);
+			memset(activeNfctFilename, 0, FF_MAX_LFN);
+			NRF_LOG_WARNING("Failed to read `%s` to set payload data!", NRF_LOG_PUSH((char*)filename));
+			// todo: dispatch an error event
 		}
 	}
 
@@ -73,6 +88,11 @@ namespace app
 		{
 			nfcTagEmulator->DisableTag();
 		}
+	}
+
+	const char* Odiin::GetActiveNfcTagPayloadFilename()
+	{
+		return activeNfctFilename;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -181,6 +201,9 @@ namespace app
 		usbMassStorageClass = &msc;
 		usbMassStorageClass->RegisterClass();
 		usb::device::Enable();
+
+		// We'd like to hear about USB events.
+		usb::device::RegisterListener(this);
 	}
 
 	void Odiin::InitializeSdCard()
@@ -193,9 +216,6 @@ namespace app
 
 		// SDCARD will want to listen for USB events.
 		usb::device::RegisterListener(sdCard);
-
-		// So do we
-		usb::device::RegisterListener(this);
 	}
 
 	void Odiin::InitializeInput()

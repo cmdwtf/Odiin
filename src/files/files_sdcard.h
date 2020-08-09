@@ -5,6 +5,7 @@
 
 #include "ff.h"
 
+#include "files_file_system.h"
 #include "usb/usb_listener.h"
 
 namespace files
@@ -13,33 +14,31 @@ namespace files
 	using SdCardFile = FIL;
 	using SdCardFileInfo = FILINFO;
 	using SdCardDirectory = DIR;
+	using SdCardFileSystem = FATFS;
 
-	class SdCard : public usb::Listener
+	class SdCard : public FileSystem<SdCardFile, SdCardDirectory, SdCardFileInfo>,
+			public usb::Listener
 	{
 	public:
 		SdCard();
 		virtual ~SdCard() = default;
 		SdCard(const SdCard &) = delete;
 		SdCard &operator=(const SdCard &) = delete;
-		bool Mount();
-		bool Unmount();
 
-		// #todo: these belong in their own class
-		bool DirectoryOpen(SdCardDirectory& dir, const char* directoryPath);
-		bool DirectoryRead(SdCardDirectory& dir, SdCardFileInfo& info);
-		bool DirectoryClose(SdCardDirectory& dir);
+		virtual bool Mount() override;
+		virtual bool Unmount() override;
 
-		// #todo: these belong in their own class
-		bool FileOpen(SdCardFile& file, const char* filePath, uint8_t mode);
-		bool FileRead(SdCardFile& file, void* buffer, size_t amountToRead, size_t* amountRead);
-		bool FileWrite(SdCardFile& file, const void* buffer, size_t bufferLength, size_t* amountWritten);
-		bool FileSeek(SdCardFile& file, size_t offset);
-		bool FileClose(SdCardFile& file);
-		bool FileStat(const char* path, SdCardFileInfo& fileInfo);
+		virtual bool FileOpen(SdCardFile& file, const char* filePath, uint8_t mode) override;
+		virtual bool FileRead(SdCardFile& file, void* buffer, size_t amountToRead, size_t* amountRead) override;
+		virtual bool FileWrite(SdCardFile& file, const void* buffer, size_t bufferLength, size_t* amountWritten) override;
+		virtual bool FileSeek(SdCardFile& file, size_t offset) override;
+		virtual bool FileClose(SdCardFile& file) override;
 
-		static constexpr const char* RootDirectory = "/";
-		static constexpr const char* RelativeCurrentDirectory = ".";
-		static constexpr const char* RelativeParentDirectory = "..";
+		virtual bool DirectoryOpen(SdCardDirectory& dir, const char* directoryPath) override;
+		virtual bool DirectoryRead(SdCardDirectory& dir, SdCardFileInfo& info) override;
+		virtual bool DirectoryClose(SdCardDirectory& dir) override;
+
+		virtual bool FileStat(SdCardFileInfo& fileInfo, const char* path) override;
 
 		inline const char* GetDriveLabel() { return driveLabel; }
 		inline uint32_t GetDriveSerial() { return driveSerial; }
@@ -51,7 +50,7 @@ namespace files
 		inline bool IsMounted() { return mounted; }
 
 	private:
-		FATFS fileSystem; // #todo: abstract out the fs.
+		SdCardFileSystem fileSystem;
 		uint8_t diskIndex = -1;
 		bool registered = false;
 		bool initialized = false;

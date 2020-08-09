@@ -61,7 +61,7 @@ void TEST_ReadDirectories()
 	if (SDCARD->Mount())
 	{
 		NRF_LOG_RAW_INFO("\r\n\r\n");
-		readDirectory(files::SdCard::RootDirectory);
+		readDirectory(SDCARD->GetRootDirectory());
 		NRF_LOG_RAW_INFO("\r\n\r\n");
 	}
 }

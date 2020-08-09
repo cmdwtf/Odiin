@@ -161,21 +161,22 @@ class MenuFiles
 	size_t displayedFileCount = 0;
 	bool isRoot = false;
 
+	files::SdCard* sdCard = nullptr;
+
 	size_t AppendDirectoryMenu(const char *path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength, size_t directoryOffset)
 	{
 		ASSERT(path != nullptr);
 		ASSERT(output != nullptr);
 		ASSERT(stringBuffers != nullptr);
 
-		files::SdCard& sd = *app::Odiin::GetInstance()->GetSdCard();
 		files::SdCardDirectory dir;
 
 		size_t outputIndex = 0;
 
-		if (sd.DirectoryOpen(dir, path))
+		if (sdCard->DirectoryOpen(dir, path))
 		{
 			files::SdCardFileInfo info;
-			while (sd.DirectoryRead(dir, info))
+			while (sdCard->DirectoryRead(dir, info))
 			{
 				//bool readOnly = (info.fattrib & AM_RDO);
 				bool hidden = (info.fattrib & AM_HID);
@@ -229,15 +230,14 @@ class MenuFiles
 	{
 		ASSERT(path != nullptr);
 
-		files::SdCard& sd = *app::Odiin::GetInstance()->GetSdCard();
 		files::SdCardDirectory dir;
 
 		size_t count = 0;
 
-		if (sd.DirectoryOpen(dir, path))
+		if (sdCard->DirectoryOpen(dir, path))
 		{
 			files::SdCardFileInfo info;
-			while (sd.DirectoryRead(dir, info))
+			while (sdCard->DirectoryRead(dir, info))
 			{
 				bool hidden = (info.fattrib & AM_HID);
 				bool system = (info.fattrib & AM_SYS);
@@ -271,7 +271,7 @@ class MenuFiles
 		}
 		else
 		{
-			output[index].option = files::SdCard::RelativeParentDirectory;
+			output[index].option = sdCard->GetRelativeParentDirectory();
 			output[index].prefix = LV_SYMBOL_NEW_LINE;
 			output[index].click_cb = MenuOptionPressedCallback;
 			output[index].user_flags = FLAG_DIR_UP;
@@ -339,7 +339,7 @@ class MenuFiles
 	{
 		paginationOffset = 0;
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, directoryName, activePath, PATH_SIZE_MAX));
-		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) == 0);
+		isRoot = (strcmp(activePath, sdCard->GetRootDirectory()) == 0);
 		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
@@ -353,8 +353,8 @@ class MenuFiles
 		}
 
 		paginationOffset = 0;
-		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, files::SdCard::RelativeParentDirectory, activePath, PATH_SIZE_MAX));
-		isRoot = (strcmp(activePath, files::SdCard::RootDirectory) == 0);
+		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, sdCard->GetRelativeParentDirectory(), activePath, PATH_SIZE_MAX));
+		isRoot = (strcmp(activePath, sdCard->GetRootDirectory()) == 0);
 		activePathItemCount = CountDirectoryItems(activePath);
 		UpdateUI();
 	}
@@ -378,13 +378,15 @@ class MenuFiles
 	{
 		LOG_STATE_ENTER(MenuFiles);
 
+		sdCard = app::Odiin::GetInstance()->GetSdCard();
+
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
 
 		// push the root path if we don't have one set.
 		if (strlen(activePath) == 0)
 		{
-			PushDirectory(files::SdCard::RootDirectory);
+			PushDirectory(sdCard->GetRootDirectory());
 		}
 		else
 		{

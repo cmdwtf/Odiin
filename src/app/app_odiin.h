@@ -29,6 +29,7 @@ namespace app
 
 		void SetNfcTagPayload(const char* filename);
 		void SetNfcTagEnabled(bool enabled);
+		const char* GetActiveNfcTagPayloadFilename();
 
 		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
 		virtual void UsbDidDisable(app_usbd_event_type_t event) override;
@@ -58,6 +59,7 @@ namespace app
 		// #todo: this is not where this should live.
 		// but it will do as a kludge for now.
 		nfc::nxp::ntag21x::Ntag215Payload payload;
+		char activeNfctFilename[FF_MAX_LFN] = { 0 };
 	};
 } // namespace app
 
