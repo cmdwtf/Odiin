@@ -4,9 +4,13 @@
 
 #define UI_NAME nfct_active
 
+#define NFCT_UI_DESC_SIZE 128
+
 static lv_obj_t* screen = NULL;
 static lv_event_cb_t cancel_callback = NULL;
 static lv_obj_t* cancel_button = NULL;
+static lv_obj_t* window = NULL;
+static char window_title_text[NFCT_UI_DESC_SIZE] = "";
 
 static void nfct_cancel_pressed(lv_obj_t* obj, lv_event_t e)
 {
@@ -39,10 +43,9 @@ UI_DECLARE_CREATE(UI_NAME)
 	LV_IMG_DECLARE(nfct_48);
 	static splash_window_desc_t desc = {
 		.title = "NFC Tag Active",
-		.instruction = PRODUCT_NAME_SHORT " is currently emulating the "
-		"NFC Tag you chose!\n\n"
-		"Place " PRODUCT_NAME_SHORT " close to the reader, or press "
-		"the X to exit!",
+		.instruction = PRODUCT_NAME_SHORT "'s NFC Tag is active."
+		"Move " PRODUCT_NAME_SHORT " close to the reader, or press "
+		"the select to exit!",
 		.icon = NULL,
 		.image = &nfct_48,
 		.header_button_text = LV_SYMBOL_CLOSE,
@@ -50,8 +53,20 @@ UI_DECLARE_CREATE(UI_NAME)
 	};
 
 	screen = display_screen_ui_create_splash_window_screen(&desc);
+	window = desc.return_window_obj;
 
 	cancel_button = desc.return_header_button_obj;
+
+	// create a label for the active file name or whatever description
+	//label_description = lv_label_create(desc.return_window_obj, NULL);
+	//lv_label_set_long_mode(label_description, LV_LABEL_LONG_SROLL);
+	//lv_obj_set_width(label_description, lv_win_get_width(desc.return_window_obj));
+	//lv_label_set_text(label_description, window_title_text);
+
+	//lv_obj_t* windowContent = lv_win_get_content(desc.return_window_obj);
+	//lv_coord_t labelHeight = lv_obj_get_height(label_description);
+	//lv_obj_set_y(label_description, lv_obj_get_height(windowContent) - labelHeight * 1.5f);
+
 
 	return screen;
 }
@@ -67,4 +82,16 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 void UI_DECLARE_FUNCTION(UI_NAME, set_cancel_callback)(lv_event_cb_t callback)
 {
 	cancel_callback = callback;
+}
+
+void UI_DECLARE_FUNCTION(UI_NAME, set_title)(const char* title)
+{
+	lv_snprintf(window_title_text, NFCT_UI_DESC_SIZE, "%s", title);
+
+	if (window == NULL)
+	{
+		return;
+	}
+
+	lv_win_set_title(window, title);
 }

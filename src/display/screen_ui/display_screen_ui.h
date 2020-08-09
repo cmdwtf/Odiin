@@ -22,6 +22,7 @@ extern "C" {
 
 	UI_DECLARE(nfct_active);
 	void UI_DECLARE_FUNCTION(nfct_active, set_cancel_callback)(lv_event_cb_t callback);
+	void UI_DECLARE_FUNCTION(nfct_active, set_title)(const char* title);
 
 #ifdef __cplusplus
 } /* extern "C" */

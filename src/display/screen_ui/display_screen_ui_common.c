@@ -66,6 +66,8 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 	lv_obj_t* window = lv_win_create(screen, NULL);
 	lv_win_set_title(window, desc->title);
 
+	desc->return_window_obj = window;
+
 	// window button
 	if (desc->header_button_text != NULL)
 	{
@@ -100,7 +102,7 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 		lv_obj_set_width(labelIcon, lv_win_get_width(window));
 		lv_label_set_text(labelIcon, desc->icon);
 		lv_obj_align(labelIcon, NULL, LV_ALIGN_CENTER, 0, 0);
-		lv_obj_set_y(labelIcon, (lv_obj_get_height(content) / 3) * 2);
+		lv_obj_set_y(labelIcon, (lv_obj_get_height(content) / 3) * 2 - 3);
 	}
 
 	if (desc->image != NULL)
@@ -108,7 +110,7 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 		lv_obj_t* image = lv_img_create(window, NULL);
 		lv_img_set_src(image, desc->image);
 		lv_obj_align(image, NULL, LV_ALIGN_CENTER, 0, 0);
-		lv_obj_set_y(image, (lv_obj_get_height(content) / 2));
+		lv_obj_set_y(image, (lv_obj_get_height(content) / 2) - 3);
 	}
 
 	return screen;

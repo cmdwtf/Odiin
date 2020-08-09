@@ -62,13 +62,22 @@ namespace app::fsm
 	{
 		void entry() override
 		{
-			app::Odiin::GetInstance()->SetNfcTagEnabled(true);
 			LOG_STATE_ENTER(NfctActive);
+
+			// enable the nfct peripheral
+			app::Odiin::GetInstance()->SetNfcTagEnabled(true);
+
+			// setup the UI
 			UI_CREATE(nfct_active);
 			UI_ACTIVATE(nfct_active, Keypad->GetInputGroup());
 			UI_FUNCTION(nfct_active, set_cancel_callback)([](lv_obj_t*, lv_event_t) {
 				dispatch(NfctDeactivateEvent());
 			});
+
+			const char* baseName;
+			size_t baseNameLength;
+			cwk_path_get_basename(app::Odiin::GetInstance()->GetActiveNfcTagPayloadFilename(), &baseName, &baseNameLength);
+			UI_FUNCTION(nfct_active, set_title)(baseName);
 		}
 
 		void exit() override
