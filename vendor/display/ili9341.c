@@ -164,6 +164,11 @@ static inline uint32_t spi_buffer_total_remaining()
 	return ILI9341_RING_BUFFER_SIZE - (ili9341CmdByteCount + ili9341DataByteCount);
 }
 
+static volatile bool ili9341_is_ready_for_command()
+{
+	return ili9341CmdByteCount == 0 && ili9341DataByteCount == 0;
+}
+
 static inline void spi_event_handler(nrfx_spim_evt_t const * p_event,
 									 void *                  p_context)
 {
@@ -623,12 +628,7 @@ const nrf_lcd_t lcd_ili9341 = {
 };
 
 //////////////////////////////////////////////////////////////////////////
-// custom functions
-
-volatile bool ili9341_is_ready_for_command()
-{
-	return ili9341CmdByteCount == 0 && ili9341DataByteCount == 0;
-}
+// extra functions
 
 void ili9341_raw_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t* colorBuffer)
 {
@@ -638,7 +638,14 @@ void ili9341_raw_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, c
 	spi_commit();
 }
 
-// end custom functions
+const nrf_lcd_ex_t lcd_ili9341_ex = {
+	.raw_draw = ili9341_raw_draw,
+	.ready_for_command = ili9341_is_ready_for_command,
+	.p_lcd_base = &lcd_ili9341,
+	.p_lcd_cb = &ili9341_cb
+};
+
+// end extra functions
 //////////////////////////////////////////////////////////////////////////
 
 #endif // NRF_MODULE_ENABLED(ILI9341)

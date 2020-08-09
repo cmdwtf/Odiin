@@ -29,10 +29,17 @@ extern "C" {
 
 #define COLOR(r, g, b)		((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3))
 
-void ili9341_raw_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t* colorBuffer);
-volatile bool ili9341_is_ready_for_command();
+// like nrf_lcd_t, but providing a few extra features.
+typedef struct
+{
+	void (*raw_draw)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t* colorBuffer);
+	volatile bool (*ready_for_command)();
+	const nrf_lcd_t* p_lcd_base;
+    lcd_cb_t* p_lcd_cb;
+} nrf_lcd_ex_t;
 
 extern const nrf_lcd_t lcd_ili9341;
+extern const nrf_lcd_ex_t lcd_ili9341_ex;
 
 #ifdef __cplusplus
 }

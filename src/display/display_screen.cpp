@@ -26,9 +26,12 @@ namespace display
 
 		//////////////////////////////////////////////////////////////////////////
 		// Display Driver
-		static const nrf_lcd_t *lcd = &lcd_ili9341;		// the graphics hardware
-		lv_disp_t* display = nullptr;					// the graphics middleware
+		static const nrf_lcd_t *lcd = &lcd_ili9341;			// the graphics hardware
+		static const nrf_lcd_ex_t *lcdEx = &lcd_ili9341_ex;	// the graphics hardware, bonus fns
+		lv_disp_t* display = nullptr;						// the graphics middleware
 		void lvFlushCallback(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
+
+		extern const nrf_lcd_t nrf_lcd_ili9341;
 	}
 
 	bool Screen::initialized = false;
@@ -73,9 +76,15 @@ namespace display
 		displayDriver.buffer = &displayBuffer;
 		displayDriver.flush_cb = lvFlushCallback;
 		// displayDriver.monitor_cb = nullptr; // #perf monitoring later
+		displayDriver.rotated = 1;
 		displayDriver.color_chroma_key = LV_COLOR_MAGENTA;
 		displayDriver.user_data = this;
 		display = lv_disp_drv_register(&displayDriver);
+
+		if (displayDriver.rotated)
+		{
+			lcd->lcd_rotation_set(NRF_LCD_ROTATE_90);
+		}
 
 		NRF_LOG_INFO("Starting gfx timer...");
 		uint32_t ticks = APP_TIMER_TICKS(GraphicsTickMs);
@@ -140,13 +149,13 @@ namespace display
 
 			// we are all set up to draw. we just need to wait and make sure
 			// that the driver is ready for us to actually hand it the next bit.
-			while (ili9341_is_ready_for_command() == false)
+			while (lcdEx->ready_for_command() == false)
 			{
 				__WFE();
 			}
 
 			// ship it!
-			ili9341_raw_draw(x, y, width, height, (const uint16_t*)color_p);
+			lcdEx->raw_draw(x, y, width, height, (const uint16_t*)color_p);
 
 			lv_disp_flush_ready(disp_drv);
 		}
