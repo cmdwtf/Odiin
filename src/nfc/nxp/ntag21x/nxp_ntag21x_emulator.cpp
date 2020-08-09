@@ -10,6 +10,11 @@ namespace nfc::nxp::ntag21x
 	{
 		NfcType2TagEmulator::SetPayload(payload);
 
+		if (payload == nullptr)
+		{
+			return true;
+		}
+
 		// set the UID based on the payload
 		size_t length = UniqueIdLength;
 		uint8_t id[UniqueIdLength] = { 0 };
