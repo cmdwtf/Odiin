@@ -9,7 +9,7 @@
 
 void readDirectory(const char* dirName, int depth = 0)
 {
-	files::SdCard* SDCARD = app::Odiin::GetSdCard();
+	files::Fat32* SDCARD = app::Odiin::GetSdCard();
 	files::SdCardDirectory dir;
 	if (SDCARD->DirectoryOpen(dir, dirName))
 	{
@@ -55,7 +55,7 @@ void readDirectory(const char* dirName, int depth = 0)
 
 void TEST_ReadDirectories()
 {
-	files::SdCard* SDCARD = app::Odiin::GetSdCard();
+	files::Fat32* SDCARD = app::Odiin::GetSdCard();
 
 	NRF_LOG_INFO("Starting TEST_ReadDirectories().");
 	if (SDCARD->Mount())

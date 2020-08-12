@@ -25,7 +25,7 @@ namespace app
 		return &instance;
 	}
 
-	files::SdCard* Odiin::GetSdCard()
+	files::Fat32* Odiin::GetSdCard()
 	{
 		return GetInstance()->sdCard;
 	}
@@ -208,7 +208,7 @@ namespace app
 
 	void Odiin::InitializeSdCard()
 	{
-		static files::SdCard sdc;
+		static files::Fat32 sdc;
 		sdCard = &sdc;
 
 		// we will go ahead and start mounted

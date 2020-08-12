@@ -161,7 +161,7 @@ class MenuFiles
 	size_t displayedFileCount = 0;
 	bool isRoot = false;
 
-	files::SdCard* sdCard = nullptr;
+	files::Fat32* sdCard = nullptr;
 
 	size_t AppendDirectoryMenu(const char *path, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength, size_t directoryOffset)
 	{

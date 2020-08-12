@@ -1,4 +1,4 @@
-#include "files_sdcard.h"
+#include "files_fat32.h"
 
 #include "diskio.h"
 #include "diskio_blkdev.h"
@@ -20,7 +20,7 @@ namespace files
 		const nrf_block_dev_sdc_t* sdCardBlockDevice = nullptr;
 	}
 
-	SdCard::SdCard()
+	Fat32::Fat32()
 	{
 
 	}
@@ -28,7 +28,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// Disk Operations
 
-	bool SdCard::Mount()
+	bool Fat32::Mount()
 	{
 		if (mounted)
 		{
@@ -59,7 +59,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::Unmount()
+	bool Fat32::Unmount()
 	{
 		if (mounted == false)
 		{
@@ -88,7 +88,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// Directory Operations
 
-	bool SdCard::DirectoryOpen(SdCardDirectory& dir, const char *directoryPath)
+	bool Fat32::DirectoryOpen(SdCardDirectory& dir, const char *directoryPath)
 	{
 		if (mounted == false)
 		{
@@ -106,7 +106,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::DirectoryRead(SdCardDirectory& dir, SdCardFileInfo& info)
+	bool Fat32::DirectoryRead(SdCardDirectory& dir, SdCardFileInfo& info)
 	{
 		if (mounted == false)
 		{
@@ -126,7 +126,7 @@ namespace files
 		return info.fname[0] != '\0';
 	}
 
-	bool SdCard::DirectoryClose(SdCardDirectory& dir)
+	bool Fat32::DirectoryClose(SdCardDirectory& dir)
 	{
 		if (mounted == false)
 		{
@@ -147,7 +147,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// File Operations
 
-	bool SdCard::FileOpen(SdCardFile& file, const char *filePath, uint8_t mode)
+	bool Fat32::FileOpen(SdCardFile& file, const char *filePath, uint8_t mode)
 	{
 		if (mounted == false)
 		{
@@ -165,7 +165,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileRead(SdCardFile& file, void *buffer, size_t amountToRead, size_t *amountRead)
+	bool Fat32::FileRead(SdCardFile& file, void *buffer, size_t amountToRead, size_t *amountRead)
 	{
 		if (mounted == false)
 		{
@@ -183,7 +183,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileWrite(SdCardFile& file, const void *buffer, size_t bufferLength, size_t *amountWritten)
+	bool Fat32::FileWrite(SdCardFile& file, const void *buffer, size_t bufferLength, size_t *amountWritten)
 	{
 		if (mounted == false)
 		{
@@ -201,7 +201,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileSeek(SdCardFile& file, size_t offset)
+	bool Fat32::FileSeek(SdCardFile& file, size_t offset)
 	{
 		if (mounted == false)
 		{
@@ -219,7 +219,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileClose(SdCardFile& file)
+	bool Fat32::FileClose(SdCardFile& file)
 	{
 		if (mounted == false)
 		{
@@ -237,7 +237,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::FileStat(SdCardFileInfo& fileInfo, const char *path)
+	bool Fat32::FileStat(SdCardFileInfo& fileInfo, const char *path)
 	{
 		if (mounted == false)
 		{
@@ -260,7 +260,7 @@ namespace files
 
 	// USB Handlers
 
-	void SdCard::UsbDidDisable(app_usbd_event_type_t event)
+	void Fat32::UsbDidDisable(app_usbd_event_type_t event)
 	{
 		if (mounted == false && autoRemountAfterUsbDisconnect)
 		{
@@ -274,7 +274,7 @@ namespace files
 		}
 	}
 
-	void SdCard::UsbWillEnable(app_usbd_event_type_t event)
+	void Fat32::UsbWillEnable(app_usbd_event_type_t event)
 	{
 		if (initialized)
 		{
@@ -287,7 +287,7 @@ namespace files
 		}
 	}
 
-	bool SdCard::Initialize()
+	bool Fat32::Initialize()
 	{
 		if (initialized)
 		{
@@ -336,7 +336,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::Uninitialize()
+	bool Fat32::Uninitialize()
 	{
 		if (initialized == false)
 		{
@@ -369,7 +369,7 @@ namespace files
 		return true;
 	}
 
-	bool SdCard::RegisterBlockDevice()
+	bool Fat32::RegisterBlockDevice()
 	{
 		if (registered)
 		{

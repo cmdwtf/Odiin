@@ -16,14 +16,14 @@ namespace files
 	using SdCardDirectory = DIR;
 	using SdCardFileSystem = FATFS;
 
-	class SdCard : public FileSystem<SdCardFile, SdCardDirectory, SdCardFileInfo>,
+	class Fat32 : public FileSystem<SdCardFile, SdCardDirectory, SdCardFileInfo>,
 			public usb::Listener
 	{
 	public:
-		SdCard();
-		virtual ~SdCard() = default;
-		SdCard(const SdCard &) = delete;
-		SdCard &operator=(const SdCard &) = delete;
+		Fat32();
+		virtual ~Fat32() = default;
+		Fat32(const Fat32 &) = delete;
+		Fat32 &operator=(const Fat32 &) = delete;
 
 		virtual bool Mount() override;
 		virtual bool Unmount() override;

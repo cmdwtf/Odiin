@@ -19,7 +19,7 @@ namespace app
 		using StateMachine = fsm::OdiinState;
 	public:
 		static Odiin* GetInstance();
-		static files::SdCard* GetSdCard();
+		static files::Fat32* GetSdCard();
 
 		~Odiin();
 		void Update();
@@ -51,7 +51,7 @@ namespace app
 		void StartApplication();
 
 		usb::MassStorageClass* usbMassStorageClass;
-		files::SdCard* sdCard;
+		files::Fat32* sdCard;
 		input::Keypad* keypad;
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
