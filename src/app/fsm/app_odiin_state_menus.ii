@@ -15,7 +15,7 @@
 #include "app/app_odiin.h"
 #include "app/app_settings.h"
 #include "display/screen_ui/display_screen_ui.h"
-#include "files/files_sdcard.h"
+#include "files/files_fat32.h"
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
 #endif // __VSCODE_CPP__
@@ -169,13 +169,13 @@ class MenuFiles
 		ASSERT(output != nullptr);
 		ASSERT(stringBuffers != nullptr);
 
-		files::SdCardDirectory dir;
+		files::Fat32Directory dir;
 
 		size_t outputIndex = 0;
 
 		if (sdCard->DirectoryOpen(dir, path))
 		{
-			files::SdCardFileInfo info;
+			files::Fat32FileInfo info;
 			while (sdCard->DirectoryRead(dir, info))
 			{
 				//bool readOnly = (info.fattrib & AM_RDO);
@@ -230,13 +230,13 @@ class MenuFiles
 	{
 		ASSERT(path != nullptr);
 
-		files::SdCardDirectory dir;
+		files::Fat32Directory dir;
 
 		size_t count = 0;
 
 		if (sdCard->DirectoryOpen(dir, path))
 		{
-			files::SdCardFileInfo info;
+			files::Fat32FileInfo info;
 			while (sdCard->DirectoryRead(dir, info))
 			{
 				bool hidden = (info.fattrib & AM_HID);

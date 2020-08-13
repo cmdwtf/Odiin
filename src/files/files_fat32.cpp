@@ -88,7 +88,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// Directory Operations
 
-	bool Fat32::DirectoryOpen(SdCardDirectory& dir, const char *directoryPath)
+	bool Fat32::DirectoryOpen(Fat32Directory& dir, const char *directoryPath)
 	{
 		if (mounted == false)
 		{
@@ -106,7 +106,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::DirectoryRead(SdCardDirectory& dir, SdCardFileInfo& info)
+	bool Fat32::DirectoryRead(Fat32Directory& dir, Fat32FileInfo& info)
 	{
 		if (mounted == false)
 		{
@@ -126,7 +126,7 @@ namespace files
 		return info.fname[0] != '\0';
 	}
 
-	bool Fat32::DirectoryClose(SdCardDirectory& dir)
+	bool Fat32::DirectoryClose(Fat32Directory& dir)
 	{
 		if (mounted == false)
 		{
@@ -147,7 +147,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// File Operations
 
-	bool Fat32::FileOpen(SdCardFile& file, const char *filePath, uint8_t mode)
+	bool Fat32::FileOpen(Fat32File& file, const char *filePath, uint8_t mode)
 	{
 		if (mounted == false)
 		{
@@ -165,7 +165,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::FileRead(SdCardFile& file, void *buffer, size_t amountToRead, size_t *amountRead)
+	bool Fat32::FileRead(Fat32File& file, void *buffer, size_t amountToRead, size_t *amountRead)
 	{
 		if (mounted == false)
 		{
@@ -183,7 +183,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::FileWrite(SdCardFile& file, const void *buffer, size_t bufferLength, size_t *amountWritten)
+	bool Fat32::FileWrite(Fat32File& file, const void *buffer, size_t bufferLength, size_t *amountWritten)
 	{
 		if (mounted == false)
 		{
@@ -201,7 +201,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::FileSeek(SdCardFile& file, size_t offset)
+	bool Fat32::FileSeek(Fat32File& file, size_t offset)
 	{
 		if (mounted == false)
 		{
@@ -219,7 +219,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::FileClose(SdCardFile& file)
+	bool Fat32::FileClose(Fat32File& file)
 	{
 		if (mounted == false)
 		{
@@ -237,7 +237,7 @@ namespace files
 		return true;
 	}
 
-	bool Fat32::FileStat(SdCardFileInfo& fileInfo, const char *path)
+	bool Fat32::FileStat(Fat32FileInfo& fileInfo, const char *path)
 	{
 		if (mounted == false)
 		{
@@ -295,7 +295,7 @@ namespace files
 		}
 
 		// zero filesystem
-		memset(&fileSystem, 0, sizeof(SdCardFileSystem));
+		memset(&fileSystem, 0, sizeof(FATFS));
 
 		if (registered == false && RegisterBlockDevice() == false)
 		{
@@ -362,7 +362,7 @@ namespace files
 		diskIndex = -1;
 		initialized = false;
 		registered = false;
-		memset(&fileSystem, 0, sizeof(SdCardFileSystem));
+		memset(&fileSystem, 0, sizeof(FATFS));
 
 		NRF_LOG_INFO("Uninitialized.");
 

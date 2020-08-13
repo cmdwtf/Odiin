@@ -35,6 +35,10 @@ namespace files
 		// file information interface
 		virtual bool FileStat(FileInfoHandle& fileInfo, const char* path) = 0;
 
+		// drive information interface
+		virtual inline const char* GetDriveLabel() { return ""; }
+		virtual inline uint32_t GetDriveSerial() { return 0; }
+
 		// directory styling
 		inline virtual constexpr const char* GetRootDirectory() { return DirectoryUnixStyleRoot; }
 		inline virtual constexpr const char* GetRelativeCurrentDirectory() { return DirectoryOneDot; }

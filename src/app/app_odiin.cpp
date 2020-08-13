@@ -51,7 +51,7 @@ namespace app
 			return;
 		}
 
-		files::SdCardFile file;
+		files::Fat32File file;
 		if (sdCard->FileOpen(file, filename, FA_READ) == false)
 		{
 			nfcTagEmulator->SetPayload(nullptr);

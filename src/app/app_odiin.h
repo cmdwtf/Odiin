@@ -4,7 +4,7 @@
 #include "usb/usb_msc.h"
 
 #include "display/display_screen.h"
-#include "files/files_sdcard.h"
+#include "files/files_fat32.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x_emulator.h"

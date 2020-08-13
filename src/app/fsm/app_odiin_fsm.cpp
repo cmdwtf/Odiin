@@ -7,7 +7,7 @@
 #include "app/app_odiin.h"
 #include "app/app_settings.h"
 #include "display/screen_ui/display_screen_ui.h"
-#include "files/files_sdcard.h"
+#include "files/files_fat32.h"
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x.h"

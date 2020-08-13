@@ -10,12 +10,12 @@
 void readDirectory(const char* dirName, int depth = 0)
 {
 	files::Fat32* SDCARD = app::Odiin::GetSdCard();
-	files::SdCardDirectory dir;
+	files::Fat32Directory dir;
 	if (SDCARD->DirectoryOpen(dir, dirName))
 	{
 		NRF_LOG_RAW_INFO("%s\t<dir>\r\n", nrf_log_push((char*)dirName));
 
-		files::SdCardFileInfo info;
+		files::Fat32FileInfo info;
 		while (SDCARD->DirectoryRead(dir, info))
 		{
 			const char* readOnly = (info.fattrib & AM_RDO) ? "R" : " ";
