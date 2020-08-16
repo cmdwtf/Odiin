@@ -6,7 +6,7 @@
 
 Odiin is a learning project as I explore the nRF52840 platform, as well as the nRF5 SDK as a whole. It's goal is to attempt to emulate different types of common NFC-A tags, to be a bit of a swiss army knife in that sense. I'm starting with the NTAG21X tags, as I actually have a few of them on hand, and it's easy to verify the behavior between actual tags and the emulated one. I'm using the fantastic [NFC Tools](https://apps.apple.com/us/app/nfc-tools/id1252962749) from [wak dev](https://www.wakdev.com/), as it's been able to give my device all sorts of workouts -- including some packets that I'm still not quite sure what to do with! It also displays a good amount of raw data when it does read, so I'm able to diagnose what I'm doing right and wrong. wak dev, if you're reading this, a full communication log, bit by bit would be a fantastic addon that I'd happily buy pro (again) for!
 
-The order in which I'm adding features is going to be mostly random depending on what I feel like working on. Feel free to open an issue if you've got an idea, question or comment!
+The order in which I'm adding features is going to be mostly random depending on what I feel like working on. Feel free to open an issue if you've got an idea, question or comment! Also, some of the links below are affiliate links. That means if you click through them and end up buying something, I make a few pennies and it doesn't cost you anything!
 
 ## Key Features
 
@@ -34,11 +34,11 @@ Okay, this project is still in the very early stages, but if you want to get a q
 
 Currently Odiin is being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has so far been wonderful and a great way to dive into the nRF52 family of System on a Chips.
 
-Debugging and logging: I'm just using a [USB to TTL](https://amzn.to/2OSYcJb) (affiliate link) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work.
+Debugging and logging: I'm just using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work.
 
 Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://www.amazon.com/gp/product/B01CZL6QIQ/ref=as_li_tl?ie=UTF8&tag=cmd0ed-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B01CZL6QIQ&linkId=e4fa58ed89551ceb71b44a4eca0320d2) (affiliate link). I'm planning to have the display code abstracted enough that I should be able to swap in different display drivers should I decide to support different ones in the future.
 
-Input: I picked up a small [5-way tactile switch breakout](https://amzn.to/3hy9GxS) (affiliate link) that has a very 'joystick style' feel to it. The breakout I got has two extra buttons that I'm trying not to use at the moment, because the breakout is a little large for what I want.I may end up designing my own PCB for the switch, because I want it to fit nicely with whatever hardware I end up using and fitting into a case. The switches themselves seem to be produced by a number of manufacturers, and are available at all my favorite components distributors (💖DigiKey).
+Input: I picked up a small [5-way tactile switch breakout](https://amzn.to/3hy9GxS) that has a very 'joystick style' feel to it. The breakout I got has two extra buttons that I'm trying not to use at the moment, because the breakout is a little large for what I want.I may end up designing my own PCB for the switch, because I want it to fit nicely with whatever hardware I end up using and fitting into a case. The switches themselves seem to be produced by a number of manufacturers, and are available at all my favorite components distributors (💖DigiKey).
 
 ## Build Environment
 
