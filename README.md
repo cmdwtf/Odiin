@@ -32,19 +32,35 @@ Okay, this project is still in the very early stages, but if you want to get a q
 
 ## Current Hardware
 
-Currently Odiin is being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has so far been wonderful and a great way to dive into the nRF52 family of System on a Chips.
+Currently Odiin is being developed on a [Pitaya Go](https://makerdiary.com/products/pitaya-go) by makerdiary. It's a nRF52840 based IoT development board that has an incredible amount of bells and whistles packed into a stick that's just a bit larger than a stick of gum.
 
-Debugging and logging: I'm just using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work.
+To flash, I'm using a makerdiary's [Pitaya-Link](https://makerdiary.com/products/pitaya-link). It's a CMSIS-DAP/DAPLink based flash/debug probe, and is pretty wonderful given the feature set and price point. Ideally I won't need to keep using it as I finish fleshing out the bootloader, but it's definitely needed while I'm debugging.
 
-Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://www.amazon.com/gp/product/B01CZL6QIQ/ref=as_li_tl?ie=UTF8&tag=cmd0ed-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B01CZL6QIQ&linkId=e4fa58ed89551ceb71b44a4eca0320d2) (affiliate link). I'm planning to have the display code abstracted enough that I should be able to swap in different display drivers should I decide to support different ones in the future.
+Debugging and logging: I'm still ocasionally using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work. As well, as I'm using the Pitaya-Link, I'm able to use the VCP it presents as well. Though, it doesn't seem to like higher baud rates for now.
 
-Input: I picked up a small [5-way tactile switch breakout](https://amzn.to/3hy9GxS) that has a very 'joystick style' feel to it. The breakout I got has two extra buttons that I'm trying not to use at the moment, because the breakout is a little large for what I want.I may end up designing my own PCB for the switch, because I want it to fit nicely with whatever hardware I end up using and fitting into a case. The switches themselves seem to be produced by a number of manufacturers, and are available at all my favorite components distributors (💖DigiKey).
+Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://amzn.to/343kaSs). The display code is decently abstracted (not perfect, mind you), that I should be able to swap in another display or driver and get going with only a little effort. It also provides an SD card slot for storage! 
+
+Storage: Since the display has an SD Card slot, I'm using [these Kootion Micro SDHC Cards](https://amzn.to/3iMW0Qm) and [these low profile adapters](https://amzn.to/3kR3EuU) to slot them in. I'd like a lower profile adapter, or something I could more permanently affix to it, but these will do.
+
+I/O: My input is all going to be mounted on the Biifröst Bridge PCB. I'm currently using the E-Switch JS1400 as a 5-way navigation switch (Digi-Key EG5857-ND), and a pair of E-Switch TL9100 (Digi-Key EG5501CT-ND). I've also got a spot for an ARGB LED (APA102) on the board (Digi-Key 1528-1436-ND). If you're building this yourself, you can probably get away just fine with one of the breakout switches I talk about in the older hardware section below!
+
+### Biifröst Bridge
+
+The Biifröst is my current solution to binding the dev kit to the screen and input. Ideally I'll design a real PCB incorporating more of the base elements, but for the time being it was a cheap and effective way to create something that should fit compactly into a case.
+
+The PCB design is incorporated into this project as a submodule in the `hardware` folder, or you can take a look at it's repository here: [BiiFrost](https://github.com/nitz/Biifrost).
+
+## Previous Hardware
+
+Previously Odiin was being developed on a [nRF52840 M.2 Developer Kit](https://store.makerdiary.com/products/nrf52840-m2-developer-kit) by makerdiary. Their hardware has been wonderful was and a great way to dive into the nRF52 family of System on a Chips.
+
+Many of the bits above in 'Current Hardware' were relevant to the development on the M.2 kit, as I was adding them ad-hoc as I was developing. One thing of note was the input switches I was using was this small [5-way tactile switch breakout](https://amzn.to/3hy9GxS) that has a very 'joystick style' feel to it. The breakout was a bit larger than I wanted to use with my goal of fitting Odiin into a case of sorts, so I ended up dropping it when I designed the Biifröst Bridge PCB.
 
 ## Build Environment
 
 A vast majority of the code in this repository is designed to be cross compiled from any platform. This section will discuss some of the tools you'll need on your path. With the exception of perhaps Python depending on how you install it, you'll need to add all these tools to your path manually, or use full paths.
 
- I'm currently targeting an ARM device, and making use of the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 9-2020-Q2 on Windows. Look in `BuildSettings.mk`, and set your paths in there accordingly. If you're using VS Code, you may want to update the path to your install in `.vscode/c_cpp_properties.json` as well, as it's used for the C++ plugin to generate error squigglies. You may very well have luck building with other tools or on other platforms, but at this point in the project life-cycle, that's an exercise left to the reader.
+ I'm currently targeting an ARM device, and making use of the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 9-2020-Q2 on Windows. Look in `BuildSettings.mk`, and set your paths in there accordingly. If you're using VS Code, you may want to update the path to your install in `.vscode/c_cpp_properties.json` as well, as it's used for the C++ plugin to generate error squiggles. You may very well have luck building with other tools or on other platforms, but at this point in the project life-cycle, that's an exercise left to the reader.
 
 I'm using Visual Studio Code as my primary editor, and have provided a .vscode folder with tasks I'm performing often to build/flash/etc. There's also a `.code-workspace` file, though that's just more for continence than anything.
 
