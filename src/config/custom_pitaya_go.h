@@ -1,10 +1,10 @@
 #pragma once
 
-/** SPI configurations, used for MicroSD Card on the Hi-Letgo 2.2" Display */
-#define SDC_SCK_PIN						NRF_GPIO_PIN_MAP(0, 16)  ///< SDC serial clock (SCK) pin.
-#define SDC_MOSI_PIN					NRF_GPIO_PIN_MAP(0, 14)  ///< SDC serial data in (DI) pin.
-#define SDC_MISO_PIN					NRF_GPIO_PIN_MAP(0, 15)   ///< SDC serial data out (DO) pin.
-#define SDC_CS_PIN						NRF_GPIO_PIN_MAP(0, 13)   ///< SDC chip select (CS) pin.
+/** SPI configurations, used for MicroSD Card on the Display */
+#define SDC_SCK_PIN						NRF_GPIO_PIN_MAP(0, 16) ///< SDC serial clock (SCK) pin.
+#define SDC_MOSI_PIN					NRF_GPIO_PIN_MAP(0, 14) ///< SDC serial data in (DI) pin.
+#define SDC_MISO_PIN					NRF_GPIO_PIN_MAP(0, 15) ///< SDC serial data out (DO) pin.
+#define SDC_CS_PIN						NRF_GPIO_PIN_MAP(0, 13) ///< SDC chip select (CS) pin.
 
 /** SPI configurations, used for ILI9341 TFT controller */
 #define ILI9341_SCK_PIN					NRF_GPIO_PIN_MAP(0, 21)
