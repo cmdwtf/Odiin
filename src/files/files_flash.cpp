@@ -1,5 +1,7 @@
 #include "files_flash.h"
 
+#include "files_log_module.ii"
+
 namespace files
 {
 	bool Flash::Mount()

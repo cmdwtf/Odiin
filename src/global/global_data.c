@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "boards.h"
 #include "nrf.h"
 #include "nrf_block_dev.h"
 #include "nrf_block_dev_sdc.h"

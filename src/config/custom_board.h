@@ -1,7 +1,7 @@
 /**
 * Copyright (c) 2019 makerdiary
 * All rights reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
 * met:
@@ -35,7 +35,10 @@
 extern "C" {
 #endif
 
-#ifdef NRF52840_M2
+#if defined(PITAYA_GO)
+#include "pitaya_go.h"
+#include "custom_pitaya_go.h"
+#elif defined(NRF52840_M2)
 #include "nrf52840_m2.h"
 #else
 #error "Board is not defined"

@@ -47,6 +47,7 @@
 #include "app_config.h"
 #endif
 
+#include "custom_pitaya_go.h"
 #include "usb/usb_config.h"
 
 // <h> nRF_Drivers
@@ -1498,7 +1499,7 @@
 #endif
 // <o> NRF_LOG_BACKEND_UART_TX_PIN - UART TX pin
 #ifndef NRF_LOG_BACKEND_UART_TX_PIN
-#define NRF_LOG_BACKEND_UART_TX_PIN 16
+#error "Please define NRF_LOG_BACKEND_URART_TX_PIN in your custom board config header."
 #endif
 
 // <o> NRF_LOG_BACKEND_UART_BAUDRATE  - Default Baudrate
@@ -1521,6 +1522,7 @@
 // <268435456=> 1000000 baud
 
 #ifndef NRF_LOG_BACKEND_UART_BAUDRATE
+//#define NRF_LOG_BACKEND_UART_BAUDRATE 61865984
 #define NRF_LOG_BACKEND_UART_BAUDRATE 251658240
 #endif
 
@@ -5922,28 +5924,28 @@
 
 
 #ifndef ILI9341_SCK_PIN
-#define ILI9341_SCK_PIN NRF_GPIO_PIN_MAP(0, 21)
+#error "Please Define ILI9341_SCK_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_MISO_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_MISO_PIN
-#define ILI9341_MISO_PIN NRF_GPIO_PIN_MAP(0, 24)
+#error "Please Define ILI9341_MISO_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_MOSI_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_MOSI_PIN
-#define ILI9341_MOSI_PIN NRF_GPIO_PIN_MAP(0, 4)
+#error "Please Define ILI9341_MOSI_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_SS_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_SS_PIN
-#define ILI9341_SS_PIN NRF_GPIO_PIN_MAP(0, 26)
+#error "Please Define ILI9341_SS_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_IRQ_PRIORITY  - Interrupt priority
@@ -5980,21 +5982,21 @@
 
 
 #ifndef ILI9341_DC_PIN
-#define ILI9341_DC_PIN NRF_GPIO_PIN_MAP(0, 20)
+#error "Please Define ILI9341_DC_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_RESET_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_RESET_PIN
-#define ILI9341_RESET_PIN NRF_GPIO_PIN_MAP(0, 27)
+#error "Please Define ILI9341_RESET_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_BACKLIGHT_CONTROL_PIN - Pin number  <0-73>
 
 
 #ifndef ILI9341_BACKLIGHT_CONTROL_PIN
-#define ILI9341_BACKLIGHT_CONTROL_PIN NRF_GPIO_PIN_MAP(0, 23)
+#error "Please Define ILI9341_BACKLIGHT_CONTROL_PIN in your custom board config header."
 #endif
 
 // <o> ILI9341_HEIGHT - ILI9341 height  <0-320>

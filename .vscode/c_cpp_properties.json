@@ -16,7 +16,7 @@
                 "CONFIG_GPIO_AS_PINRESET",
                 "FLOAT_ABI_HARD",
                 "NRF52840_XXAABOARD_CUSTOM",
-                "NRF52840_M2",
+                "PITAYA_GO",
                 "BSP_DEFINES_ONLY",
                 "CONFIG_GPIO_AS_PINRESET",
                 "FLOAT_ABI_HARD",

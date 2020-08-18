@@ -339,6 +339,17 @@ OPT = -O3 $(MAX_DEBUG_INFO)
 # Uncomment the line below to enable link time optimization
 #OPT += -flto
 
+# Board Flags for dev platform,
+# Defaulting to pitayago if we don't have one set.
+DEV_PLATFORM ?= pitayago
+
+ifeq ($(DEV_PLATFORM),pitayago)
+  DEV_PLATFORM_FLAGS = -DPITAYA_GO
+else ifeq ($(BOARD_PLATFORM),m2)
+  DEV_PLATFORM_FLAGS = -DNRF52840_M2
+else
+  $(error Dev Platform $(DEV_PLATFORM) is unknown)
+endif
 
 # C flags common to all targets
 CFLAGS += $(OPT)
@@ -347,9 +358,9 @@ CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += $(DEBUG_DEFINES)
+CFLAGS += $(DEV_PLATFORM_FLAGS)
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
-CFLAGS += -DNRF52840_M2
 CFLAGS += -DNRF52840_XXAA
 CFLAGS += -mcpu=cortex-m4
 CFLAGS += -mthumb -mabi=aapcs
@@ -372,9 +383,9 @@ ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 ASMFLAGS += -DBOARD_CUSTOM
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 ASMFLAGS += $(DEBUG_DEFINES)
+ASMFLAGS += $(DEV_PLATFORM_FLAGS)
 ASMFLAGS += -DFLOAT_ABI_HARD
 ASMFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
-ASMFLAGS += -DNRF52840_M2
 ASMFLAGS += -DNRF52840_XXAA
 ASMFLAGS += -mcpu=cortex-m4
 ASMFLAGS += -mthumb -mabi=aapcs
