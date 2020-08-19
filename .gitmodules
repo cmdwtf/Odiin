@@ -19,3 +19,7 @@
 [submodule "cwalk"]
 	path = vendor/cwalk
 	url = https://github.com/likle/cwalk.git
+[submodule "bootloader"]
+	path = bootloader
+	url = https://github.com/nitz/Adafruit_nRF52_Bootloader.git
+	branch = odiin

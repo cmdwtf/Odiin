@@ -16,6 +16,13 @@ GIT_VERSION != git describe --dirty --always --tags
 FILENAME_OUTPUT_MERGED_HEX := $(PROJECT)-$(GIT_VERSION).hex
 FILENAME_OUTPUT_UF2 := $(PROJECT)-$(GIT_VERSION).uf2
 
+# Bootloader Settings
+BOOTLOADER_DIR := bootloader
+BOOTLOADER_BOARD := odiin
+BOOTLOADER_OUTFILE := uf2_bootloader.hex
+BOOTLOADER_BOOT_SETTING_ADDR = 0xFF000
+BOOTLOADER_BOOT_APP_VALID_VALUE = 0x00000001
+
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := $(SOURCE_DIR)/link/nrf52.ld
 
@@ -432,9 +439,22 @@ include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
 
-.PHONY: flash merge flash_mbr flash_all erase release
+.PHONY: bootloader clean_bootloader flash merge flash_mbr flash_bootloader flash_all erase release
 
-# Flash the program
+# Build the bootloader subproject, and copy it to the output.
+# If someone wants to improve the copy/rename to work on multiple platforms, be my guest.
+bootloader:
+	@echo Building UF2 bootloader...
+	make -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) all
+	@xcopy $(BOOTLOADER_DIR)\_build\build-$(BOOTLOADER_BOARD)\$(BOOTLOADER_BOARD)_bootloader*nosd.hex $(OUTPUT_DIRECTORY)\ /R /Y
+	move /y $(OUTPUT_DIRECTORY)\$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)
+
+# Clean bootloader subproject
+clean_bootloader:
+	@echo Cleaning UF2 bootloader...
+	make -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) clean
+
+# Flash the program, no bootloader.
 flash: default
 	@echo Flashing: $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
 	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
@@ -444,15 +464,23 @@ flash_mbr:
 	@echo Flashing: mbr_nrf52_2.4.1_mbr.hex
 	pyocd flash -t nrf52840 $(SDK_ROOT)/components/softdevice/mbr/hex/mbr_nrf52_2.4.1_mbr.hex
 
-# Merge the MBR and application
-merge: default
-	@echo Merging: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
-	mergehex -m $(SDK_ROOT)/components/softdevice/mbr/hex/mbr_nrf52_2.4.1_mbr.hex $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
+# Flash the UF2 bootloader, which has been merged with the MBR already.
+flash_bootloader: bootloader
+	@echo Flashing: UF2 bootloader...
+	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/$(BOOTLOADER_OUTFILE)
 
-# Flash MBR and application
+# Merge the bootloader and the application
+merge: bootloader default
+	@echo Merging: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) from application and UF2 bootloader.
+	mergehex -m $(OUTPUT_DIRECTORY)/$(BOOTLOADER_OUTFILE) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
+
+# Flash UF2 bootloader and application, and mark the application valid by
+# Poking a '1' in app valid, and 0 for the crc.
+# via: https://github.com/adafruit/circuitpython/blob/main/ports/nrf/Makefile#L286
 flash_all: merge
 	@echo Flashing: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
 	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
+	pyocd cmd -t nrf52840 --command w32 $(BOOTLOADER_BOOT_SETTING_ADDR) $(BOOTLOADER_BOOT_APP_VALID_VALUE) --command reset
 
 # Erase the chip
 erase:

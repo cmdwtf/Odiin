@@ -15,14 +15,13 @@ The order in which I'm adding features is going to be mostly random depending on
 |NFC Forum Type 2 Tag Emulation|✔*Partial*|Implementing a happy path as I go. Lots of functions left to handle.|
 |NTag21X Emulation|✔*Partial*|As above, just working on "making it work" first.|
 |USB Mass Storage Emulation|✔|Connect via USB, and edit files on the SD Card!|
-|Tag File loading/saving|✔*Partial*\*\*|~~Soon™!~~ See note below.|
+|Tag File loading/saving|✔*Partial*\*|~~Soon™!~~ See note below.|
 |NDEF Payload Format|❌ (Planned)|Less Soon™!|
 |NFC Forum Type 1/3/4/5 Tag Emulation|🎄|*Maybe!*|
-|Bootloader for easy USB Firmware Updates|✔*|See note below.|
+|Bootloader for easy USB Firmware Updates|✔|UF2 Style Bootloader|
 
-🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.  
-\* Bootloader isn't in the repo yet, but it's based on a slightly modified [adafruit/Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader). Currently, the NFCT hardware [isn't working](https://github.com/adafruit/Adafruit_nRF52_Bootloader/issues/150) when booting through the bootloader, so I'm skipping it for now until I figure that bug out. Once I do, it'll be uploaded as well, as either part of this project or a separate project.  
-\*\* Right now it just loads up tags of a specific size. There will be issues if the file isn't the expected size, or the expected format. It's on the list to handle this a little better, there's just a few laundry list items that are above it.
+🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
+\* Right now it just loads up tags of a specific size. There will be issues if the file isn't the expected size, or the expected format. It's on the list to handle this a little better, there's just a few laundry list items that are above it.
 
 ## What's it look like in action?
 
@@ -38,7 +37,7 @@ To flash, I'm using a makerdiary's [Pitaya-Link](https://makerdiary.com/products
 
 Debugging and logging: I'm still ocasionally using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work. As well, as I'm using the Pitaya-Link, I'm able to use the VCP it presents as well. Though, it doesn't seem to like higher baud rates for now.
 
-Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://amzn.to/343kaSs). The display code is decently abstracted (not perfect, mind you), that I should be able to swap in another display or driver and get going with only a little effort. It also provides an SD card slot for storage! 
+Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://amzn.to/343kaSs). The display code is decently abstracted (not perfect, mind you), that I should be able to swap in another display or driver and get going with only a little effort. It also provides an SD card slot for storage!
 
 Storage: Since the display has an SD Card slot, I'm using [these Kootion Micro SDHC Cards](https://amzn.to/3iMW0Qm) and [these low profile adapters](https://amzn.to/3kR3EuU) to slot them in. I'd like a lower profile adapter, or something I could more permanently affix to it, but these will do.
 
@@ -60,13 +59,13 @@ Many of the bits above in 'Current Hardware' were relevant to the development on
 
 A vast majority of the code in this repository is designed to be cross compiled from any platform. This section will discuss some of the tools you'll need on your path. With the exception of perhaps Python depending on how you install it, you'll need to add all these tools to your path manually, or use full paths.
 
- I'm currently targeting an ARM device, and making use of the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 9-2020-Q2 on Windows. Look in `BuildSettings.mk`, and set your paths in there accordingly. If you're using VS Code, you may want to update the path to your install in `.vscode/c_cpp_properties.json` as well, as it's used for the C++ plugin to generate error squiggles. You may very well have luck building with other tools or on other platforms, but at this point in the project life-cycle, that's an exercise left to the reader.
+ I'm currently targeting an ARM device, and making use of the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 9-2020-Q2 on Windows. Look in `BuildSettings.mk`, and set your paths in there accordingly. Currently, the bootloader requires that the toolchain is on your path, so you'll need it there or will have to edit the bootloader makefile to account for it. If you're using VS Code, you may want to update the path to your install in `.vscode/c_cpp_properties.json` as well, as it's used for the C++ plugin to generate error squiggles. You may very well have luck building with other tools or on other platforms, but at this point in the project life-cycle, that's an exercise left to the reader.
 
 I'm using Visual Studio Code as my primary editor, and have provided a .vscode folder with tasks I'm performing often to build/flash/etc. There's also a `.code-workspace` file, though that's just more for continence than anything.
 
 The vscode tasks (and building in general) use the GNU `make` to run. You'll need `make` on your path (I'm using the latest from [chocolatey](https://chocolatey.org/packages/make)). As well, you'll need the [nRF5x-Command-Line-Tools for Win32](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
 
-You'll need `python` 3, and a few tools to finish building and flash. Where you install Python from is not important as long as it's on your path (and probably your Scripts directory, too.) In either user space or in a venv, you'll want to `pip install` at least `pyocd`, `intelhex`, and maybe `adafruit-nrfutil` if you're tinkering with the bootloader.
+You'll need `python` 3, and a few tools to finish building and flash. Where you install Python from is not important as long as it's on your path (and probably your Scripts directory, too.) In either user space or in a venv, you'll want to `pip install` at least `pyocd`, `intelhex`, and `adafruit-nrfutil` for building the bootloader.
 
 ##### Make sure to `git submodule update --init --recursive` after checking out this repo, or using `--recurse-submodules` when you clone!
 
