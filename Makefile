@@ -236,7 +236,7 @@ CIE1931_DIR := $(VENDOR_ROOT)/cie1931
 # No source files, header only library.
 
 INC_FOLDERS += \
-   $(CIE1931_DIR) \
+  $(CIE1931_DIR) \
 
 ########################################################
 ## Vendor: cwalk
@@ -246,10 +246,10 @@ CWALK_DIR := $(VENDOR_ROOT)/cwalk
 CWALK_SRC_DIR := $(CWALK_DIR)/src
 
 SRC_FILES += \
-   $(CWALK_SRC_DIR)/cwalk.c \
+  $(CWALK_SRC_DIR)/cwalk.c \
 
 INC_FOLDERS += \
-   $(CWALK_DIR)/include \
+  $(CWALK_DIR)/include \
 
 ########################################################
 ## Vendor: fatfs
@@ -263,8 +263,8 @@ SRC_FILES += \
   $(wildcard $(FATFS_DIR)/source/ffunicode.c) \
 
 INC_FOLDERS += \
-   $(FATFS_DIR)/port \
-   $(FATFS_DIR)/source \
+  $(FATFS_DIR)/port \
+  $(FATFS_DIR)/source \
 
 ########################################################
 ## Vendor: IlI9341 Display Driver <not external>
@@ -274,7 +274,7 @@ SRC_FILES += \
   $(wildcard $(VENDOR_ROOT)/display/*.c) \
 
 INC_FOLDERS += \
-   $(VENDOR_ROOT)/display \
+  $(VENDOR_ROOT)/display \
 
 ########################################################
 ## Vendor: littlefs
@@ -287,7 +287,7 @@ SRC_FILES += \
   $(wildcard $(LITTLEFS_DIR)/bd/*.c) \
 
 INC_FOLDERS += \
-   $(LITTLEFS_DIR) \
+  $(LITTLEFS_DIR) \
 
 ########################################################
 ## Vendor: lvgl
@@ -309,8 +309,8 @@ SRC_FILES += \
   $(wildcard $(LVGL_SRC_DIR)/lv_widgets/*.c) \
 
 INC_FOLDERS += \
-   $(LVGL_BASE_DIR) \
-   $(LVGL_DIR) \
+  $(LVGL_BASE_DIR) \
+  $(LVGL_DIR) \
 
 ########################################################
 ## Vendor: TinyFSM
@@ -321,7 +321,7 @@ TFSM_DIR := $(VENDOR_ROOT)/TinyFSM/include
 # No source files, header only library.
 
 INC_FOLDERS += \
-   $(TFSM_DIR) \
+  $(TFSM_DIR) \
 
 ########################################################
 ## Library Files
