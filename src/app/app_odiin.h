@@ -56,6 +56,8 @@ namespace app
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 
+		uint32_t ticksPrevious = 0;
+
 		// #todo: this is not where this should live.
 		// but it will do as a kludge for now.
 		nfc::nxp::ntag21x::Ntag215Payload payload;

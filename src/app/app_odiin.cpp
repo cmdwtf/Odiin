@@ -12,6 +12,7 @@
 #include "crypto/crypto_shared.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
+#include "timer/timer.h"
 #include "usb/usb.h"
 
 namespace app
@@ -37,10 +38,16 @@ namespace app
 
 	void Odiin::Update()
 	{
-        NRF_LOG_FLUSH();
+		uint32_t ticksCurrent = timer_get_ticks();
+		uint32_t ticksDelta = ticksCurrent - ticksPrevious;
+		float delta = timer_ticks_to_seconds(ticksDelta);
+
+		NRF_LOG_FLUSH();
 
 		usb::device::Update();
 		screen->Update();
+
+		ticksPrevious = ticksCurrent;
 	}
 
 	void Odiin::SetNfcTagPayload(const char* filename)
@@ -158,25 +165,19 @@ namespace app
 
 	void Odiin::InitializeClocks()
 	{
-		NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
-		NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-		NRF_CLOCK->TASKS_LFCLKSTART    = 1;
-
-		while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
-		{
-			// Do nothing.
-		}
-
-		// initialize
+		// initialize nrf clock module. (calls nrfx_clock_init inside.)
 		ret_code_t ret = nrf_drv_clock_init();
 		APP_ERROR_CHECK(ret);
-		nrf_drv_clock_lfclk_request(NULL);
 	}
 
 	void Odiin::InitializeTimers()
 	{
 		ret_code_t err_code = app_timer_init();
 		APP_ERROR_CHECK(err_code);
+
+		// initialize the frame timer based on the rtc
+		timer_initialize();
+		timer_start();
 	}
 
 	void Odiin::InitializeBsp()
