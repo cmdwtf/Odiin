@@ -18,13 +18,7 @@ namespace display
 
 		void Update(float timeDelta);
 
-		// todo, support hsv.
-		// see: https://gist.github.com/fairlight1337/4935ae72bcbcc1ba5c72
-		// also: https://gist.github.com/yoggy/8999625
-		//static inline RgbColor ColorHsv()
-		//{
-		//	return 0;
-		//}
+		inline RgbLedColorBufferDescriptor* GetColors() { return colors; }
 
 		static inline RgbColor Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = UINT8_MAX)
 		{

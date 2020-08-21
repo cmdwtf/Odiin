@@ -24,25 +24,24 @@ namespace display
 
 		NRF_LOG_INFO("Initializing %d LED%s with driver %s.", colors->Size, colors->Size == 1 ? "" : "s", ledDriver->name);
 		ledDriver->initialize();
-		colors->Brightness = ledDriver->default_brightness;
+		colors->ShouldUpdate = true;
 	}
-
 
 	void RgbLeds::Update(float timeDelta)
 	{
 		// hack -- just cycling through colors to test for now.
-		static float position = 0.0f;
-		const float patternLength = 10.0f;
-		const uint8_t TOTAL_POSITIONS = 255;
-		position += timeDelta;
-		if (position > patternLength) position -= patternLength;
-		float patternPercent = (position / patternLength);
-		uint8_t wheelPosition = patternPercent * TOTAL_POSITIONS;
+		static float elapsedTime = 0.0f;
+		const float patternDuration = 10.0f;
+		const uint8_t patternTotalPositions = 255;
+		elapsedTime += timeDelta;
+		if (elapsedTime > patternDuration) elapsedTime -= patternDuration;
+		float patternPercent = (elapsedTime / patternDuration);
+		uint8_t patternPosition = patternPercent * patternTotalPositions;
 
 		for (size_t scan = 0; scan < colors->Size; ++scan)
 		{
-			(*colors)[scan] = RgbLeds::ColorWheel(wheelPosition);
-			wheelPosition++;
+			(*colors)[scan] = RgbLeds::ColorWheel(patternPosition);
+			patternPosition++;
 		}
 		colors->ShouldUpdate = true;
 		colors->Brightness = 1;

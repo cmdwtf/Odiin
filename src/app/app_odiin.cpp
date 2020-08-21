@@ -239,6 +239,8 @@ namespace app
 	{
 #if defined(DISPLAY_APA102_ENABLED) && DISPLAY_APA102_ENABLED == 1
 		static display::RgbLedColorBuffer<1> colors;
+		colors.Brightness = 2;
+
 		static display::RgbLeds status_pixel_apa102(&colors, &display_apa102);
 		statusPixel = &status_pixel_apa102;
 #else
