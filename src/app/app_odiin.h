@@ -4,6 +4,7 @@
 #include "usb/usb_msc.h"
 
 #include "display/display_screen.h"
+#include "display/display_rgb_leds.h"
 #include "files/files_fat32.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
@@ -47,12 +48,14 @@ namespace app
 		void InitializeSdCard();
 		void InitializeInput();
 		void InitializeScreen();
+		void InitializeLeds();
 		void InitializeNfcTag();
 		void StartApplication();
 
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
 		input::Keypad* keypad;
+		display::RgbLeds* statusPixel;
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 

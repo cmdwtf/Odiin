@@ -10,6 +10,7 @@
 
 #include "app_settings.h"
 #include "crypto/crypto_shared.h"
+#include "display/display_apa102.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "timer/timer.h"
@@ -46,6 +47,7 @@ namespace app
 
 		usb::device::Update();
 		screen->Update();
+		statusPixel->Update(delta);
 
 		ticksPrevious = ticksCurrent;
 	}
@@ -146,9 +148,10 @@ namespace app
 		InitializeSdCard();
 		InitializeInput();
 		InitializeScreen();
+		InitializeLeds();
 		InitializeNfcTag();
 
-		NRF_LOG_INFO("Odiin initialization complete. Starting application.");
+		NRF_LOG_INFO("Odiin initialization complete " NRF_LOG_FLOAT_MARKER " seconds. Starting application.", NRF_LOG_FLOAT(timer_get_elapsed_seconds()));
 
 		StartApplication();
 
@@ -230,6 +233,18 @@ namespace app
 	{
 		static display::Screen scr(keypad);
 		screen = &scr;
+	}
+
+	void Odiin::InitializeLeds()
+	{
+#if defined(DISPLAY_APA102_ENABLED) && DISPLAY_APA102_ENABLED == 1
+		static display::RgbLedColorBuffer<1> colors;
+		static display::RgbLeds status_pixel_apa102(&colors, &display_apa102);
+		statusPixel = &status_pixel_apa102;
+#else
+		static display::RgbLeds null_led(nullptr, nullptr);
+		statusPixel = &null_led;
+#endif // DISPLAY_APA102_ENABLED
 	}
 
 	void Odiin::InitializeNfcTag()
