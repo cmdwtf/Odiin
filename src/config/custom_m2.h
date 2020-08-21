@@ -1,5 +1,9 @@
 #pragma once
 
+/** SPI configurations, used for MicroSD Card on the Dock */
+// Pins are defined in nrf52840_m2.h
+#define APP_SDCARD_SPI_INSTANCE			0
+
 /** SPI configurations, used for ILI9341 TFT controller */
 #define ILI9341_SCK_PIN					NRF_GPIO_PIN_MAP(0, 21)
 #define ILI9341_MISO_PIN				NRF_GPIO_PIN_MAP(0, 24)

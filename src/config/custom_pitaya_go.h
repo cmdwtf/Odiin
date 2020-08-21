@@ -5,6 +5,7 @@
 #define SDC_MOSI_PIN					NRF_GPIO_PIN_MAP(0, 14) ///< SDC serial data in (DI) pin.
 #define SDC_MISO_PIN					NRF_GPIO_PIN_MAP(0, 15) ///< SDC serial data out (DO) pin.
 #define SDC_CS_PIN						NRF_GPIO_PIN_MAP(0, 13) ///< SDC chip select (CS) pin.
+#define APP_SDCARD_SPI_INSTANCE			0
 
 /** SPI configurations, used for ILI9341 TFT controller */
 #define ILI9341_SCK_PIN					NRF_GPIO_PIN_MAP(0, 21)
