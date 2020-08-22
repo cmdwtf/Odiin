@@ -29,6 +29,11 @@ namespace display
 
 	void RgbLeds::Update(float timeDelta)
 	{
+		if (colors == nullptr)
+		{
+			return;
+		}
+
 		// hack -- just cycling through colors to test for now.
 		static float elapsedTime = 0.0f;
 		const float patternDuration = 10.0f;
