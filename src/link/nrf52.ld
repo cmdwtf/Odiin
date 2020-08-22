@@ -45,6 +45,12 @@ SECTIONS
     KEEP(*(SORT(.crypto_data*)))
     PROVIDE(__stop_crypto_data = .);
   } > FLASH
+  .pwr_mgmt_data :
+  {
+    PROVIDE(__start_pwr_mgmt_data = .);
+    KEEP(*(SORT(.pwr_mgmt_data*)))
+    PROVIDE(__stop_pwr_mgmt_data = .);
+  } > FLASH
   .log_const_data :
   {
     PROVIDE(__start_log_const_data = .);

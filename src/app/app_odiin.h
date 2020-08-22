@@ -1,14 +1,13 @@
 #pragma once
 #include <cstdint>
 
-#include "usb/usb_msc.h"
-
 #include "display/display_screen.h"
 #include "display/display_rgb_leds.h"
 #include "files/files_fat32.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x_emulator.h"
+#include "usb/usb_msc.h"
 
 using NfcTagEmulator = nfc::nxp::ntag21x::Ntag21xEmulator;
 using NtagPayload = nfc::nxp::ntag21x::Ntag21XPayload;
@@ -34,6 +33,12 @@ namespace app
 
 		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
 		virtual void UsbDidDisable(app_usbd_event_type_t event) override;
+
+		bool OnSleep();
+		bool OnPowerOff();
+		bool OnRebootToDfu();
+		bool OnReboot();
+
 	private:
 		Odiin();
 		Odiin(const Odiin&) = delete;
@@ -43,6 +48,7 @@ namespace app
 		void InitializeClocks();
 		void InitializeTimers();
 		void InitializeBsp();
+		void InitializePower();
 		void InitializeCrypto();
 		void InitializeUsbDevice();
 		void InitializeSdCard();

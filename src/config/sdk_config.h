@@ -1402,6 +1402,143 @@
 #define NRF_MEMOBJ_ENABLED 1
 #endif
 
+// <e> NRF_PWR_MGMT_ENABLED - nrf_pwr_mgmt - Power management module
+//==========================================================
+#ifndef NRF_PWR_MGMT_ENABLED
+#define NRF_PWR_MGMT_ENABLED 1
+#endif
+// <e> NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED - Enables pin debug in the module.
+
+// <i> Selected pin will be set when CPU is in sleep mode.
+//==========================================================
+#ifndef NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED
+#define NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED 0
+#endif
+// <o> NRF_PWR_MGMT_SLEEP_DEBUG_PIN  - Pin number
+
+// <0=> 0 (P0.0)
+// <1=> 1 (P0.1)
+// <2=> 2 (P0.2)
+// <3=> 3 (P0.3)
+// <4=> 4 (P0.4)
+// <5=> 5 (P0.5)
+// <6=> 6 (P0.6)
+// <7=> 7 (P0.7)
+// <8=> 8 (P0.8)
+// <9=> 9 (P0.9)
+// <10=> 10 (P0.10)
+// <11=> 11 (P0.11)
+// <12=> 12 (P0.12)
+// <13=> 13 (P0.13)
+// <14=> 14 (P0.14)
+// <15=> 15 (P0.15)
+// <16=> 16 (P0.16)
+// <17=> 17 (P0.17)
+// <18=> 18 (P0.18)
+// <19=> 19 (P0.19)
+// <20=> 20 (P0.20)
+// <21=> 21 (P0.21)
+// <22=> 22 (P0.22)
+// <23=> 23 (P0.23)
+// <24=> 24 (P0.24)
+// <25=> 25 (P0.25)
+// <26=> 26 (P0.26)
+// <27=> 27 (P0.27)
+// <28=> 28 (P0.28)
+// <29=> 29 (P0.29)
+// <30=> 30 (P0.30)
+// <31=> 31 (P0.31)
+// <32=> 32 (P1.0)
+// <33=> 33 (P1.1)
+// <34=> 34 (P1.2)
+// <35=> 35 (P1.3)
+// <36=> 36 (P1.4)
+// <37=> 37 (P1.5)
+// <38=> 38 (P1.6)
+// <39=> 39 (P1.7)
+// <40=> 40 (P1.8)
+// <41=> 41 (P1.9)
+// <42=> 42 (P1.10)
+// <43=> 43 (P1.11)
+// <44=> 44 (P1.12)
+// <45=> 45 (P1.13)
+// <46=> 46 (P1.14)
+// <47=> 47 (P1.15)
+// <4294967295=> Not connected
+
+#ifndef NRF_PWR_MGMT_SLEEP_DEBUG_PIN
+#define NRF_PWR_MGMT_SLEEP_DEBUG_PIN 4294967295
+#endif
+
+// </e>
+
+// <q> NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED  - Enables CPU usage monitor.
+
+
+// <i> Module will trace percentage of CPU usage in one second intervals.
+
+#ifndef NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED
+#define NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED 1
+#endif
+
+// <e> NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED - Enable standby timeout.
+//==========================================================
+#ifndef NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED
+#define NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED 1
+#endif
+// <o> NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S - Standby timeout (in seconds).
+// <i> Shutdown procedure will begin no earlier than after this number of seconds.
+
+#ifndef NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S
+#define NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S 10
+#endif
+
+// </e>
+
+// <q> NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED  - Enables FPU event cleaning.
+
+
+#ifndef NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED
+#define NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED 1
+#endif
+
+// <q> NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY  - Blocked shutdown procedure will be retried every second.
+
+
+#ifndef NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY
+#define NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY 1
+#endif
+
+// <q> NRF_PWR_MGMT_CONFIG_USE_SCHEDULER  - Module will use @ref app_scheduler.
+
+
+#ifndef NRF_PWR_MGMT_CONFIG_USE_SCHEDULER
+#define NRF_PWR_MGMT_CONFIG_USE_SCHEDULER 0
+#endif
+
+// <o> NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT - The number of priorities for module handlers.
+// <i> The number of stages of the shutdown process.
+
+#ifndef NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT
+#define NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT 3
+#endif
+
+// </e>
+
+// <q> NRF_SECTION_ITER_ENABLED  - nrf_section_iter - Section iterator
+
+
+#ifndef NRF_SECTION_ITER_ENABLED
+#define NRF_SECTION_ITER_ENABLED 1
+#endif
+
+// <q> NRF_SORTLIST_ENABLED  - nrf_sortlist - Sorted list
+
+
+#ifndef NRF_SORTLIST_ENABLED
+#define NRF_SORTLIST_ENABLED 1
+#endif
+
 // <q> NRF_STRERROR_ENABLED  - nrf_strerror - Library for converting error code to string.
 
 

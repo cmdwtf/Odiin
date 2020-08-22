@@ -13,6 +13,7 @@
 #include "display/display_apa102.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
+#include "platform/platform_power.h"
 #include "timer/timer.h"
 #include "usb/usb.h"
 
@@ -50,6 +51,9 @@ namespace app
 		statusPixel->Update(delta);
 
 		ticksPrevious = ticksCurrent;
+
+		// power update will handle our WFE/SEV
+		platform_nrf52_power.update();
 	}
 
 	void Odiin::SetNfcTagPayload(const char* filename)
@@ -129,6 +133,7 @@ namespace app
 	namespace
 	{
 		void BspEventHandler(bsp_event_t event);
+		bool ShutdownHandler(platform_power_event_t event);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -143,6 +148,7 @@ namespace app
 		InitializeClocks();
 		InitializeTimers();
 		InitializeBsp();
+		InitializePower();
 		InitializeCrypto();
 		InitializeUsbDevice();
 		InitializeSdCard();
@@ -191,6 +197,12 @@ namespace app
 
 		err_code = bsp_init(bspFlags, BspEventHandler);
 		APP_ERROR_CHECK(err_code);
+	}
+
+	void Odiin::InitializePower()
+	{
+		platform_nrf52_power.event_handler = ShutdownHandler;
+		platform_nrf52_power.initialize();
 	}
 
 	void Odiin::InitializeCrypto() // crypto means cryptography
@@ -268,6 +280,26 @@ namespace app
 		StateMachine::start();
 	}
 
+	bool Odiin::OnSleep()
+	{
+		return true;
+	}
+
+	bool Odiin::OnPowerOff()
+	{
+		return true;
+	}
+
+	bool Odiin::OnRebootToDfu()
+	{
+		return true;
+	}
+
+	bool Odiin::OnReboot()
+	{
+		return true;
+	}
+
 	namespace
 	{
 		void BspEventHandler(bsp_event_t event)
@@ -280,6 +312,25 @@ namespace app
 				default:
 					NRF_LOG_DEBUG("[BSP] Unhandled event: %d", event);
 					break;
+			}
+		}
+
+		bool ShutdownHandler(platform_power_event_t event)
+		{
+			NRF_LOG_WARNING("ShutdownHandler Event: %d", event);
+
+			switch (event)
+			{
+				case PLATFORM_POWER_EVENT_PREPARE_WAKEUP:
+					return Odiin::GetInstance()->OnSleep();
+				case PLATFORM_POWER_EVENT_PREPARE_OFF:
+					return Odiin::GetInstance()->OnPowerOff();
+				case PLATFORM_POWER_EVENT_PREPARE_DFU:
+					return Odiin::GetInstance()->OnRebootToDfu();
+				case PLATFORM_POWER_EVENT_PREPARE_RESET:
+					return Odiin::GetInstance()->OnReboot();
+				default:
+					return true;
 			}
 		}
 	}
