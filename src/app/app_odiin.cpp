@@ -282,6 +282,7 @@ namespace app
 
 	bool Odiin::OnSleep()
 	{
+		screen->BacklightOff();
 		return true;
 	}
 
