@@ -4,5 +4,6 @@
 #define WEAK __attribute__((weak))
 #define NO_RETURN __attribute__((noreturn))
 #define NO_OPT __attribute__((optimize("O0")))
+#define PACKED __attribute__((packed))
 
 void __PANIC() NO_RETURN;
