@@ -1,15 +1,14 @@
 #include "display_screen.h"
 
 #include "app_timer.h"
-
-#include "display_log_module.ii"
-
-#include "lvgl.h"
+#include "boards.h"
 #include "ili9341.h"
-
-#include "tests/tests.h"
+#include "lvgl.h"
+#include "nrf_gfx.h"
 
 #include "screen_ui/display_screen_ui.h"
+
+#include "display_log_module.ii"
 
 APP_TIMER_DEF(display_screen_tick_timer);
 

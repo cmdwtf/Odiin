@@ -58,9 +58,10 @@
 #ifndef GPIOTE_ENABLED
 #define GPIOTE_ENABLED 1
 #endif
+
 // <o> GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS - Number of lower power input pins
 #ifndef GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS
-#define GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 4
+#define GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 7
 #endif
 
 // <o> GPIOTE_CONFIG_IRQ_PRIORITY  - Interrupt priority
@@ -87,9 +88,10 @@
 #ifndef NRFX_GPIOTE_ENABLED
 #define NRFX_GPIOTE_ENABLED 1
 #endif
+
 // <o> NRFX_GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS - Number of lower power input pins
 #ifndef NRFX_GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS
-#define NRFX_GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 1
+#define NRFX_GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 7
 #endif
 
 // <o> NRFX_GPIOTE_CONFIG_IRQ_PRIORITY  - Interrupt priority
@@ -1634,8 +1636,9 @@
 #ifndef NRF_LOG_BACKEND_UART_ENABLED
 #define NRF_LOG_BACKEND_UART_ENABLED 1
 #endif
+
 // <o> NRF_LOG_BACKEND_UART_TX_PIN - UART TX pin
-#ifndef NRF_LOG_BACKEND_UART_TX_PIN
+#if !defined(NRF_LOG_BACKEND_UART_TX_PIN) && (NRF_LOG_BACKEND_UART_ENABLED == 1)
 #error "Please define NRF_LOG_BACKEND_URART_TX_PIN in your custom board config header."
 #endif
 

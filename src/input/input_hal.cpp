@@ -1,38 +1,37 @@
 #include "input_hal.h"
 
+#include "bsp.h"
+
 namespace input
 {
 	namespace
 	{
-		constexpr nrf_gpio_pin_pull_t BUTTON_ACTIVE_PIN_GPIO_PULL = NRF_GPIO_PIN_PULLUP;
-		constexpr uint32_t BUTTON_ACTIVE_PIN_STATE = 0;
-		bool HardwareButtonActive(uint8_t pin)
+		bool HardwareButtonActive(uint32_t buttonId)
 		{
-			if (pin == HW_PIN_NONE)
+			if (buttonId == BUTTON_NONE)
 			{
 				return false;
 			}
 
-			return nrf_gpio_pin_read(pin) == BUTTON_ACTIVE_PIN_STATE ?
-				true : false;
+			return bsp_button_is_pressed(buttonId);
 		}
 
 		static bool halInitialized = false;
 	}
 
-	map<lv_key_t, int> KeyMap = {
-		{ LV_KEY_UP        , HW_KEY_UP_PIN },
-		{ LV_KEY_DOWN      , HW_KEY_DOWN_PIN },
-		{ LV_KEY_RIGHT     , HW_KEY_RIGHT_PIN },
-		{ LV_KEY_LEFT      , HW_KEY_LEFT_PIN },
-		{ LV_KEY_ESC       , HW_KEY_NONE },
-		{ LV_KEY_DEL       , HW_KEY_NONE },
-		{ LV_KEY_BACKSPACE , HW_KEY_NONE },
-		{ LV_KEY_ENTER     , HW_KEY_CENTER_PIN },
-		{ LV_KEY_NEXT      , HW_KEY_DOWN_PIN },
-		{ LV_KEY_PREV      , HW_KEY_UP_PIN },
-		{ LV_KEY_HOME      , HW_KEY_NONE },
-		{ LV_KEY_END       , HW_KEY_NONE },
+	map<lv_key_t, uint32_t> KeyMap = {
+		{ LV_KEY_UP        , BUTTON_UP },
+		{ LV_KEY_DOWN      , BUTTON_DOWN },
+		{ LV_KEY_RIGHT     , BUTTON_RIGHT },
+		{ LV_KEY_LEFT      , BUTTON_LEFT },
+		{ LV_KEY_ESC       , BUTTON_NONE },
+		{ LV_KEY_DEL       , BUTTON_NONE },
+		{ LV_KEY_BACKSPACE , BUTTON_NONE },
+		{ LV_KEY_ENTER     , BUTTON_CENTER },
+		{ LV_KEY_NEXT      , BUTTON_DOWN },
+		{ LV_KEY_PREV      , BUTTON_UP },
+		{ LV_KEY_HOME      , BUTTON_NONE },
+		{ LV_KEY_END       , BUTTON_NONE },
 	};
 
 	void InitializeHal()
@@ -42,31 +41,23 @@ namespace input
 			return;
 		}
 
-		// loop through map, marking each pin as input!
-		for (auto it = KeyMap.begin(); it != KeyMap.end(); ++it)
-		{
-			uint8_t pin = it->second;
-
-			if (pin != HW_PIN_NONE)
-			{
-				nrf_gpio_cfg_input(pin, BUTTON_ACTIVE_PIN_GPIO_PULL);
-			}
-		}
+		// shouldn't need to configure pins,
+		// as the BSP init should have taken care of things for us.
 
 		halInitialized = true;
 	}
 
-
 	const bool KeyIsPressed(lv_key_t key)
 	{
+		// translate key to button
 		auto it = KeyMap.find(key);
 		if (it != KeyMap.end())
 		{
-			uint8_t pin = it->second;
-			return HardwareButtonActive(pin);
+			uint32_t button = it->second;
+			return HardwareButtonActive(button);
 		}
 
-		// we don't have a mapping for that key.
+		// we don't have a mapping for that key, so it's not pressed.
 		return false;
 	}
 
