@@ -56,6 +56,10 @@ namespace display
 			return;
 		}
 
+		// and init the backlight, too.
+		nrf_gpio_cfg_output(ILI9341_BACKLIGHT_CONTROL_PIN);
+		BacklightOn();
+
 		NRF_LOG_INFO("Initializing gfx lvgl...");
 		lv_init();
 
@@ -100,6 +104,7 @@ namespace display
 	{
 		if (initialized)
 		{
+			BacklightOff();
 			lv_deinit();
 			nrf_gfx_uninit(lcd);
 			initialized = false;
@@ -121,6 +126,21 @@ namespace display
 		{
 			lv_tick_inc(GraphicsTickMs);
 		}
+	}
+
+	void Screen::BacklightOn()
+	{
+		nrf_gpio_pin_set(ILI9341_BACKLIGHT_CONTROL_PIN);
+	}
+
+	void Screen::BacklightOff()
+	{
+		nrf_gpio_pin_clear(ILI9341_BACKLIGHT_CONTROL_PIN);
+	}
+
+	void SetBacklightBrightness(uint8_t brightness)
+	{
+		// todo
 	}
 
 	namespace

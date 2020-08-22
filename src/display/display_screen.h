@@ -18,6 +18,10 @@ namespace display
 		Screen &operator=(const Screen &) = delete;
 
 		void Update();
+		void BacklightOn();
+		void BacklightOff();
+		void SetBacklightBrightness(uint8_t brightness);
+
 		inline bool IsInitialized() { return initialized; }
 		static constexpr uint32_t GraphicsTickMs = 1;
 	private:
