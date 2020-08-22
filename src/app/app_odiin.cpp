@@ -307,8 +307,18 @@ namespace app
 		{
 			switch (event)
 			{
+				// any key events (button presses) from
+				// our regular buttons, we will feed
+				// the power management. this resets
+				// the sleep timer, and keeps the device active.
 				case BSP_EVENT_KEY_0:
-					NRF_LOG_INFO("Board button pressed. No event handler yet.");
+				case BSP_EVENT_KEY_1:
+				case BSP_EVENT_KEY_2:
+				case BSP_EVENT_KEY_3:
+				case BSP_EVENT_KEY_4:
+				case BSP_EVENT_KEY_5:
+				case BSP_EVENT_KEY_6:
+					platform_nrf52_power.feed();
 					break;
 				default:
 					NRF_LOG_DEBUG("[BSP] Unhandled event: %d", event);
