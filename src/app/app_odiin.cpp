@@ -318,6 +318,20 @@ namespace app
 
 	bool Odiin::OnRebootToDfu()
 	{
+		// #todo: This code should be in a HAL.
+		// magic values from UF2 bootloader (see bootloader's main.c)
+		enum DfuMagic {
+			OtaReset = 0xA8,
+			SerialOnlyReset = 0x4E,
+			Uf2Reset = 0x57,
+		};
+
+		// GPREGRET and GPREGRET2 are general
+		// purpose retention registers. They are
+		// 1 byte each, and their value persists
+		// through wakeups from SYSOFF.
+		NRF_POWER->GPREGRET = DfuMagic::Uf2Reset;
+
 		return true;
 	}
 
