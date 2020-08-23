@@ -10,7 +10,7 @@
 
 #include "app_settings.h"
 #include "crypto/crypto_shared.h"
-#include "display/display_apa102.h"
+#include "display/led/display_led_apa102.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "platform/platform_power.h"
@@ -254,16 +254,16 @@ namespace app
 
 	void Odiin::InitializeLeds()
 	{
-#if defined(DISPLAY_APA102_ENABLED) && DISPLAY_APA102_ENABLED == 1
-		static display::RgbLedColorBuffer<1> colors;
+#if defined(DISPLAY_LED_APA102_ENABLED) && DISPLAY_LED_APA102_ENABLED == 1
+		static display::led::RgbLedColorBuffer<1> colors;
 		colors.Brightness = 2;
 
-		static display::RgbLeds status_pixel_apa102(&colors, &display_apa102);
+		static display::led::RgbLeds status_pixel_apa102(&colors, &display_led_apa102);
 		statusPixel = &status_pixel_apa102;
 #else
-		static display::RgbLeds null_led(nullptr, nullptr);
+		static display::led::RgbLeds null_led(nullptr, nullptr);
 		statusPixel = &null_led;
-#endif // DISPLAY_APA102_ENABLED
+#endif // DISPLAY_LED_APA102_ENABLED
 	}
 
 	void Odiin::InitializeNfcTag()

@@ -2,7 +2,7 @@
 #include <cstdint>
 
 #include "display/display_screen.h"
-#include "display/display_rgb_leds.h"
+#include "display/led/display_led_rgb_leds.h"
 #include "files/files_fat32.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
@@ -66,7 +66,7 @@ namespace app
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
 		input::Keypad* keypad;
-		display::RgbLeds* statusPixel;
+		display::led::RgbLeds* statusPixel;
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 

@@ -22,23 +22,23 @@
 
 #include "sdk_common.h"
 
-#if defined(DISPLAY_APA102_ENABLED) && DISPLAY_APA102_ENABLED == 1
+#if defined(DISPLAY_LED_APA102_ENABLED) && DISPLAY_LED_APA102_ENABLED == 1
 
-#include "display_apa102.h"
+#include "display_led_apa102.h"
 
 #include <stdbool.h>
 
 #include "nrf_gpio.h"
 #include "nrfx_spim.h"
 
-#include "display_log_module.ii"
+#include "../display_log_module.ii"
 
-#define DISPLAY_APA102_FRAME_SIZE		4 // frames are 32 bits
+#define DISPLAY_LED_APA102_FRAME_SIZE		4 // frames are 32 bits
 
-static const uint8_t DISPLAY_APA102_BRIGTNESS_BASE_VALUE = 0b11100000;
-static const nrfx_spim_t spi = NRFX_SPIM_INSTANCE(DISPLAY_APA102_SPIM_INSTANCE);
+static const uint8_t DISPLAY_LED_APA102_BRIGTNESS_BASE_VALUE = 0b11100000;
+static const nrfx_spim_t spi = NRFX_SPIM_INSTANCE(DISPLAY_LED_APA102_SPIM_INSTANCE);
 
-static bool display_apa102_initialized = false;
+static bool display_led_apa102_initialized = false;
 
 static inline void spi_write(const uint8_t* data, size_t data_length)
 {
@@ -48,17 +48,17 @@ static inline void spi_write(const uint8_t* data, size_t data_length)
 	APP_ERROR_CHECK(err);
 }
 
-static ret_code_t display_apa102_initialize()
+static ret_code_t display_led_apa102_initialize()
 {
-	if (display_apa102_initialized)
+	if (display_led_apa102_initialized)
 	{
-		NRF_LOG_WARNING("display_apa102 already initialized.");
+		NRF_LOG_WARNING("display_led_apa102 already initialized.");
 		return NRF_ERROR_MODULE_ALREADY_INITIALIZED;
 	}
 
 	nrfx_spim_config_t spi_config = NRFX_SPIM_DEFAULT_CONFIG;
-    spi_config.sck_pin   = DISPLAY_APA102_SCK_PIN;
-    spi_config.mosi_pin  = DISPLAY_APA102_MOSI_PIN;
+    spi_config.sck_pin   = DISPLAY_LED_APA102_SCK_PIN;
+    spi_config.mosi_pin  = DISPLAY_LED_APA102_MOSI_PIN;
     spi_config.miso_pin  = NRFX_SPIM_PIN_NOT_USED;
 	spi_config.frequency = NRF_SPIM_FREQ_8M;
 	spi_config.mode      = NRF_SPIM_MODE_0;
@@ -66,27 +66,27 @@ static ret_code_t display_apa102_initialize()
     nrfx_err_t err_code = nrfx_spim_init(&spi, &spi_config, NULL, NULL);
 	APP_ERROR_CHECK(err_code);
 
-	display_apa102_initialized = true;
+	display_led_apa102_initialized = true;
 
 	return err_code;
 }
 
-static void display_apa102_uninitialize()
+static void display_led_apa102_uninitialize()
 {
 	nrfx_spim_uninit(&spi);
-	display_apa102_initialized = false;
+	display_led_apa102_initialized = false;
 }
 
-static void display_apa102_set_leds(const display_rgb_led_color_t* led_colors, size_t led_count, uint8_t brightness)
+static void display_led_apa102_set_leds(const display_led_rgb_color_t* led_colors, size_t led_count, uint8_t brightness)
 {
-	if (display_apa102_initialized == false)
+	if (display_led_apa102_initialized == false)
 	{
 		return;
 	}
 
 	// reference value frames
 	// they're not actually const, because we need them *not* in flash, and instead in ram.
-	static uint8_t zero_frame[DISPLAY_APA102_FRAME_SIZE] = { 0x00, 0x00, 0x00, 0x00 };
+	static uint8_t zero_frame[DISPLAY_LED_APA102_FRAME_SIZE] = { 0x00, 0x00, 0x00, 0x00 };
 
 	// constant frames
 	static const uint8_t* start_frame = zero_frame;
@@ -94,51 +94,51 @@ static void display_apa102_set_leds(const display_rgb_led_color_t* led_colors, s
 	static const uint8_t* sk9822_reset_frame = zero_frame;
 
 	// start frame
-	spi_write(start_frame, DISPLAY_APA102_FRAME_SIZE);
+	spi_write(start_frame, DISPLAY_LED_APA102_FRAME_SIZE);
 
-	uint8_t real_brightness = DISPLAY_APA102_BRIGTNESS_BASE_VALUE | (brightness & DISPLAY_APA102_BRIGHTNESS_MAX);
+	uint8_t real_brightness = DISPLAY_LED_APA102_BRIGTNESS_BASE_VALUE | (brightness & DISPLAY_LED_APA102_BRIGHTNESS_MAX);
 
 	for (size_t scan = 0; scan < led_count; ++scan)
 	{
-		const display_rgb_led_color_t* color = &led_colors[scan];
+		const display_led_rgb_color_t* color = &led_colors[scan];
 
-		uint8_t led_frame[DISPLAY_APA102_FRAME_SIZE] = { real_brightness,
-#if (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_RGB)
+		uint8_t led_frame[DISPLAY_LED_APA102_FRAME_SIZE] = { real_brightness,
+#if (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_RGB)
 		color->red, color->green, color->blue };
-#elif (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_RBG)
+#elif (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_RBG)
 		color->red, color->blue, color->green };
-#elif (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_GRB)
+#elif (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_GRB)
 		color->green, color->red, color->blue };
-#elif (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_GBR)
+#elif (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_GBR)
 		color->green, color->blue, color->red };
-#elif (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_BRG)
+#elif (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_BRG)
 		color->blue, color->red, color->green };
-#elif (DISPLAY_APA102_COLOR_ORDER == DISPLAY_RGB_COLOR_ORDER_BGR)
+#elif (DISPLAY_LED_APA102_COLOR_ORDER == DISPLAY_LED_RGB_COLOR_ORDER_BGR)
 		color->blue, color->green, color->red };
 #else
 #error "Unsupported color order."
-#endif // DISPLAY_APA102_COLOR_ORDER
+#endif // DISPLAY_LED_APA102_COLOR_ORDER
 
-		spi_write(led_frame, DISPLAY_APA102_FRAME_SIZE);
+		spi_write(led_frame, DISPLAY_LED_APA102_FRAME_SIZE);
 	}
 
-#if defined(DISPLAY_APA102_ENABLE_SK9822_RESET_FRAME) && DISPLAY_APA102_ENABLE_SK9822_RESET_FRAME == 1
+#if defined(DISPLAY_LED_APA102_ENABLE_SK9822_RESET_FRAME) && DISPLAY_LED_APA102_ENABLE_SK9822_RESET_FRAME == 1
 	// sk9822 reset frame
-	spi_write(sk9822_reset_frame, DISPLAY_APA102_FRAME_SIZE);
-#endif // DISPLAY_APA102_ENABLE_SK9822_RESET_FRAME
+	spi_write(sk9822_reset_frame, DISPLAY_LED_APA102_FRAME_SIZE);
+#endif // DISPLAY_LED_APA102_ENABLE_SK9822_RESET_FRAME
 
 	// end frame
 	// this will only work for up to 64 leds (see cpldcpu post),
 	// but that's enough for my purposes, so it can be future me's problem to fix.
-	spi_write(end_frame, DISPLAY_APA102_FRAME_SIZE);
+	spi_write(end_frame, DISPLAY_LED_APA102_FRAME_SIZE);
 }
 
-const display_rgb_led_driver_t display_apa102 = {
-	.initialize = display_apa102_initialize,
-	.uninitialize = display_apa102_uninitialize,
-	.set_leds = display_apa102_set_leds,
-	.default_brightness = DISPLAY_APA102_BRIGHTNESS_DEFAULT,
+const display_led_rgb_driver_t display_led_apa102 = {
+	.initialize = display_led_apa102_initialize,
+	.uninitialize = display_led_apa102_uninitialize,
+	.set_leds = display_led_apa102_set_leds,
+	.default_brightness = DISPLAY_LED_APA102_BRIGHTNESS_DEFAULT,
 	.name = "APA102",
 };
 
-#endif // DISPLAY_APA102_ENABLED
+#endif // DISPLAY_LED_APA102_ENABLED

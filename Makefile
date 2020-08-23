@@ -39,6 +39,7 @@ SRC_FILES += \
   $(wildcard $(SOURCE_DIR)/display/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/fonts/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/images/*.c*) \
+  $(wildcard $(SOURCE_DIR)/display/led/*.c*) \
   $(wildcard $(SOURCE_DIR)/display/screen_ui/*.c*) \
   $(wildcard $(SOURCE_DIR)/files/*.c*) \
   $(wildcard $(SOURCE_DIR)/global/*.c*) \

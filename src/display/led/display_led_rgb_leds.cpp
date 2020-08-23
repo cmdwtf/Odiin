@@ -1,10 +1,10 @@
-#include "display_rgb_leds.h"
+#include "display_led_rgb_leds.h"
 
-#include "display_log_module.ii"
-#include "screen_ui/display_screen_ui.h"
 #include <cstdio>
 
-namespace display
+#include "../display_log_module.ii"
+
+namespace display::led
 {
 	RgbLeds::RgbLeds(RgbLedColorBufferDescriptor* colorBuffer, const RgbLedDriver* driver) :
 		ledDriver(driver), colors(colorBuffer)
@@ -58,4 +58,4 @@ namespace display
 			colors->ShouldUpdate = false;
 		}
 	}
-} // namespace display
+} // namespace display::led

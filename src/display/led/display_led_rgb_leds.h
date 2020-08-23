@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "display_rgb_led_data.h"
+#include "display_led_rgb_led_data.h"
 
 #ifdef __cplusplus
 
-namespace display
+namespace display::led
 {
 	class RgbLeds
 	{
 	public:
-		using RgbColor = display_rgb_led_color_t;
-		using RgbLedDriver = display_rgb_led_driver_t;
+		using RgbColor = display_led_rgb_color_t;
+		using RgbLedDriver = display_led_rgb_driver_t;
 
 		RgbLeds(RgbLedColorBufferDescriptor* colorBuffer, const RgbLedDriver* driver);
 		virtual ~RgbLeds() = default;
@@ -59,6 +59,6 @@ namespace display
 		RgbLeds(const RgbLeds&) = delete;
 		RgbLeds& operator=(const RgbLeds&) = delete;
 	};
-} // namespace display
+} // namespace display::led
 
 #endif // __cplusplus
