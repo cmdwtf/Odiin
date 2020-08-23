@@ -19,6 +19,11 @@
 
 namespace app
 {
+	namespace
+	{
+		platform_power_driver_t& power = platform_nrf52_power;
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	// Public interface
 
@@ -53,7 +58,7 @@ namespace app
 		ticksPrevious = ticksCurrent;
 
 		// power update will handle our WFE/SEV
-		platform_nrf52_power.update();
+		power.update();
 	}
 
 	void Odiin::SetNfcTagPayload(const char* filename)
@@ -201,8 +206,8 @@ namespace app
 
 	void Odiin::InitializePower()
 	{
-		platform_nrf52_power.event_handler = ShutdownHandler;
-		platform_nrf52_power.initialize();
+		power.event_handler = ShutdownHandler;
+		power.initialize();
 	}
 
 	void Odiin::InitializeCrypto() // crypto means cryptography
@@ -280,6 +285,26 @@ namespace app
 		StateMachine::start();
 	}
 
+	void Odiin::Sleep()
+	{
+		power.shutdown(PLATFORM_POWER_SLEEP);
+	}
+
+	void Odiin::PowerOff()
+	{
+
+	}
+
+	void Odiin::RebootToDfu()
+	{
+
+	}
+
+	void Odiin::Reboot()
+	{
+
+	}
+
 	bool Odiin::OnSleep()
 	{
 		screen->BacklightOff();
@@ -318,7 +343,7 @@ namespace app
 				case BSP_EVENT_KEY_4:
 				case BSP_EVENT_KEY_5:
 				case BSP_EVENT_KEY_6:
-					platform_nrf52_power.feed();
+					power.feed();
 					break;
 				default:
 					NRF_LOG_DEBUG("[BSP] Unhandled event: %d", event);

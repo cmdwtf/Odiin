@@ -34,6 +34,11 @@ namespace app
 		virtual void UsbWillEnable(app_usbd_event_type_t event) override;
 		virtual void UsbDidDisable(app_usbd_event_type_t event) override;
 
+		void Sleep();
+		void PowerOff();
+		void RebootToDfu();
+		void Reboot();
+
 		bool OnSleep();
 		bool OnPowerOff();
 		bool OnRebootToDfu();

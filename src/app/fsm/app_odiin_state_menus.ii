@@ -103,13 +103,13 @@ class MenuMain
 
 		output[index].option = "Reboot";
 		output[index].prefix = LV_SYMBOL_REFRESH;
-		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].click_cb = MenuOptionPressedCallback;
 		output[index].user_flags = NEXT_STATE_REBOOT;
 		++index;
 
 		output[index].option = "Power Off";
 		output[index].prefix = LV_SYMBOL_POWER;
-		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].click_cb = MenuOptionPressedCallback;
 		output[index].user_flags = NEXT_STATE_POWEROFF;
 		++index;
 
@@ -136,9 +136,14 @@ class MenuMain
 
 	void react(MenuOptionPressedEvent const& event) override
 	{
-		if (event.Option->user_flags == NEXT_STATE_FILES)
+		switch (event.Option->user_flags)
 		{
-			transit<MenuFiles>();
+			case NEXT_STATE_FILES:
+				transit<MenuFiles>();
+				break;
+			case NEXT_STATE_POWEROFF:
+				app::Odiin::GetInstance()->Sleep();
+				break;
 		}
 	}
 };
