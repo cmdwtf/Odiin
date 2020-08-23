@@ -16,7 +16,7 @@ extern "C" {
 #define USB_DEVICE_VERSION_SUB_MINOR			PRODUCT_VERSION_SUB_MINOR
 
 #define USB_DEVICE_SELF_POWERED					1 // 1 for yes 'self powered', 0 for needs power
-#define USB_DEVICE_MAX_POWER					100 // in mA
+#define USB_DEVICE_MAX_POWER					500 // in mA
 
 #define USB_DEVICE_USE_UTF8_STRINGS				1 // 1 for yes 'uses utf8', 0 for ASCII only
 

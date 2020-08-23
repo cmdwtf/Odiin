@@ -9,8 +9,8 @@
 #define PRODUCT_VERSION_MINOR		0
 #define PRODUCT_VERSION_SUB_MINOR	1
 
-#define PRODUCT_USB_VID				0xC001
-#define PRODUCT_USB_PID				0xB4B3
+#define PRODUCT_USB_VID				0x1209	// pending approval from pid.codes
+#define PRODUCT_USB_PID				0x0D11	// pending approval from pid.codes
 
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
