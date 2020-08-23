@@ -34,22 +34,10 @@ namespace display::led
 			return;
 		}
 
-		// hack -- just cycling through colors to test for now.
-		static float elapsedTime = 0.0f;
-		const float patternDuration = 10.0f;
-		const uint8_t patternTotalPositions = 255;
-		elapsedTime += timeDelta;
-		if (elapsedTime > patternDuration) elapsedTime -= patternDuration;
-		float patternPercent = (elapsedTime / patternDuration);
-		uint8_t patternPosition = patternPercent * patternTotalPositions;
-
-		for (size_t scan = 0; scan < colors->Size; ++scan)
+		if (activeEffect != nullptr)
 		{
-			(*colors)[scan] = RgbLeds::ColorWheel(patternPosition);
-			patternPosition++;
+			activeEffect->Update(timeDelta, *colors);
 		}
-		colors->ShouldUpdate = true;
-		colors->Brightness = 1;
 
 		// if we have a driver and the colors should update, do so!
 		if (ledDriver != nullptr && colors->ShouldUpdate)
@@ -58,4 +46,15 @@ namespace display::led
 			colors->ShouldUpdate = false;
 		}
 	}
+
+	void RgbLeds::SetEffect(effect::Effect* e)
+	{
+		activeEffect = e;
+
+		if (colors != nullptr)
+		{
+			colors->ShouldUpdate = true;
+		}
+	}
+
 } // namespace display::led

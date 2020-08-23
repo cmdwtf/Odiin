@@ -66,7 +66,9 @@ namespace app::fsm
 			LOG_STATE_ENTER(NfctActive);
 
 			// enable the nfct peripheral
-			app::Odiin::GetInstance()->SetNfcTagEnabled(true);
+			Odiin->SetNfcTagEnabled(true);
+
+			Led->SetModeNfct();
 
 			// setup the UI
 			UI_CREATE(nfct_active);
@@ -77,13 +79,14 @@ namespace app::fsm
 
 			const char* baseName;
 			size_t baseNameLength;
-			cwk_path_get_basename(app::Odiin::GetInstance()->GetActiveNfcTagPayloadFilename(), &baseName, &baseNameLength);
+			cwk_path_get_basename(Odiin->GetActiveNfcTagPayloadFilename(), &baseName, &baseNameLength);
 			UI_FUNCTION(nfct_active, set_title)(baseName);
 		}
 
 		void exit() override
 		{
-			app::Odiin::GetInstance()->SetNfcTagEnabled(false);
+			Led->SetModeMenu();
+			Odiin->SetNfcTagEnabled(false);
 			LOG_STATE_EXIT(NfctActive);
 		}
 
@@ -115,6 +118,9 @@ namespace app::fsm
 		void entry() override
 		{
 			LOG_STATE_ENTER(About);
+
+			Led->SetModeFun();
+
 			UI_CREATE(about);
 			UI_ACTIVATE(about, Keypad->GetInputGroup());
 			UI_FUNCTION(about, set_cancel_callback)([](lv_obj_t*, lv_event_t) {
@@ -129,6 +135,13 @@ namespace app::fsm
 	};
 	//////////////////////////////////////////////////////////////////////////
 	// Base state: default implementations
+
+	void OdiinState::SetOdiin(app::Odiin* odiin)
+	{
+		Odiin = odiin;
+		Led = odiin->GetStatusLed();
+		Keypad = odiin->GetKeypad();
+	}
 
 	void OdiinState::react(::tinyfsm::Event const &) { }
 	void OdiinState::react(BootScreenTimeoutEvent const &) { }
@@ -164,6 +177,8 @@ namespace app::fsm
 	void OdiinState::exit() { }
 
 	input::Keypad* OdiinState::Keypad = nullptr;
+	app::Odiin* OdiinState::Odiin = nullptr;
+	app::StatusLed* OdiinState::Led = nullptr;
 } // namespace app::fsm
 
 //////////////////////////////////////////////////////////////////////////

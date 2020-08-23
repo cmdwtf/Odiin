@@ -10,7 +10,6 @@
 
 #include "app_settings.h"
 #include "crypto/crypto_shared.h"
-#include "display/led/display_led_apa102.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "platform/platform_power.h"
@@ -53,7 +52,7 @@ namespace app
 
 		usb::device::Update();
 		screen->Update();
-		statusPixel->Update(delta);
+		statusLed->Update(delta);
 
 		ticksPrevious = ticksCurrent;
 
@@ -243,7 +242,6 @@ namespace app
 	{
 		static input::Keypad kp;
 		keypad = &kp;
-		StateMachine::Keypad = keypad;
 	}
 
 	void Odiin::InitializeScreen()
@@ -254,16 +252,9 @@ namespace app
 
 	void Odiin::InitializeLeds()
 	{
-#if defined(DISPLAY_LED_APA102_ENABLED) && DISPLAY_LED_APA102_ENABLED == 1
-		static display::led::RgbLedColorBuffer<1> colors;
-		colors.Brightness = 2;
-
-		static display::led::RgbLeds status_pixel_apa102(&colors, &display_led_apa102);
-		statusPixel = &status_pixel_apa102;
-#else
-		static display::led::RgbLeds null_led(nullptr, nullptr);
-		statusPixel = &null_led;
-#endif // DISPLAY_LED_APA102_ENABLED
+		static StatusLed led;
+		statusLed = &led;
+		statusLed->SetModeBoot();
 	}
 
 	void Odiin::InitializeNfcTag()
@@ -282,6 +273,7 @@ namespace app
 		// let's get down to business!
 		// to defeat
 		// the punssss.
+		StateMachine::SetOdiin(this);
 		StateMachine::start();
 	}
 
@@ -309,6 +301,7 @@ namespace app
 	{
 		NRF_LOG_WARNING("Device going to sleep.");
 		screen->BacklightOff();
+		statusLed->SetModeShutdown();
 		return true;
 	}
 

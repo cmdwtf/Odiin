@@ -4,11 +4,21 @@
 
 #include "tinyfsm.hpp"
 
-#include "input/input_keypad.h"
-#include "display/screen_ui/display_screen_ui.h"
-
 #define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
 #define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
+
+namespace app
+{
+	class Odiin;
+	class StatusLed;
+}
+
+namespace input
+{
+	class Keypad;
+}
+
+typedef struct menu_option_desc_s menu_option_desc_t;
 
 namespace app::fsm
 {
@@ -50,6 +60,11 @@ namespace app::fsm
 		virtual void entry();
 		virtual void exit();
 
+		static void SetOdiin(app::Odiin* odiin);
+
+	protected:
 		static input::Keypad* Keypad;
+		static app::Odiin* Odiin;
+		static app::StatusLed* Led;
 	};
 } // namespace app::fsm

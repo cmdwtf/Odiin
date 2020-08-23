@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
 
+#include "app/app_status_led.h"
 #include "display/display_screen.h"
-#include "display/led/display_led_rgb_leds.h"
 #include "files/files_fat32.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
@@ -44,6 +44,9 @@ namespace app
 		bool OnRebootToDfu();
 		bool OnReboot();
 
+		StatusLed* GetStatusLed() { return statusLed; }
+		input::Keypad* GetKeypad() { return keypad; }
+
 	private:
 		Odiin();
 		Odiin(const Odiin&) = delete;
@@ -66,7 +69,7 @@ namespace app
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
 		input::Keypad* keypad;
-		display::led::RgbLeds* statusPixel;
+		StatusLed* statusLed;
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 

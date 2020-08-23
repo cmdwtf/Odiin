@@ -120,6 +120,9 @@ class MenuMain
 	void entry() override
 	{
 		LOG_STATE_ENTER(MenuMain);
+
+		Led->SetModeMenu();
+
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
 
@@ -146,10 +149,10 @@ class MenuMain
 				transit<About>();
 				break;
 			case NEXT_STATE_REBOOT:
-				app::Odiin::GetInstance()->Reboot();
+				Odiin->Reboot();
 				break;
 			case NEXT_STATE_POWEROFF:
-				app::Odiin::GetInstance()->Sleep();
+				Odiin->Sleep();
 				break;
 		}
 	}
@@ -344,7 +347,7 @@ class MenuFiles
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, filename, fullPathBuffer, PATH_SIZE_MAX));
 
 		// set the payload
-		app::Odiin::GetInstance()->SetNfcTagPayload(fullPathBuffer);
+		Odiin->SetNfcTagPayload(fullPathBuffer);
 	}
 
 	void PushDirectory(const char* directoryName)
@@ -390,7 +393,7 @@ class MenuFiles
 	{
 		LOG_STATE_ENTER(MenuFiles);
 
-		sdCard = app::Odiin::GetInstance()->GetSdCard();
+		sdCard = Odiin->GetSdCard();
 
 		UI_CREATE(list_menu);
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
@@ -433,7 +436,7 @@ class MenuFiles
 				PageChange(-1);
 				break;
 			case FLAG_GO_HOME:
-				app::Odiin::GetInstance()->SendEvent(app::fsm::GoHomeEvent());
+				Odiin->SendEvent(app::fsm::GoHomeEvent());
 				break;
 			default:
 				NRF_LOG_WARNING("Unhandled menu option flag. (%d)", event.Option->user_flags);
