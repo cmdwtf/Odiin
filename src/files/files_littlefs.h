@@ -2,19 +2,21 @@
 
 #include "files_file_system.h"
 
+#include "lfs.h"
+
 namespace files
 {
-	using FlashFile = void*;
-	using FlashFileInfo = void*;
-	using FlashDirectory = void*;
+	using FlashFile = lfs_file_t;
+	using FlashFileInfo = lfs_info;
+	using FlashDirectory = lfs_dir;
 
-	class Flash : public FileSystem<FlashFile, FlashFileInfo, FlashDirectory>
+	class LittleFs : public FileSystem<FlashFile, FlashDirectory, FlashFileInfo>
 	{
 	public:
-		Flash() = default;
-		virtual ~Flash() = default;
-		Flash(const Flash&) = delete;
-		Flash& operator=(const Flash&) = delete;
+		LittleFs() = default;
+		virtual ~LittleFs() = default;
+		LittleFs(const LittleFs&) = delete;
+		LittleFs& operator=(const LittleFs&) = delete;
 
 		// disk operation interface
 		virtual bool Mount() override;
@@ -39,5 +41,6 @@ namespace files
 		virtual inline const char* GetDriveLabel() override { return ""; }
 		virtual inline uint32_t GetDriveSerial() override { return 0; }
 	private:
+		lfs_t littlefs;
 	};
 } // namespace files

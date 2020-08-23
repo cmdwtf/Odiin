@@ -39,6 +39,9 @@ namespace files
 		virtual inline const char* GetDriveLabel() { return ""; }
 		virtual inline uint32_t GetDriveSerial() { return 0; }
 
+		// disk information interface
+		virtual inline bool IsMounted() { return mounted; }
+
 		// directory styling
 		inline virtual constexpr const char* GetRootDirectory() { return DirectoryUnixStyleRoot; }
 		inline virtual constexpr const char* GetRelativeCurrentDirectory() { return DirectoryOneDot; }
@@ -51,5 +54,7 @@ namespace files
 		static constexpr const char* DirectoryTwoDots = "..";
 		static constexpr const char DirectorySeperatorUnix = '/';
 		static constexpr const char DirectorySeperatorWindows = '\\';
+
+		bool mounted = false;
 	};
 } // namespace files
