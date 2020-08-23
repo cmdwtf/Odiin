@@ -14,24 +14,28 @@ namespace input
 			lv_key_t pressed = GetPressedKey();
 			if (pressed != LV_KEY_NONE)
 			{
+				// a new key was pressed!
 				data->key = pressed;
 				data->state = LV_INDEV_STATE_PR;
+				instance->lastKeyPressed = pressed;
 			}
 			else
 			{
+				// no key pressed.
 				data->state = LV_INDEV_STATE_REL;
 			}
 		}
 		else
 		{
 			// we are currently pressing a key, return it's state.
-
 			if (KeyIsPressed(instance->lastKeyPressed))
 			{
+				// key is continued to be pressed.
 				data->state = LV_INDEV_STATE_PR;
 			}
 			else
 			{
+				// key is released.
 				data->state = LV_INDEV_STATE_REL;
 
 				// we let go of the key, so now no key is pressed,
