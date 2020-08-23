@@ -307,17 +307,20 @@ namespace app
 
 	bool Odiin::OnSleep()
 	{
+		NRF_LOG_WARNING("Device going to sleep.");
 		screen->BacklightOff();
 		return true;
 	}
 
 	bool Odiin::OnPowerOff()
 	{
+		NRF_LOG_WARNING("Device will power OFF!");
 		return true;
 	}
 
 	bool Odiin::OnRebootToDfu()
 	{
+		NRF_LOG_WARNING("Device rebooting to DFU!");
 		// #todo: This code should be in a HAL.
 		// magic values from UF2 bootloader (see bootloader's main.c)
 		enum DfuMagic {
@@ -337,6 +340,7 @@ namespace app
 
 	bool Odiin::OnReboot()
 	{
+		NRF_LOG_WARNING("Device rebooting!");
 		return true;
 	}
 
@@ -367,8 +371,6 @@ namespace app
 
 		bool ShutdownHandler(platform_power_event_t event)
 		{
-			NRF_LOG_WARNING("ShutdownHandler Event: %d", event);
-
 			switch (event)
 			{
 				case PLATFORM_POWER_EVENT_PREPARE_WAKEUP:
@@ -380,6 +382,7 @@ namespace app
 				case PLATFORM_POWER_EVENT_PREPARE_RESET:
 					return Odiin::GetInstance()->OnReboot();
 				default:
+					NRF_LOG_WARNING("Unhandled shutdown event: %d", event);
 					return true;
 			}
 		}
