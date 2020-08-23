@@ -292,17 +292,17 @@ namespace app
 
 	void Odiin::PowerOff()
 	{
-
+		power.shutdown(PLATFORM_POWER_OFF);
 	}
 
 	void Odiin::RebootToDfu()
 	{
-
+		power.shutdown(PLATFORM_POWER_DFU);
 	}
 
 	void Odiin::Reboot()
 	{
-
+		power.shutdown(PLATFORM_POWER_RESET);
 	}
 
 	bool Odiin::OnSleep()

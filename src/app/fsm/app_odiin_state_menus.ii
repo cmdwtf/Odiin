@@ -141,6 +141,9 @@ class MenuMain
 			case NEXT_STATE_FILES:
 				transit<MenuFiles>();
 				break;
+			case NEXT_STATE_REBOOT:
+				app::Odiin::GetInstance()->Reboot();
+				break;
 			case NEXT_STATE_POWEROFF:
 				app::Odiin::GetInstance()->Sleep();
 				break;
