@@ -12,7 +12,8 @@ HEAP_SIZE_BYTES := 32768
 STACK_SIZE_BYTES := 32768
 
 # File names
-GIT_VERSION != git describe --dirty --always --tags
+GIT_VERSION_RAW != git describe --dirty --always --tags
+GIT_VERSION = $(subst -,+,$(GIT_VERSION_RAW))
 FILENAME_OUTPUT_MERGED_HEX := $(PROJECT)-$(GIT_VERSION).hex
 FILENAME_OUTPUT_UF2 := $(PROJECT)-$(GIT_VERSION).uf2
 
