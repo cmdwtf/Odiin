@@ -23,6 +23,7 @@ namespace app::fsm
 	class MenuMain;
 	class MenuFiles;
 
+	class About;
 	class NfctActive;
 	class UsbConnected;
 
@@ -105,6 +106,25 @@ namespace app::fsm
 		void exit() override
 		{
 			LOG_STATE_EXIT(UsbConnected);
+		}
+	};
+
+	class About
+		: public OdiinState
+	{
+		void entry() override
+		{
+			LOG_STATE_ENTER(About);
+			UI_CREATE(about);
+			UI_ACTIVATE(about, Keypad->GetInputGroup());
+			UI_FUNCTION(about, set_cancel_callback)([](lv_obj_t*, lv_event_t) {
+				dispatch(GoHomeEvent());
+			});
+		}
+
+		void exit() override
+		{
+			LOG_STATE_EXIT(About);
 		}
 	};
 	//////////////////////////////////////////////////////////////////////////

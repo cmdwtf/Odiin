@@ -30,6 +30,7 @@ namespace
 		app::Odiin::GetInstance()->SendEvent(ev);
 	};
 
+	void MenuOptionPressedCallbackNyi(menu_option_desc_t* o, lv_group_t* group) __attribute__((unused));
 	void MenuOptionPressedCallbackNyi(menu_option_desc_t* o, lv_group_t* group)
 	{
 		NRF_LOG_INFO("Menu Option `%s` clicked, NYI", NRF_LOG_PUSH((char*)o->option));
@@ -91,13 +92,13 @@ class MenuMain
 
 		output[index].option = "Settings";
 		output[index].prefix = LV_SYMBOL_SETTINGS;
-		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].click_cb = MenuOptionPressedCallback;
 		output[index].user_flags = NEXT_STATE_SETTINGS;
 		++index;
 
 		output[index].option = "About";
 		output[index].prefix = LV_SYMBOL_CHARGE;
-		output[index].click_cb = MenuOptionPressedCallbackNyi;
+		output[index].click_cb = MenuOptionPressedCallback;
 		output[index].user_flags = NEXT_STATE_ABOUT;
 		++index;
 
@@ -140,6 +141,9 @@ class MenuMain
 		{
 			case NEXT_STATE_FILES:
 				transit<MenuFiles>();
+				break;
+			case NEXT_STATE_ABOUT:
+				transit<About>();
 				break;
 			case NEXT_STATE_REBOOT:
 				app::Odiin::GetInstance()->Reboot();
