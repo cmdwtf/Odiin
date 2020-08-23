@@ -24,13 +24,13 @@ namespace input
 		{ LV_KEY_DOWN      , BUTTON_DOWN },
 		{ LV_KEY_RIGHT     , BUTTON_RIGHT },
 		{ LV_KEY_LEFT      , BUTTON_LEFT },
-		{ LV_KEY_ESC       , BUTTON_NONE },
+		{ LV_KEY_ESC       , BUTTON_EX2 },
 		{ LV_KEY_DEL       , BUTTON_NONE },
 		{ LV_KEY_BACKSPACE , BUTTON_NONE },
 		{ LV_KEY_ENTER     , BUTTON_CENTER },
-		{ LV_KEY_NEXT      , BUTTON_DOWN },
-		{ LV_KEY_PREV      , BUTTON_UP },
-		{ LV_KEY_HOME      , BUTTON_NONE },
+		{ LV_KEY_NEXT      , BUTTON_NONE },
+		{ LV_KEY_PREV      , BUTTON_NONE },
+		{ LV_KEY_HOME      , BUTTON_EX1 },
 		{ LV_KEY_END       , BUTTON_NONE },
 	};
 
