@@ -56,26 +56,27 @@ namespace display
 		}
 
 		// and init the backlight, too.
+		NRF_LOG_VERBOSE("Initializing backlight control...");
 		nrf_gpio_cfg_output(ILI9341_BACKLIGHT_CONTROL_PIN);
 		BacklightOn();
 
-		NRF_LOG_INFO("Initializing gfx lvgl...");
+		NRF_LOG_VERBOSE("Initializing gfx lvgl...");
 		lv_init();
 
-		NRF_LOG_INFO("Creating timer event for gfx...");
+		NRF_LOG_VERBOSE("Creating timer event for gfx...");
 		ret_code_t timerResult = app_timer_create(&display_screen_tick_timer,
 												  APP_TIMER_MODE_REPEATED,
 												  Screen::Tick);
 		APP_ERROR_CHECK(timerResult);
 
-		NRF_LOG_INFO("Initializing gfx display buffers...");
+		NRF_LOG_VERBOSE("Initializing gfx display buffers...");
 		lv_disp_buf_init(&displayBuffer, displayBuffer0, displayBuffer1, displayBufferPixelCount);
 
-		NRF_LOG_INFO("Initializing gfx display driver...");
+		NRF_LOG_VERBOSE("Initializing gfx display driver...");
 		lv_disp_drv_t displayDriver; // docs say this can be local.
 		lv_disp_drv_init(&displayDriver);
 
-		NRF_LOG_INFO("Registering gfx display driver...");
+		NRF_LOG_VERBOSE("Registering gfx display driver...");
 		displayDriver.buffer = &displayBuffer;
 		displayDriver.flush_cb = lvFlushCallback;
 		// displayDriver.monitor_cb = nullptr; // #perf monitoring later
@@ -89,7 +90,7 @@ namespace display
 			lcd->lcd_rotation_set(NRF_LCD_ROTATE_90);
 		}
 
-		NRF_LOG_INFO("Starting gfx timer...");
+		NRF_LOG_VERBOSE("Starting gfx timer...");
 		uint32_t ticks = APP_TIMER_TICKS(GraphicsTickMs);
 		timerResult = app_timer_start(display_screen_tick_timer, ticks, this);
 		APP_ERROR_CHECK(timerResult);
