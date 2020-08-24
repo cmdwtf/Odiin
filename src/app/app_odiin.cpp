@@ -350,6 +350,7 @@ namespace app
 	{
 		NRF_LOG_WARNING("Device going to sleep.");
 		screen->BacklightOff();
+		screen->DisplaySleep();
 		statusLed->SetModeShutdown();
 		return true;
 	}

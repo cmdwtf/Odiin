@@ -10,6 +10,8 @@ extern "C" {
 typedef struct
 {
 	void (*raw_draw)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t* colorBuffer);
+	void (*sleep)();
+	void (*wake)();
 	volatile bool (*ready_for_command)();
 	const nrf_lcd_t* p_lcd_base;
     lcd_cb_t* p_lcd_cb;

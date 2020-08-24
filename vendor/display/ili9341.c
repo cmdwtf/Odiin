@@ -633,8 +633,24 @@ void ili9341_raw_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, c
 	spi_commit();
 }
 
+void ili9341_sleep(void)
+{
+	buffer_command(ILI9341_SLPIN);
+	spi_commit();
+	nrf_delay_ms(5);
+}
+
+void ili9341_wake(void)
+{
+	buffer_command(ILI9341_SLPOUT);
+	spi_commit();
+	nrf_delay_ms(120);
+}
+
 const nrf_lcd_ex_t lcd_ili9341_ex = {
 	.raw_draw = ili9341_raw_draw,
+	.sleep = ili9341_sleep,
+	.wake = ili9341_wake,
 	.ready_for_command = ili9341_is_ready_for_command,
 	.p_lcd_base = &lcd_ili9341,
 	.p_lcd_cb = &ili9341_cb

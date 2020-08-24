@@ -22,6 +22,9 @@ namespace display
 		void BacklightOff();
 		void SetBacklightBrightness(uint8_t brightness);
 
+		void DisplaySleep();
+		void DisplayWake();
+
 		inline bool IsInitialized() { return initialized; }
 		static constexpr uint32_t GraphicsTickMs = 1;
 	private:

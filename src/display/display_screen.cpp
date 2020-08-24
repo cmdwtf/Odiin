@@ -138,9 +138,25 @@ namespace display
 		nrf_gpio_pin_clear(ILI9341_BACKLIGHT_CONTROL_PIN);
 	}
 
-	void SetBacklightBrightness(uint8_t brightness)
+	void Screen::SetBacklightBrightness(uint8_t brightness)
 	{
 		// todo
+	}
+
+	void Screen::DisplaySleep()
+	{
+		if (initialized)
+		{
+			lcdEx->sleep();
+		}
+	}
+
+	void Screen::DisplayWake()
+	{
+		if (initialized)
+		{
+			lcdEx->wake();
+		}
 	}
 
 	namespace
