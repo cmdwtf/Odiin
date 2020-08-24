@@ -5801,6 +5801,70 @@
 
 //==========================================================
 
+// <e> ODIIN_LOG_ENABLED - Enable logging in APPFILES and its submodules.
+//==========================================================
+
+#ifndef ODIIN_LOG_ENABLED
+#define ODIIN_LOG_ENABLED 1
+#endif
+
+// <o> ODIIN_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef ODIIN_LOG_LEVEL
+#define ODIIN_LOG_LEVEL 4
+#endif
+
+// <q> ODIIN_VERBOSE_LOGGING - Enable verbose logging in APPFILES and its submodules.
+// <i> This is for even more verbose than 'Debug' logging. Requires LOG_LEVEL to be set to debug.
+//==========================================================
+
+#ifndef ODIIN_VERBOSE_LOGGING
+#define ODIIN_VERBOSE_LOGGING 0
+#endif
+
+// <o> ODIIN_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef ODIIN_INFO_COLOR
+#define ODIIN_INFO_COLOR 7
+#endif
+
+// <o> ODIIN_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef ODIIN_DEBUG_COLOR
+#define ODIIN_DEBUG_COLOR 8
+#endif
+
+// </e>
+
+
+//==========================================================
+
 // <e> APPFILES_LOG_ENABLED - Enable logging in APPFILES and its submodules.
 //==========================================================
 
@@ -5825,7 +5889,7 @@
 //==========================================================
 
 #ifndef APPFILES_VERBOSE_LOGGING
-#define APPFILES_VERBOSE_LOGGING 1
+#define APPFILES_VERBOSE_LOGGING 0
 #endif
 
 // <o> APPFILES_INFO_COLOR  - ANSI escape code prefix.
@@ -5888,7 +5952,7 @@
 //==========================================================
 
 #ifndef APPDISPLAY_VERBOSE_LOGGING
-#define APPDISPLAY_VERBOSE_LOGGING 1
+#define APPDISPLAY_VERBOSE_LOGGING 0
 #endif
 
 // <o> APPDISPLAY_INFO_COLOR  - ANSI escape code prefix.

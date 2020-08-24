@@ -36,6 +36,10 @@
         {
             "label": "Clean",
             "command": "make clean"
+        },,
+        {
+            "label": "Clean Bootloader",
+            "command": "make clean_bootloader"
         },
         {
             "label": "Make & Flash",

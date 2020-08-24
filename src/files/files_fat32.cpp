@@ -147,7 +147,7 @@ namespace files
 	//////////////////////////////////////////////////////////////////////////
 	// File Operations
 
-	bool Fat32::FileOpen(Fat32File& file, const char *filePath, uint8_t mode)
+	bool Fat32::FileOpen(Fat32File& file, const char *filePath, uint16_t mode)
 	{
 		if (mounted == false)
 		{
@@ -310,7 +310,7 @@ namespace files
 		// #hardcode -- we only support one disk right now.
 		diskIndex = 0;
 
-		NRF_LOG_INFO("Initializing disk %d (SDC)...", diskIndex);
+		NRF_LOG_VERBOSE("Initializing disk %d (SDC)...", diskIndex);
 
 		// trying 3 times, cause that's what they did in the example
 		// and here: https://devzone.nordicsemi.com/f/nordic-q-a/59811/fatfs-example-bug
@@ -376,7 +376,7 @@ namespace files
 			return true;
 		}
 
-		NRF_LOG_INFO("Registering SDC Block Device...");
+		NRF_LOG_VERBOSE("Registering SDC Block Device...");
 
 		sdCardBlockDevice = get_sdc_block_device();
 
@@ -393,7 +393,7 @@ namespace files
 
 		diskio_blockdev_register(drives, ARRAY_SIZE(drives));
 
-		NRF_LOG_INFO("Registered.");
+		NRF_LOG_VERBOSE("Registered.");
 
 		registered = true;
 

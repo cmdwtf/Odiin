@@ -1,0 +1,19 @@
+#pragma once
+
+#define NRF_LOG_MODULE_NAME odiin
+#if ODIIN_LOG_ENABLED
+#define NRF_LOG_LEVEL ODIIN_LOG_LEVEL
+#define NRF_LOG_INFO_COLOR ODIIN_INFO_COLOR
+#define NRF_LOG_DEBUG_COLOR ODIIN_DEBUG_COLOR
+#else //ODIIN_LOG_ENABLED
+#define NRF_LOG_LEVEL 0
+#endif //ODIIN_LOG_ENABLED
+#include "nrf_log.h"
+
+#if defined(ODIIN_VERBOSE_LOGGING) && (ODIIN_VERBOSE_LOGGING == 1)
+#define NRF_LOG_VERBOSE(...) NRF_LOG_DEBUG(__VA_ARGS__)
+#define NRF_HEXDUMP_VERBOSE(p_data, len) NRF_LOG_HEXDUMP_DEBUG(p_data, len)
+#else
+#define NRF_LOG_VERBOSE(...)
+#define NRF_HEXDUMP_VERBOSE(p_data, len) do { UNUSED_VARIABLE(p_data); UNUSED_VARIABLE(len); } while(0)
+#endif // ODIIN_VERBOSE_LOGGING

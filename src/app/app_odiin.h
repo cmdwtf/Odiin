@@ -4,6 +4,7 @@
 #include "app/app_status_led.h"
 #include "display/display_screen.h"
 #include "files/files_fat32.h"
+#include "files/files_littlefs.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x_emulator.h"
@@ -47,6 +48,9 @@ namespace app
 		StatusLed* GetStatusLed() { return statusLed; }
 		input::Keypad* GetKeypad() { return keypad; }
 
+		void LoadSettings();
+		void SaveSettings();
+
 	private:
 		Odiin();
 		Odiin(const Odiin&) = delete;
@@ -57,6 +61,7 @@ namespace app
 		void InitializeTimers();
 		void InitializeBsp();
 		void InitializePower();
+		void InitializeFlash();
 		void InitializeCrypto();
 		void InitializeUsbDevice();
 		void InitializeSdCard();
@@ -64,10 +69,12 @@ namespace app
 		void InitializeScreen();
 		void InitializeLeds();
 		void InitializeNfcTag();
+
 		void StartApplication();
 
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
+		files::Littlefs* flash;
 		input::Keypad* keypad;
 		StatusLed* statusLed;
 		display::Screen* screen;

@@ -2,7 +2,6 @@
 
 #include "cwalk.h"
 #include "nrf_assert.h"
-#include "nrf_log.h"
 
 #include "app/app_odiin.h"
 #include "app/app_settings.h"
@@ -11,6 +10,11 @@
 #include "global/global_strings.h"
 #include "input/input_keypad.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x.h"
+
+#include "../app_log_module.ii"
+
+#define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
+#define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
 
 namespace app::fsm
 {

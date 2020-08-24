@@ -26,7 +26,7 @@ namespace files
 		virtual bool Mount() override;
 		virtual bool Unmount() override;
 
-		virtual bool FileOpen(Fat32File& file, const char* filePath, uint8_t mode) override;
+		virtual bool FileOpen(Fat32File& file, const char* filePath, uint16_t mode) override;
 		virtual bool FileRead(Fat32File& file, void* buffer, size_t amountToRead, size_t* amountRead) override;
 		virtual bool FileWrite(Fat32File& file, const void* buffer, size_t bufferLength, size_t* amountWritten) override;
 		virtual bool FileSeek(Fat32File& file, size_t offset) override;

@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstddef>
 
+#include "files_storage_driver.h"
+
 namespace files
 {
 	template <typename FileHandle,
@@ -21,7 +23,7 @@ namespace files
 		virtual bool Unmount() = 0;
 
 		// file interface
-		virtual bool FileOpen(FileHandle& file, const char* filePath, uint8_t mode) = 0;
+		virtual bool FileOpen(FileHandle& file, const char* filePath, uint16_t mode) = 0;
 		virtual bool FileRead(FileHandle& file, void* buffer, size_t amountToRead, size_t* amountRead) = 0;
 		virtual bool FileWrite(FileHandle& file, const void* buffer, size_t bufferLength, size_t* amountWritten) = 0;
 		virtual bool FileSeek(FileHandle& file, size_t offset) = 0;

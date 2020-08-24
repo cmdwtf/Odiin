@@ -1,11 +1,6 @@
 #pragma once
 
-#include "nrf_log.h"
-
 #include "tinyfsm.hpp"
-
-#define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
-#define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
 
 namespace app
 {

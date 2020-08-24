@@ -10,20 +10,20 @@ namespace files
 	using FlashFileInfo = lfs_info;
 	using FlashDirectory = lfs_dir;
 
-	class LittleFs : public FileSystem<FlashFile, FlashDirectory, FlashFileInfo>
+	class Littlefs : public FileSystem<FlashFile, FlashDirectory, FlashFileInfo>
 	{
 	public:
-		LittleFs() = default;
-		virtual ~LittleFs() = default;
-		LittleFs(const LittleFs&) = delete;
-		LittleFs& operator=(const LittleFs&) = delete;
+		Littlefs() = default;
+		virtual ~Littlefs() = default;
+		Littlefs(const Littlefs&) = delete;
+		Littlefs& operator=(const Littlefs&) = delete;
 
 		// disk operation interface
 		virtual bool Mount() override;
 		virtual bool Unmount() override;
 
 		// file interface
-		virtual bool FileOpen(FlashFile& file, const char* filePath, uint8_t mode) override;
+		virtual bool FileOpen(FlashFile& file, const char* filePath, uint16_t flags) override;
 		virtual bool FileRead(FlashFile& file, void* buffer, size_t amountToRead, size_t* amountRead) override;
 		virtual bool FileWrite(FlashFile& file, const void* buffer, size_t bufferLength, size_t* amountWritten) override;
 		virtual bool FileSeek(FlashFile& file, size_t offset) override;
@@ -33,14 +33,16 @@ namespace files
 		virtual bool DirectoryOpen(FlashDirectory& dir, const char* directoryPath) override;
 		virtual bool DirectoryRead(FlashDirectory& dir, FlashFileInfo& info) override;
 		virtual bool DirectoryClose(FlashDirectory& dir) override;
+		virtual bool DirectoryCreate(FlashDirectory& dir, const char* directoryPath);
 
 		// file information interface
 		virtual bool FileStat(FlashFileInfo& fileInfo, const char* path) override;
 
 		// drive information interface
-		virtual inline const char* GetDriveLabel() override { return ""; }
+		virtual inline const char* GetDriveLabel() override { return GetFlashName(); }
 		virtual inline uint32_t GetDriveSerial() override { return 0; }
 	private:
 		lfs_t littlefs;
+		const char* GetFlashName();
 	};
 } // namespace files

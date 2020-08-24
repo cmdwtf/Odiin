@@ -4,7 +4,6 @@
 #include "app_timer.h"
 #include "bsp.h"
 #include "nrf_drv_clock.h"
-#include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
@@ -15,6 +14,8 @@
 #include "platform/platform_power.h"
 #include "timer/timer.h"
 #include "usb/usb.h"
+
+#include "app_log_module.ii"
 
 namespace app
 {
@@ -113,6 +114,35 @@ namespace app
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Settings
+
+	void Odiin::LoadSettings()
+	{
+		if (app::settings::Load(*flash))
+		{
+			NRF_LOG_INFO("Settings loaded!");
+		}
+		else
+		{
+			NRF_LOG_ERROR("Failed to load settings. Will try to save default settings.");
+			SaveSettings();
+		}
+	}
+
+	void Odiin::SaveSettings()
+	{
+		if (app::settings::Save(*flash))
+		{
+			NRF_LOG_INFO("Settings saved!");
+		}
+		else
+		{
+			NRF_LOG_ERROR("Failed to save settings. Is the flash device working?");
+			// we probably should panic, but lets try to continue...
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	// USB Listener interface
 	void Odiin::UsbWillEnable(app_usbd_event_type_t event)
 	{
@@ -153,6 +183,8 @@ namespace app
 		InitializeTimers();
 		InitializeBsp();
 		InitializePower();
+		InitializeFlash();
+		LoadSettings();
 		InitializeCrypto();
 		InitializeUsbDevice();
 		InitializeSdCard();
@@ -207,6 +239,16 @@ namespace app
 	{
 		power.event_handler = ShutdownHandler;
 		power.initialize();
+	}
+
+	void Odiin::InitializeFlash()
+	{
+		static files::Littlefs fs;
+		flash = &fs;
+		if (flash->Mount() == false)
+		{
+			NRF_LOG_WARNING("Flash failed to mount!");
+		}
 	}
 
 	void Odiin::InitializeCrypto() // crypto means cryptography
@@ -277,6 +319,9 @@ namespace app
 		StateMachine::start();
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Power Event Triggers
+
 	void Odiin::Sleep()
 	{
 		power.shutdown(PLATFORM_POWER_SLEEP);
@@ -296,6 +341,10 @@ namespace app
 	{
 		power.shutdown(PLATFORM_POWER_RESET);
 	}
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// Power Event Handlers
 
 	bool Odiin::OnSleep()
 	{

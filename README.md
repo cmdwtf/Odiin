@@ -83,11 +83,18 @@ If you'd like license this project or a part of it's code for a specific purpose
 
 - [M.2 DevKit SDK](https://github.com/makerdiary/nrf52840-m2-devkit): MIT © 2020 makerdiary
 - [nRF5 SDK](https://developer.nordicsemi.com/): 5-Clause Nordic © 2010-2017 Nordic Semiconductor ASA
-- [littlefs](https://github.com/ARMmbed/littlefs): BSD-3-Clause License © 2017 ARM Limited
-- [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx ChaN (See LICENSE.txt in vendor/fatfs for details)
 - [lvgl](https://github.com/lvgl/lvgl): MIT © 2020 LVGL LLC
+- [Adafruit_nRF52_Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader): MIT © 2016 Adafruit Industries
+- [FatFs](http://elm-chan.org/fsw/ff/00index_e.html): Custom-1-Clause License © 20xx ChaN (See LICENSE.txt in vendor/fatfs for details)
+- [littlefs](https://github.com/ARMmbed/littlefs): BSD-3-Clause License © 2017 ARM Limited
 - [TinyFSM](https://github.com/digint/tinyfsm): MIT © 2012-2018 Axel Burri
 - [libcwalk](https://github.com/likle/cwalk): MIT © 2020 Leonard Iklé
+
+#### Additional Third-Party Thanks
+
+This is software that I didn't use directly, but was able to glean information from for my implementations of things.
+- [Zephyr](https://github.com/zephyrproject-rtos/zephyr): Apache-2.0 - Various authors/copyrights. When I'm not in a "do it from scratch" mood next time, I'm going for Zephyr.
+- [AdaFruit](https://www.adafruit.com/): No project in particular. Just their endless wealth of tutorials and community.
 
 *If you've noticed I'm using a piece of code that isn't mentioned here, please make a PR/issue to add it. I want everyone to get the credit they deserve!*
 

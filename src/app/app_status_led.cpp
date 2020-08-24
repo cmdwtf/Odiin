@@ -5,6 +5,8 @@
 #include "display/led/display_led_apa102.h"
 #include "display/led/effect/display_led_effect_all_effects.h"
 
+#include "app_log_module.ii"
+
 namespace app
 {
 	using namespace display::led;
