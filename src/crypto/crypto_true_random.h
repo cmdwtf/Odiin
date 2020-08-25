@@ -1,7 +1,9 @@
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
+#include <stdint.h>
+#include <stddef.h>
+
+#ifdef __cplusplus
 
 namespace crypto
 {
@@ -19,3 +21,15 @@ namespace crypto
 		TrueRandom& operator=(const TrueRandom&) = delete;
 	};
 }
+
+#endif // __cplusplus
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+extern uint32_t crypto_true_random_range(uint32_t min, uint32_t max);
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
