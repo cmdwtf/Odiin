@@ -1,5 +1,9 @@
 #include "global_strings.h"
 
+#include <stddef.h>
+
+#include "crypto/crypto_true_random.h"
+
 #define LOADING_ELIPSIS "..."
 const char* const LoadingReasons[] = {
 		"Loadiing" LOADING_ELIPSIS,
@@ -22,3 +26,10 @@ const char* const LoadingReasons[] = {
 		"Ordering piiza" LOADING_ELIPSIS,
 		// I'm probably not as clever as I think I am.
 };
+
+const char* const global_strings_loading_reason_random(void)
+{
+	const size_t reasonCount = sizeof(LoadingReasons) / sizeof(LoadingReasons[0]);
+	size_t randomReason = crypto_true_random_range(0, reasonCount - 1);
+	return LoadingReasons[randomReason];
+}

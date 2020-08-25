@@ -1,5 +1,6 @@
 #include "display_screen_ui.h"
 
+#include "crypto/crypto_true_random.h"
 #include "global/global_strings.h"
 
 #define UI_NAME boot
@@ -30,17 +31,15 @@ UI_DECLARE_CREATE(UI_NAME)
 	lv_label_set_long_mode(labelProduct, LV_LABEL_LONG_EXPAND);
 	lv_label_set_text(labelProduct, PRODUCT_NAME_LONG);
 
+	// pick a random loading reason
 	lv_obj_t* labelReason = lv_label_create(screen, NULL);
 	ui_common_set_label_font_theme_small(labelReason);
 	lv_obj_refresh_style(labelReason, LV_LABEL_PART_MAIN);
-	lv_label_set_long_mode(labelReason, LV_LABEL_LONG_EXPAND);
-	lv_label_set_align(labelReason, LV_LABEL_ALIGN_CENTER);
-	lv_obj_align(labelReason, NULL, LV_ALIGN_CENTER, 0, 0);
-	lv_obj_set_y(labelReason, container->coords.y2 + 10);
-	lv_label_set_text(labelReason, LoadingReasons[0]); // #todo rng
+	lv_label_set_long_mode(labelReason, LV_LABEL_LONG_SROLL);
+	lv_label_set_align(labelReason, LV_LABEL_ALIGN_LEFT);
+	lv_obj_align(labelReason, screen, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
+	lv_label_set_text(labelReason, global_strings_loading_reason_random());
 	lv_obj_set_width_fit(labelReason, lv_obj_get_width(screen));
-	// #todo, get this string to center...
-	//lv_obj_set_x(labelReason, labelReason->coords.x1 + lv_obj_get_width(labelReason) / 2);
 
 	return screen;
 }

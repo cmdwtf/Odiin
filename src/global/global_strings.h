@@ -42,6 +42,7 @@ extern "C" {
 #endif
 
 extern const char* const LoadingReasons[];
+extern const char* const global_strings_loading_reason_random(void);
 
 #ifdef __cplusplus
 }
