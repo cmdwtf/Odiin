@@ -425,6 +425,9 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
 # that may need symbols provided by these libraries.
 LIB_FILES += -lc -lnosys -lm -lstdc++
 
+# Check to see if the bootloader already is built and is ready to be used
+BOOTLOADER_EXISTS := $(or $(and $(wildcard $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)),1),0)
+
 .PHONY: default help
 
 # Default target - first one defined
@@ -445,20 +448,22 @@ include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
 
-.PHONY: bootloader clean_bootloader flash merge flash_mbr flash_bootloader flash_all erase release
+.PHONY: bootloader clean_bootloader flash flash_mbr flash_bootloader merge flash_all erase release
 
 # Build the bootloader subproject, and copy it to the output.
 # If someone wants to improve the copy/rename to work on multiple platforms, be my guest.
 bootloader:
+ifeq ($(BOOTLOADER_EXISTS),0)
 	@echo Building UF2 bootloader...
-	make -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) all
+	$(MAKE) -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) all
 	@xcopy $(BOOTLOADER_DIR)\_build\build-$(BOOTLOADER_BOARD)\$(BOOTLOADER_BOARD)_bootloader*nosd.hex $(OUTPUT_DIRECTORY)\ /R /Y
-	move /y $(OUTPUT_DIRECTORY)\$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)
+	@move /y $(OUTPUT_DIRECTORY)\$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)
+endif
 
 # Clean bootloader subproject
 clean_bootloader:
 	@echo Cleaning UF2 bootloader...
-	make -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) clean
+	$(MAKE) -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) clean
 
 # Flash the program, no bootloader.
 flash: default
