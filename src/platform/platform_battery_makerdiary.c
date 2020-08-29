@@ -9,6 +9,7 @@
 static uint16_t makerdiary_voltage_mv = 0;
 static uint8_t makerdiary_charge_percent = 0;
 static bool makerdiary_is_charging = false;
+static bool makerdiary_is_power_good = false;
 
 #define MAKERDIARY_SAADC_CHANNEL 0
 
@@ -25,6 +26,9 @@ static ret_code_t makerdiary_battery_initialize(void)
 	nrf_saadc_channel_config_t channel_config = NRFX_SAADC_DEFAULT_CHANNEL_CONFIG_SE(BATT_VSENSE_AIN);
 
 	nrf_gpio_cfg_input(BATT_CHRG_PIN, NRF_GPIO_PIN_NOPULL);
+#ifdef BATT_PGOOD_PIN
+    nrf_gpio_cfg_input(BATT_PGOOD_PIN, NRF_GPIO_PIN_NOPULL);
+#endif // BATT_PGOOD_PIN
 
 	// Burst enabled to oversample the SAADC.
 	channel_config.burst    = NRF_SAADC_BURST_ENABLED;
@@ -67,9 +71,14 @@ static void makerdiary_battery_update(void)
 	makerdiary_charge_percent = BATT_MEAS_VOLTAGE_TO_SOC[soc_vector_element];
 
 	makerdiary_is_charging = !(bool)nrf_gpio_pin_read(BATT_CHRG_PIN);
+
+#ifdef BATT_PGOOD_PIN
+	makerdiary_is_power_good = !(bool)nrf_gpio_pin_read(BATT_PGOOD_PIN);
+#endif // BATT_PGOOD_PIN
+
 }
 
-static uint8_t makerdiary_battery_get_percentage(void)
+static uint8_t makerdiary_battery_get_state_of_charge(void)
 {
 	return makerdiary_charge_percent;
 }
@@ -79,15 +88,30 @@ static uint16_t makerdiary_battery_get_voltage(void)
 	return makerdiary_voltage_mv;
 }
 
-static bool makerdiary_battery_get_is_charging(void)
+static platform_battery_state_t makerdiary_battery_state(void)
 {
-	return makerdiary_is_charging;
+	if (makerdiary_is_charging)
+	{
+		return PLATFORM_BATTERY_STATE_CHARGING;
+	}
+#ifdef BATT_PGOOD_PIN
+	else if (makerdiary_is_power_good)
+	{
+		return PLATFORM_BATTERY_STATE_CAN_CHARGE;
+	}
+	else
+	{
+		return PLATFORM_BATTERY_STATE_DISCHARGING;
+	}
+#else
+	return PLATFORM_BATTERY_CAN_CHARGE_UNKNOWN;
+#endif // BATT_PGOOD_PIN
 }
 
 platform_battery_driver_t platform_battery_makerdiary = {
 	.initialize = makerdiary_battery_initialize,
 	.update = makerdiary_battery_update,
-	.get_battery_percent = makerdiary_battery_get_percentage,
+	.get_battery_state_of_charge = makerdiary_battery_get_state_of_charge,
 	.get_battery_voltage = makerdiary_battery_get_voltage,
-	.get_battery_is_charging = makerdiary_battery_get_is_charging,
+	.get_battery_state = makerdiary_battery_state,
 };

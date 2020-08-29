@@ -257,14 +257,14 @@
 
 
 #ifndef NRFX_RTC0_ENABLED
-#define NRFX_RTC0_ENABLED 0
+#define NRFX_RTC0_ENABLED 0 // TRY NOT TO USE RTC0! It is used if a softdevice is preseent.
 #endif
 
 // <q> NRFX_RTC1_ENABLED  - Enable RTC1 instance
 
 
 #ifndef NRFX_RTC1_ENABLED
-#define NRFX_RTC1_ENABLED 0
+#define NRFX_RTC1_ENABLED 0 // DO NOT USE RTC1! It is used by the APP_TIMER module.
 #endif
 
 // <q> NRFX_RTC2_ENABLED  - Enable RTC2 instance

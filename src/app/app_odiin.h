@@ -72,6 +72,9 @@ namespace app
 
 		void StartApplication();
 
+		void TimerTick1Sec();
+		void UpdateBattery();
+
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
 		files::Littlefs* flash;
@@ -80,7 +83,11 @@ namespace app
 		display::Screen* screen;
 		NfcTagEmulator* nfcTagEmulator;
 
+		uint8_t batteryStateOfCharge = 0;
+		bool batteryIsCharging = false;
+
 		uint32_t ticksPrevious = 0;
+		bool updateBattery = false;
 
 		// #todo: this is not where this should live.
 		// but it will do as a kludge for now.

@@ -11,17 +11,21 @@
 #include "crypto/crypto_shared.h"
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
+#include "platform/platform_battery.h"
 #include "platform/platform_power.h"
 #include "timer/timer.h"
 #include "usb/usb.h"
 
 #include "app_log_module.ii"
 
+APP_TIMER_DEF(app_odiin_1sec);
+
 namespace app
 {
 	namespace
 	{
 		platform_power_driver_t& power = platform_power_nrf52;
+		platform_battery_driver_t& battery = platform_battery_makerdiary;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -54,6 +58,8 @@ namespace app
 		usb::device::Update();
 		screen->Update();
 		statusLed->Update(delta);
+
+		UpdateBattery();
 
 		ticksPrevious = ticksCurrent;
 
@@ -223,6 +229,16 @@ namespace app
 		// initialize the frame timer based on the rtc
 		timer_initialize();
 		timer_start();
+
+		// initialize the 1-sec tick timer
+		err_code = app_timer_create(&app_odiin_1sec,
+									APP_TIMER_MODE_REPEATED,
+									[](void* ctx){ ((app::Odiin*)ctx)->TimerTick1Sec(); });
+
+		APP_ERROR_CHECK(err_code);
+		constexpr uint32_t ticks1SecMs = 1000;
+		constexpr uint32_t ticks1Sec = APP_TIMER_TICKS(ticks1SecMs);
+		app_timer_start(app_odiin_1sec, ticks1Sec, this);
 	}
 
 	void Odiin::InitializeBsp()
@@ -239,6 +255,8 @@ namespace app
 	{
 		power.event_handler = ShutdownHandler;
 		power.initialize();
+
+		battery.initialize();
 	}
 
 	void Odiin::InitializeFlash()
@@ -317,6 +335,68 @@ namespace app
 		// the punssss.
 		StateMachine::SetOdiin(this);
 		StateMachine::start();
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Timer Handlers
+	void Odiin::TimerTick1Sec()
+	{
+		updateBattery = true;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Private Updaters
+
+	void Odiin::UpdateBattery()
+	{
+		constexpr size_t SAMPLE_COUNT = 10;
+		static uint32_t sample = 0;
+		static uint8_t numSamples = 0;
+
+		if (updateBattery)
+		{
+			battery.update();
+			uint8_t percent = battery.get_battery_state_of_charge();
+			sample += percent;
+			numSamples++;
+
+			if (numSamples >= SAMPLE_COUNT)
+			{
+				// calc average
+				batteryStateOfCharge = (sample / SAMPLE_COUNT);
+				platform_battery_state_t batteryState = battery.get_battery_state();
+				batteryIsCharging = batteryState == PLATFORM_BATTERY_STATE_CHARGING;
+
+#if defined(ODIIN_VERBOSE_LOGGING) && ODIIN_VERBOSE_LOGGING == 1
+				uint16_t currentMilliVolts = battery.get_battery_voltage();
+				const char* chargingText = "";
+
+				switch (batteryState)
+				{
+					case PLATFORM_BATTERY_STATE_CHARGING:
+						chargingText = "charging";
+						break;
+					case PLATFORM_BATTERY_CAN_CHARGE:
+						chargingText = "charge possible";
+						break;
+					case PLATFORM_BATTERY_CAN_NOT_CHARGE:
+						chargingText = "can't charge";
+						break;
+					case PLATFORM_BATTERY_CAN_CHARGE_UNKNOWN:
+						chargingText = "unknown state";
+						break;
+				}
+
+				NRF_LOG_VERBOSE("[Bat]: %d%% [%s] (%d mV)", average, chargingText, currentMilliVolts);
+#endif // ODIIN_VERBOSE_LOGGING
+
+				// reset samples
+				numSamples = 0;
+				sample = 0;
+			}
+
+			updateBattery = false;
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////
