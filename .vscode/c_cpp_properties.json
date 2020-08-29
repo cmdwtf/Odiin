@@ -33,7 +33,8 @@
                 "-mfloat-abi=hard",
                 "-mabi=aapcs",
                 "-mfpu=fpv4-sp-d16"
-            ]
+            ],
+            "compileCommands": "${workspaceFolder}/compile_commands.json"
         }
     ],
     "version": 4

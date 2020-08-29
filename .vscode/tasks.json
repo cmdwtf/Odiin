@@ -36,7 +36,11 @@
         {
             "label": "Clean",
             "command": "make clean"
-        },,
+		},
+		{
+			"label": "Make Bootloader",
+			"command": "make bootloader"
+		},
         {
             "label": "Clean Bootloader",
             "command": "make clean_bootloader"
@@ -54,8 +58,12 @@
             }
         },
         {
-            "label": "Erase",
+            "label": "Erase Target",
             "command": "make erase"
-        }
+		},
+		{
+			"label": "Generate compile_commands.json",
+			"command": "compiledb make release",
+		}
     ]
 }

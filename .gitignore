@@ -4,3 +4,4 @@
 _build/
 _firmware/
 .todo/
+compile_commands.json
