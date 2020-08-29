@@ -34,7 +34,7 @@ typedef struct platform_power_driver_s {
 } platform_power_driver_t;
 
 #ifdef NRF52840_XXAA
-extern platform_power_driver_t platform_nrf52_power;
+extern platform_power_driver_t platform_power_nrf52;
 #endif //DNRF52840_XXAA
 
 #ifdef __cplusplus

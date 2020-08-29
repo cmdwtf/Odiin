@@ -50,7 +50,7 @@ static void nrf52_power_shutdown(platform_power_shutdown_t mode)
 
 static bool nrf52_power_event_handler(nrf_pwr_mgmt_evt_t event)
 {
-	if (platform_nrf52_power.event_handler == NULL)
+	if (platform_power_nrf52.event_handler == NULL)
 	{
 		return true;
 	}
@@ -58,19 +58,19 @@ static bool nrf52_power_event_handler(nrf_pwr_mgmt_evt_t event)
 	switch (event)
 	{
 		case NRF_PWR_MGMT_EVT_PREPARE_WAKEUP:
-			return platform_nrf52_power.event_handler(PLATFORM_POWER_EVENT_PREPARE_WAKEUP);
+			return platform_power_nrf52.event_handler(PLATFORM_POWER_EVENT_PREPARE_WAKEUP);
 		case NRF_PWR_MGMT_EVT_PREPARE_SYSOFF:
-			return platform_nrf52_power.event_handler(PLATFORM_POWER_EVENT_PREPARE_OFF);
+			return platform_power_nrf52.event_handler(PLATFORM_POWER_EVENT_PREPARE_OFF);
 		case NRF_PWR_MGMT_EVT_PREPARE_DFU:
-			return platform_nrf52_power.event_handler(PLATFORM_POWER_EVENT_PREPARE_DFU);
+			return platform_power_nrf52.event_handler(PLATFORM_POWER_EVENT_PREPARE_DFU);
 		case NRF_PWR_MGMT_EVT_PREPARE_RESET:
-			return platform_nrf52_power.event_handler(PLATFORM_POWER_EVENT_PREPARE_RESET);
+			return platform_power_nrf52.event_handler(PLATFORM_POWER_EVENT_PREPARE_RESET);
 		default:
 			return true;
 	}
 }
 
-platform_power_driver_t platform_nrf52_power = {
+platform_power_driver_t platform_power_nrf52 = {
 	.initialize = nrf52_power_initialize,
 	.update = nrf52_power_update,
 	.feed = nrf52_power_feed,

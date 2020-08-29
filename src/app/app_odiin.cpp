@@ -21,7 +21,7 @@ namespace app
 {
 	namespace
 	{
-		platform_power_driver_t& power = platform_nrf52_power;
+		platform_power_driver_t& power = platform_power_nrf52;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
