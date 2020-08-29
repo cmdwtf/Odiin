@@ -1,9 +1,4 @@
 
-#if defined(__VSCODE__CPP__)
-// make vs code linter happy
-#include "app_usbd_msc.h"
-#endif // __VSCODE__CPP__
-
 static void usb_msc_class_event_handler(app_usbd_class_inst_t const *classInstance,
 						 				app_usbd_msc_user_event_t event)
 

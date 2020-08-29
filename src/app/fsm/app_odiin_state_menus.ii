@@ -1,25 +1,3 @@
-#ifdef __VSCODE__CPP__
-
-// these files aren't included here in the actual build.
-// it just makes the vscode linter a little happier.
-#include <deque>
-#include <string>
-#include <sstream>
-
-#include "app_odiin_fsm.h"
-
-#include "cwalk.h"
-#include "nrf_assert.h"
-#include "nrf_log.h"
-
-#include "app/app_odiin.h"
-#include "app/app_settings.h"
-#include "display/screen_ui/display_screen_ui.h"
-#include "files/files_fat32.h"
-#include "global/global_strings.h"
-#include "input/input_keypad.h"
-#endif // __VSCODE_CPP__
-
 
 namespace
 {
