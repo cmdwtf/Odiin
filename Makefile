@@ -155,6 +155,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_qspi.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rtc.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_saadc.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spi.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spim.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_systick.c \
@@ -428,17 +429,10 @@ LIB_FILES += -lc -lnosys -lm -lstdc++
 # Check to see if the bootloader already is built and is ready to be used
 BOOTLOADER_EXISTS := $(or $(and $(wildcard $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)),1),0)
 
-.PHONY: default help
+.PHONY: default
 
 # Default target - first one defined
 default: nrf52840_xxaa
-
-# Print all targets that can be built
-help:
-	@echo following targets are available:
-	@echo		nrf52840_xxaa
-	@echo		sdk_config - starting external tool for editing sdk_config.h (requires java)
-	@echo		flash      - flashing binary
 
 include BuildSettings.mk
 
