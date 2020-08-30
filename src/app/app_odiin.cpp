@@ -204,6 +204,10 @@ namespace app
 		StartApplication();
 
 		NRF_LOG_RAW_INFO("=====================================\n");
+
+		// prevent a giant time delta on the first frame,
+		// by initializing the timer to the current amount of ticks.
+		ticksPrevious = timer_get_ticks();
 	}
 
 	void Odiin::InitializeLogs()
