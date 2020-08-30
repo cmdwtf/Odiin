@@ -147,7 +147,7 @@ class MenuFiles
 	static const uint8_t FLAG_DIR_UP = 2;
 	static const uint8_t FLAG_PAGE_NEXT = 3;
 	static const uint8_t FLAG_PAGE_PREV = 4;
-	static const uint8_t FLAG_GO_HOME = 5;
+	static const uint8_t FLAG_BACK = 5;
 
 	size_t paginationOffset = 0;
 
@@ -258,22 +258,14 @@ class MenuFiles
 
 		size_t index = 0;
 
-		if (isRoot)
-		{
-			output[index].option = "<Main Menu>";
-			output[index].prefix = LV_SYMBOL_HOME;
-			output[index].click_cb = MenuOptionPressedCallback;
-			output[index].user_flags = FLAG_GO_HOME;
-		}
-		else
+		if (isRoot == false)
 		{
 			output[index].option = sdCard->GetRelativeParentDirectory();
 			output[index].prefix = LV_SYMBOL_NEW_LINE;
 			output[index].click_cb = MenuOptionPressedCallback;
 			output[index].user_flags = FLAG_DIR_UP;
+			++index;
 		}
-
-		++index;
 
 		if (paginationOffset > 0)
 		{
@@ -377,6 +369,16 @@ class MenuFiles
 		sdCard = Odiin->GetSdCard();
 
 		UI_CREATE(list_menu);
+
+		// must set back callback before activate, or button will hide.
+		UI_FUNCTION(list_menu, set_back_clicked_cb)([](){
+			static menu_option_desc_t backOption;
+			backOption.user_flags = FLAG_BACK;
+			app::fsm::MenuOptionPressedEvent e;
+			e.Option = &backOption;
+			Odiin->SendEvent(e);
+		});
+
 		UI_ACTIVATE(list_menu, Keypad->GetInputGroup());
 
 		// push the root path if we don't have one set.
@@ -416,8 +418,17 @@ class MenuFiles
 			case FLAG_PAGE_PREV:
 				PageChange(-1);
 				break;
-			case FLAG_GO_HOME:
-				Odiin->SendEvent(app::fsm::GoHomeEvent());
+			case FLAG_BACK:
+				if (isRoot)
+				{
+					// if we are at the root of the card, go home.
+					Odiin->SendEvent(app::fsm::GoHomeEvent());
+				}
+				else
+				{
+					// otherwise, just move up a directory.
+					PopDirectory();
+				}
 				break;
 			default:
 				NRF_LOG_WARNING("Unhandled menu option flag. (%d)", event.Option->user_flags);

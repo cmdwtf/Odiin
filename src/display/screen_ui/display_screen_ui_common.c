@@ -151,3 +151,33 @@ void ui_common_set_label_font_theme_small(lv_obj_t* label)
 	lv_style_set_text_font(&styleThemeSmall, LV_STATE_DEFAULT, LV_THEME_DEFAULT_FONT_SMALL);
 	lv_obj_add_style(label, LV_LABEL_PART_MAIN, &styleThemeSmall);
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+// Callback Helpers
+
+static lv_group_t* callback_helpers_active_group = NULL;
+
+void ui_common_cb_set_active_group(lv_group_t* group)
+{
+	callback_helpers_active_group = group;
+}
+
+void ui_common_up_down_focus_cb(lv_obj_t* obj, lv_event_t e)
+{
+	if (e == LV_EVENT_KEY)
+	{
+		uint32_t key = *((uint32_t*)lv_event_get_data());
+		switch (key)
+		{
+			case LV_KEY_UP:
+				lv_group_focus_prev(callback_helpers_active_group);
+				break;
+			case LV_KEY_DOWN:
+				lv_group_focus_next(callback_helpers_active_group);
+				break;
+			default:
+				break;
+		}
+	}
+}

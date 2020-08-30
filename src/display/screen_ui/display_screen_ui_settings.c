@@ -24,8 +24,8 @@ static ui_common_simple_cb done_cb = NULL;
 static ui_common_float_cb brightness_cb = NULL;
 
 static void settings_done_pressed(lv_obj_t* obj, lv_event_t e);
-static void settings_up_down_focus_cb(lv_obj_t* obj, lv_event_t e);
 static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e);
+static void settings_focus_cb(lv_group_t* group);
 
 UI_DECLARE_CREATE(UI_NAME)
 {
@@ -97,7 +97,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	// nfc container
 	ui.nfc = lv_cont_create(content, ui.general);
     lv_obj_set_style_local_value_str(ui.nfc, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, "NFC");
-	lv_obj_set_event_cb(ui.nfc, settings_up_down_focus_cb);
+	lv_obj_set_event_cb(ui.nfc, ui_common_up_down_focus_cb);
 
 	// nfc coming soon
 	ui.nfc_nyi = lv_label_create(ui.nfc, NULL);
@@ -110,7 +110,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	// cryptography container
 	ui.cryptography = lv_cont_create(content, ui.general);
     lv_obj_set_style_local_value_str(ui.cryptography, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, "Cryptography");
-	lv_obj_set_event_cb(ui.cryptography, settings_up_down_focus_cb);
+	lv_obj_set_event_cb(ui.cryptography, ui_common_up_down_focus_cb);
 
 	// cryptography coming soon
 	ui.cryptography_nyi = lv_label_create(ui.cryptography, ui.nfc_nyi);
@@ -123,8 +123,9 @@ UI_DECLARE_CREATE(UI_NAME)
 UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(ui.screen);
-
+	lv_group_set_focus_cb(group, settings_focus_cb);
 	lv_group_remove_all_objs(group);
+
 	lv_group_add_obj(group, ui.window_done_button);
 
 	lv_group_add_obj(group, ui.brightness);
@@ -134,6 +135,8 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 	lv_group_add_obj(group, ui.cryptography);
 
 	lv_group_focus_obj(ui.brightness);
+
+	ui_common_cb_set_active_group(group);
 
 	ui.active_group = group;
 
@@ -171,28 +174,7 @@ static void settings_done_pressed(lv_obj_t* obj, lv_event_t e)
 	}
 	else
 	{
-		settings_up_down_focus_cb(obj, e);
-	}
-}
-
-static void settings_up_down_focus_cb(lv_obj_t* obj, lv_event_t e)
-{
-	if (e == LV_EVENT_KEY)
-	{
-		uint32_t key = *((uint32_t*)lv_event_get_data());
-		switch (key)
-		{
-			case LV_KEY_UP:
-				lv_group_focus_prev(ui.active_group);
-				lv_win_focus(ui.window, *ui.active_group->obj_focus, LV_ANIM_ON);
-				break;
-			case LV_KEY_DOWN:
-				lv_group_focus_next(ui.active_group);
-				lv_win_focus(ui.window, *ui.active_group->obj_focus, LV_ANIM_ON);
-				break;
-			default:
-				break;
-		}
+		ui_common_up_down_focus_cb(obj, e);
 	}
 }
 
@@ -215,6 +197,11 @@ static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e)
     }
 	else
 	{
-		settings_up_down_focus_cb(slider, e);
+		ui_common_up_down_focus_cb(slider, e);
 	}
+}
+
+static void settings_focus_cb(lv_group_t* group)
+{
+	lv_win_focus(ui.window, *group->obj_focus, LV_ANIM_ON);
 }

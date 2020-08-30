@@ -37,7 +37,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	// pick a random loading reason
 	label_reason = lv_label_create(screen, NULL);
 	ui_common_set_label_font_theme_small(label_reason);
-	lv_obj_refresh_style(label_reason, LV_LABEL_PART_MAIN);
+	lv_obj_refresh_style(label_reason, LV_LABEL_PART_MAIN, LV_STYLE_PROP_ALL);
 	lv_label_set_long_mode(label_reason, LV_LABEL_LONG_SROLL);
 	lv_label_set_align(label_reason, LV_LABEL_ALIGN_LEFT);
 	lv_obj_align(label_reason, screen, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
@@ -50,6 +50,8 @@ UI_DECLARE_CREATE(UI_NAME)
 UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(screen);
+	lv_group_set_focus_cb(group, NULL);
+	lv_group_remove_all_objs(group);
 	// this screen has no intractable parts, no groups to set.
 
 	// add status widget

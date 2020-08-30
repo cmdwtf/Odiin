@@ -64,7 +64,9 @@ UI_DECLARE_CREATE(UI_NAME)
 UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(screen);
+	lv_group_set_focus_cb(group, NULL);
 	lv_group_remove_all_objs(group);
+
 	lv_group_add_obj(group, cancel_button);
 	lv_group_focus_obj(cancel_button);
 

@@ -66,6 +66,11 @@ extern "C" {
 	typedef void (*ui_common_uint8t_cb)(uint8_t);
 
 	//////////////////////////////////////////////////////////////////////////
+	// Callback Helpers
+	void ui_common_cb_set_active_group(lv_group_t* group);
+	void ui_common_up_down_focus_cb(lv_obj_t* obj, lv_event_t e);
+
+	//////////////////////////////////////////////////////////////////////////
 	// Macros for building UI screens
 #define UI_CREATE_RETURN_TYPE lv_obj_t*
 #define UI_FUNCTION(uiName, functionName) display_screen_ui_ ## uiName ## _ ## functionName
