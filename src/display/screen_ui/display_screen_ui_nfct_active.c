@@ -48,7 +48,7 @@ UI_DECLARE_CREATE(UI_NAME)
 		"the select to exit!",
 		.icon = NULL,
 		.image = &nfct_48,
-		.header_button_text = LV_SYMBOL_CLOSE,
+		.header_button_text = LV_SYMBOL_LEFT,
 		.header_button_cb = nfct_cancel_pressed,
 	};
 

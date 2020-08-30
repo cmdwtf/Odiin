@@ -74,7 +74,8 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 	if (desc->header_button_text != NULL)
 	{
 		// Add button to the header
-		lv_obj_t* btn = lv_win_add_btn(window, desc->header_button_text);
+		lv_obj_t* btn = lv_win_add_btn_left(window, desc->header_button_text);
+		ui_common_set_window_button_style(btn);
 
 		if (desc->header_button_cb != NULL)
 		{
@@ -118,6 +119,18 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 	}
 
 	return screen;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Styles
+
+void ui_common_set_window_button_style(lv_obj_t* button)
+{
+	lv_obj_set_style_local_border_width(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, 2);
+	//lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_ORANGE);
+
+	lv_obj_set_style_local_border_width(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED | LV_STATE_PRESSED, 2);
+	//lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED | LV_STATE_PRESSED, LV_COLOR_PURPLE);
 }
 
 //////////////////////////////////////////////////////////////////////////

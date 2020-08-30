@@ -75,7 +75,7 @@ class MenuMain
 		++index;
 
 		output[index].option = "About";
-		output[index].prefix = LV_SYMBOL_CHARGE;
+		output[index].prefix = LV_SYMBOL_KEYBOARD;
 		output[index].click_cb = MenuOptionPressedCallback;
 		output[index].user_flags = NEXT_STATE_ABOUT;
 		++index;

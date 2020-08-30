@@ -51,9 +51,19 @@ extern "C" {
 	} menu_option_desc_t;
 
 	//////////////////////////////////////////////////////////////////////////
+	// Styles
+	void ui_common_set_window_button_style(lv_obj_t* button);
+
+	//////////////////////////////////////////////////////////////////////////
 	// Label Font switching
 	void ui_common_set_label_font_icons64(lv_obj_t* label);
 	void ui_common_set_label_font_theme_small(lv_obj_t* label);
+
+	//////////////////////////////////////////////////////////////////////////
+	// Callback typedefs
+	typedef void (*ui_common_simple_cb)(void);
+	typedef void (*ui_common_float_cb)(float);
+	typedef void (*ui_common_uint8t_cb)(uint8_t);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Macros for building UI screens

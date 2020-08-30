@@ -46,7 +46,7 @@ UI_DECLARE_CREATE(UI_NAME)
 		"Dedicated to my incredible wife, Jordan.",
 		.icon = NULL,
 		.image = &odiin_icon_48,
-		.header_button_text = LV_SYMBOL_CLOSE,
+		.header_button_text = LV_SYMBOL_LEFT,
 		.header_button_cb = about_cancel_pressed,
 	};
 
