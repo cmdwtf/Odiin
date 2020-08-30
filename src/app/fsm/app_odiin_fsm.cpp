@@ -34,7 +34,9 @@ namespace app::fsm
 
 	//////////////////////////////////////////////////////////////////////////
 	// Include states broken out into their own files.
-#include "app_odiin_state_menus.ii"
+#define INCLUDING_FROM_FSM_CPP
+#include "app_odiin_state_menus.cpp"
+#undef INCLUDING_FROM_FSM_CPP
 
 	//////////////////////////////////////////////////////////////////////////
 	// States that don't have their own files

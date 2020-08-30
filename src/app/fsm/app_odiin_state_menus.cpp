@@ -1,3 +1,4 @@
+#ifdef INCLUDING_FROM_FSM_CPP
 
 namespace
 {
@@ -436,3 +437,5 @@ class MenuFiles
 		}
 	}
 };
+
+#endif // INCLUDING_FROM_FSM_CPP
