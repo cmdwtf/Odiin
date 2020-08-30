@@ -58,6 +58,7 @@ namespace display
 
 		// and init the backlight, too.
 		NRF_LOG_VERBOSE("Starting backlight...");
+		lastBacklightBrightness = initialBacklight;
 		BacklightOn();
 
 		NRF_LOG_VERBOSE("Initializing gfx lvgl...");
