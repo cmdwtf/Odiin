@@ -123,6 +123,9 @@ class MenuMain
 			case NEXT_STATE_FILES:
 				transit<MenuFiles>();
 				break;
+			case NEXT_STATE_SETTINGS:
+				transit<Settings>();
+				break;
 			case NEXT_STATE_ABOUT:
 				transit<About>();
 				break;

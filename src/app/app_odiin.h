@@ -45,11 +45,13 @@ namespace app
 		bool OnRebootToDfu();
 		bool OnReboot();
 
-		StatusLed* GetStatusLed() { return statusLed; }
-		input::Keypad* GetKeypad() { return keypad; }
-
 		void LoadSettings();
 		void SaveSettings();
+
+		void SetBacklightBrightness(float level);
+
+		inline StatusLed* GetStatusLed() { return statusLed; }
+		inline input::Keypad* GetKeypad() { return keypad; }
 
 	private:
 		Odiin();

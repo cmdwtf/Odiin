@@ -29,6 +29,7 @@ namespace app::fsm
 
 	class About;
 	class NfctActive;
+	class Settings;
 	class UsbConnected;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -137,6 +138,32 @@ namespace app::fsm
 			LOG_STATE_EXIT(About);
 		}
 	};
+
+	class Settings
+		: public OdiinState
+	{
+		void entry() override
+		{
+			LOG_STATE_ENTER(Settings);
+
+			UI_CREATE(settings);
+			UI_ACTIVATE(settings, Keypad->GetInputGroup());
+			UI_FUNCTION(settings, set_done_callback)([]() {
+				dispatch(GoHomeEvent());
+			});
+			UI_FUNCTION(settings, set_brightness_callback)([](float level) {
+				Odiin->SetBacklightBrightness(level);
+			});
+		}
+
+		void exit() override
+		{
+			Odiin->SaveSettings();
+			LOG_STATE_EXIT(Settings);
+		}
+	};
+
+
 	//////////////////////////////////////////////////////////////////////////
 	// Base state: default implementations
 

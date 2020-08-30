@@ -136,6 +136,17 @@ namespace app
 	//////////////////////////////////////////////////////////////////////////
 	// Settings
 
+	void Odiin::SetBacklightBrightness(float level)
+	{
+		if (level < 0.05f)
+		{
+		//	level = 0.05f;
+		}
+
+		SETTINGS.backlight_brightness = (uint8_t)(UINT8_MAX * level);
+		screen->SetBacklightBrightness(level);
+	}
+
 	void Odiin::LoadSettings()
 	{
 		if (app::settings::Load(*flash))
@@ -326,7 +337,8 @@ namespace app
 
 	void Odiin::InitializeScreen()
 	{
-		static display::Screen scr(keypad);
+		float backlightBrightness = (SETTINGS.backlight_brightness / (float)UINT8_MAX);
+		static display::Screen scr(keypad, backlightBrightness);
 		screen = &scr;
 	}
 

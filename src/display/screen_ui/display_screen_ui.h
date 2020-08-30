@@ -26,6 +26,10 @@ extern "C" {
 	void UI_DECLARE_FUNCTION(nfct_active, set_cancel_callback)(lv_event_cb_t callback);
 	void UI_DECLARE_FUNCTION(nfct_active, set_title)(const char* title);
 
+	UI_DECLARE(settings);
+	void UI_DECLARE_FUNCTION(settings, set_done_callback)(ui_common_simple_cb cb);
+	void UI_DECLARE_FUNCTION(settings, set_brightness_callback)(ui_common_float_cb cb);
+
 	UI_DECLARE(usb);
 
 #ifdef __cplusplus

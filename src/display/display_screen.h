@@ -14,7 +14,7 @@ namespace display
 	class Screen
 	{
 	public:
-		Screen(input::Keypad* keypad);
+		Screen(input::Keypad* keypad, float initialBacklight = 1.0f);
 		virtual ~Screen();
 		Screen(const Screen &) = delete;
 		Screen &operator=(const Screen &) = delete;
@@ -24,6 +24,7 @@ namespace display
 		void BacklightOff();
 		void BacklightOffImmediate();
 		void SetBacklightBrightness(float brightnessPercent);
+		float GetBacklightBrightness() { return lastBacklightBrightness; }
 
 		void SetBatteryStatus(uint8_t stateOfCharge, bool isCharging);
 

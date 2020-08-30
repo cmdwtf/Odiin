@@ -35,7 +35,7 @@ namespace display
 
 	bool Screen::initialized = false;
 
-	Screen::Screen(input::Keypad* _keypad) :
+	Screen::Screen(input::Keypad* _keypad, float initialBacklight /*= 1.0f*/) :
 		backlight(ILI9341_BACKLIGHT_CONTROL_PIN)
 	{
 		if (initialized)
