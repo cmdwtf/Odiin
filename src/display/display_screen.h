@@ -4,6 +4,8 @@
 #include "ili9341.h"
 #include "input/input_keypad.h"
 
+#include "led/display_led_pwm.h"
+
 namespace display
 {
 	using color_t = uint32_t;
@@ -17,10 +19,11 @@ namespace display
 		Screen(const Screen &) = delete;
 		Screen &operator=(const Screen &) = delete;
 
-		void Update();
+		void Update(float timeDelta);
 		void BacklightOn();
 		void BacklightOff();
-		void SetBacklightBrightness(uint8_t brightness);
+		void BacklightOffImmediate();
+		void SetBacklightBrightness(float brightnessPercent);
 
 		void SetBatteryStatus(uint8_t stateOfCharge, bool isCharging);
 
@@ -29,9 +32,13 @@ namespace display
 
 		inline bool IsInitialized() { return initialized; }
 		static constexpr uint32_t GraphicsTickMs = 1;
+		static constexpr float BacklightAnimationDurationSlow = 0.5f;
+		static constexpr float BacklightAnimationDurationFast = 0.1f;
 	private:
 		static bool initialized;
 		static void Tick(void* context);
 		input::Keypad* keypad;
+		float lastBacklightBrightness = 1.0f;
+		led::Pwm backlight;
 	};
 } // namespace display

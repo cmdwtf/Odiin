@@ -56,7 +56,7 @@ namespace app
 		NRF_LOG_FLUSH();
 
 		usb::device::Update();
-		screen->Update();
+		screen->Update(delta);
 		statusLed->Update(delta);
 
 		UpdateBattery();
@@ -445,7 +445,7 @@ namespace app
 	bool Odiin::OnSleep()
 	{
 		NRF_LOG_WARNING("Device going to sleep.");
-		screen->BacklightOff();
+		screen->BacklightOffImmediate();
 		screen->DisplaySleep();
 		statusLed->SetModeShutdown();
 		return true;

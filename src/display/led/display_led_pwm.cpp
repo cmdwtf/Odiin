@@ -1,32 +1,75 @@
 #include "display_led_pwm.h"
 
 #include "boards.h"
-#include "nrfx_pwm.h"
-
-//static nrfx_pwm_t m_pwm0 = NRFX_PWM_INSTANCE(ILI9341_BACKLIGHT_LED_PWM_INSTANCE);
+#include "app_error.h"
 
 namespace display::led
 {
 	namespace
 	{
-		constexpr Cie1931<> cie1931;
+		constexpr Cie1931 cie1931;
+
+		// Linear interpolation
+		constexpr float Lerp(float a, float b, float t)
+		{
+			return ((1.0f - t) * a) + (b * t);
+		}
+	}
+
+	Pwm::Pwm(uint8_t pin)
+	{
+		APP_TIMER_DEF(lowPowerPwmTimer);
+		low_power_pwm_config_t config;
+		config.active_high    = true;
+		config.period         = DutyCycleMax;
+		config.bit_mask       = PIN_MASK(pin);
+		config.p_timer_id     = &lowPowerPwmTimer;
+		config.p_port         = NRF_GPIO;
+
+		ret_code_t err_code = low_power_pwm_init((&lpPwm), &config, Pwm::PwmHandler);
+		APP_ERROR_CHECK(err_code);
+
+		// default to a zero DC.
+		constexpr uint8_t defaultDutyCycle = 0;
+		SetRawDutyCycle(defaultDutyCycle);
+
+		// start the pwm!
+		err_code = low_power_pwm_start((&lpPwm), lpPwm.bit_mask);
+		APP_ERROR_CHECK(err_code);
 	}
 
 	void Pwm::SetDutyCycle(float dutyCyclePercent)
 	{
+		startDutyCyclePercent = dutyCyclePercent;
 		targetDutyCyclePercent = dutyCyclePercent;
+
 		currentDutyCyclePercent = dutyCyclePercent;
+
 		animating = false;
-		// todo: update DC NOW!
+
+		uint8_t raw = (uint8_t)(currentDutyCyclePercent * DutyCycleMax);
+		SetRawDutyCycle(raw);
+	}
+
+	void Pwm::AnimateDutyCycle(float toDutyCyclePercent, float animationTime)
+	{
+		AnimateDutyCycle(-1, toDutyCyclePercent, animationTime);
 	}
 
 	void Pwm::AnimateDutyCycle(float fromDutyCyclePercent, float toDutyCyclePercent, float animationTime)
 	{
+		if (fromDutyCyclePercent < 0)
+		{
+			fromDutyCyclePercent = currentDutyCyclePercent;
+		}
+
 		elapsedTime = 0.0f;
 		targetTime = animationTime;
 
-		currentDutyCyclePercent = fromDutyCyclePercent;
+		startDutyCyclePercent = fromDutyCyclePercent;
 		targetDutyCyclePercent = toDutyCyclePercent;
+
+		currentDutyCyclePercent = fromDutyCyclePercent;
 
 		animating = true;
 		Update(0);
@@ -34,8 +77,42 @@ namespace display::led
 
 	void Pwm::Update(float timeDelta)
 	{
-		// update animation
-		// todo: easing functions
+		if (animating)
+		{
+			// update!
+			elapsedTime += timeDelta;
+			float timePercent = elapsedTime / targetTime;
+
+			// check to see if we've reached the target,
+			// cap and stop animating if we have.
+			if (timePercent >= 1.0f)
+			{
+				animating = false;
+				timePercent = 1.0f;
+			}
+
+			// calculate the new DC percent.
+			currentDutyCyclePercent = Lerp(startDutyCyclePercent, targetDutyCyclePercent, timePercent);
+
+			// calculate the new raw dc
+			// todo: other easing functions besides lerp?
+			uint8_t dc = (uint8_t)Lerp(DutyCycleMin, DutyCycleMax, currentDutyCyclePercent);
+
+			// and set it!
+			SetRawDutyCycle(dc);
+		}
+	}
+
+	void Pwm::PwmHandler(void* context)
+	{
+		// noop is fine for now.
+	}
+
+	void Pwm::SetRawDutyCycle(uint8_t _rawDutyCycle)
+	{
+		rawDutyCycle = _rawDutyCycle;
+		ret_code_t err_code = low_power_pwm_duty_set(&lpPwm, rawDutyCycle);
+		APP_ERROR_CHECK(err_code);
 	}
 
 } // namespace display::led

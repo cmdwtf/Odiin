@@ -35,7 +35,8 @@ namespace display
 
 	bool Screen::initialized = false;
 
-	Screen::Screen(input::Keypad* _keypad)
+	Screen::Screen(input::Keypad* _keypad) :
+		backlight(ILI9341_BACKLIGHT_CONTROL_PIN)
 	{
 		if (initialized)
 		{
@@ -56,8 +57,7 @@ namespace display
 		}
 
 		// and init the backlight, too.
-		NRF_LOG_VERBOSE("Initializing backlight control...");
-		nrf_gpio_cfg_output(ILI9341_BACKLIGHT_CONTROL_PIN);
+		NRF_LOG_VERBOSE("Starting backlight...");
 		BacklightOn();
 
 		NRF_LOG_VERBOSE("Initializing gfx lvgl...");
@@ -112,11 +112,12 @@ namespace display
 		}
 	}
 
-	void Screen::Update()
+	void Screen::Update(float timeDelta)
 	{
 		if (initialized)
 		{
 			lv_task_handler();
+			backlight.Update(timeDelta);
 		}
 	}
 
@@ -130,17 +131,24 @@ namespace display
 
 	void Screen::BacklightOn()
 	{
-		nrf_gpio_pin_set(ILI9341_BACKLIGHT_CONTROL_PIN);
+		backlight.AnimateDutyCycle(lastBacklightBrightness, BacklightAnimationDurationSlow);
 	}
 
 	void Screen::BacklightOff()
 	{
-		nrf_gpio_pin_clear(ILI9341_BACKLIGHT_CONTROL_PIN);
+		backlight.AnimateDutyCycle(0, BacklightAnimationDurationSlow);
 	}
 
-	void Screen::SetBacklightBrightness(uint8_t brightness)
+	void Screen::BacklightOffImmediate()
 	{
-		// todo
+		// no animation, just turn it off.
+		backlight.SetDutyCycle(0);
+	}
+
+	void Screen::SetBacklightBrightness(float brightnessPercent)
+	{
+		lastBacklightBrightness = brightnessPercent;
+		backlight.AnimateDutyCycle(lastBacklightBrightness, BacklightAnimationDurationFast);
 	}
 
 	void Screen::SetBatteryStatus(uint8_t stateOfCharge, bool isCharging)

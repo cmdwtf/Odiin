@@ -788,7 +788,7 @@
 
 
 #ifndef NRFX_PWM0_ENABLED
-#define NRFX_PWM0_ENABLED 1
+#define NRFX_PWM0_ENABLED 0
 #endif
 
 // <q> NRFX_PWM1_ENABLED  - Enable PWM1 instance
@@ -1426,7 +1426,7 @@
 
 
 #ifndef PWM0_ENABLED
-#define PWM0_ENABLED 1
+#define PWM0_ENABLED 0
 #endif
 
 // <q> PWM1_ENABLED  - Enable PWM1 instance
@@ -1902,6 +1902,13 @@
 
 #ifndef HARDFAULT_HANDLER_ENABLED
 #define HARDFAULT_HANDLER_ENABLED 1
+#endif
+
+// <q> LOW_POWER_PWM_ENABLED  - low_power_pwm - low_power_pwm module
+
+
+#ifndef LOW_POWER_PWM_ENABLED
+#define LOW_POWER_PWM_ENABLED 1
 #endif
 
 // <e> NRF_BALLOC_ENABLED - nrf_balloc - Block allocator module
