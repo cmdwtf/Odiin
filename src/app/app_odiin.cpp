@@ -138,9 +138,9 @@ namespace app
 
 	void Odiin::SetBacklightBrightness(float level)
 	{
-		if (level < 0.05f)
+		if (level < 0.01f)
 		{
-		//	level = 0.05f;
+			level = 0.01f;
 		}
 
 		SETTINGS.backlight_brightness = (uint8_t)(UINT8_MAX * level);
