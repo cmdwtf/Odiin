@@ -16,13 +16,14 @@ namespace display::led
 		}
 	}
 
-	Pwm::Pwm(uint8_t pin)
+	Pwm::Pwm(uint8_t pin) :
+		Pin(pin)
 	{
 		APP_TIMER_DEF(lowPowerPwmTimer);
 		low_power_pwm_config_t config;
 		config.active_high    = true;
 		config.period         = DutyCycleMax;
-		config.bit_mask       = PIN_MASK(pin);
+		config.bit_mask       = PIN_MASK(Pin);
 		config.p_timer_id     = &lowPowerPwmTimer;
 		config.p_port         = NRF_GPIO;
 
@@ -113,6 +114,17 @@ namespace display::led
 		rawDutyCycle = _rawDutyCycle;
 		ret_code_t err_code = low_power_pwm_duty_set(&lpPwm, rawDutyCycle);
 		APP_ERROR_CHECK(err_code);
+
+		// check to see if we set the duty cycle to off,
+		// and if so, immediately clear the bit. the reason
+		// for this is, when shutting down, SetRawDutyCycle will
+		// be called to turn the backlight off, but the timers will
+		// not tick again before the device goes into POWER_OFF state,
+		// and we want to make sure the LED is off before it does so!
+		if (rawDutyCycle == 0)
+		{
+        	nrf_gpio_port_out_clear(lpPwm.p_port, lpPwm.bit_mask_toggle);
+		}
 	}
 
 } // namespace display::led

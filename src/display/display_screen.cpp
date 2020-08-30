@@ -104,7 +104,7 @@ namespace display
 	{
 		if (initialized)
 		{
-			BacklightOff();
+			BacklightOffImmediate();
 			lv_deinit();
 			nrf_gfx_uninit(lcd);
 			initialized = false;

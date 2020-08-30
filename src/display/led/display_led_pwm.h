@@ -21,6 +21,8 @@ namespace display::led
 
 		void Update(float timeDelta);
 
+		const uint8_t Pin;
+
 		static constexpr uint8_t DutyCycleMin = 0;
 		static constexpr uint8_t DutyCycleMax = UINT8_MAX;
 
