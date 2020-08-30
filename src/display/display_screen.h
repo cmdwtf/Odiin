@@ -4,7 +4,7 @@
 #include "ili9341.h"
 #include "input/input_keypad.h"
 
-#include "led/display_led_pwm.h"
+#include "led/display_led_low_power_pwm.h"
 
 namespace display
 {
