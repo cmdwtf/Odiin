@@ -127,10 +127,10 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 void ui_common_set_window_button_style(lv_obj_t* button)
 {
 	lv_obj_set_style_local_border_width(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, 2);
-	//lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_ORANGE);
+	lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_THEME_DEFAULT_COLOR_PRIMARY);
 
 	lv_obj_set_style_local_border_width(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED | LV_STATE_PRESSED, 2);
-	//lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED | LV_STATE_PRESSED, LV_COLOR_PURPLE);
+	lv_obj_set_style_local_border_color(button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED | LV_STATE_PRESSED, LV_THEME_DEFAULT_COLOR_SECONDARY);
 }
 
 //////////////////////////////////////////////////////////////////////////
