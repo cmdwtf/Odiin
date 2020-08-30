@@ -26,6 +26,20 @@ namespace app
 	{
 		platform_power_driver_t& power = platform_power_nrf52;
 		platform_battery_driver_t& battery = platform_battery_makerdiary;
+
+		// #todo: This code should be in a HAL.
+		// magic values from UF2 bootloader (see bootloader's main.c)
+		// GPREGRET and GPREGRET2 are general
+		// purpose retention registers. They are
+		// 1 byte each, and their value persists
+		// through wakeups from SYSOFF. The bootloader
+		// checks for these magic values.
+		enum DfuMagic {
+			OtaReset = 0xA8,
+			SerialOnlyReset = 0x4E,
+			Uf2Reset = 0x57,
+			Skip = 0x6d,
+		};
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -452,6 +466,10 @@ namespace app
 		screen->BacklightOffImmediate();
 		screen->DisplaySleep();
 		statusLed->SetModeShutdown();
+
+		// tell the bootloader that we want to come right back to the app.
+		NRF_POWER->GPREGRET = DfuMagic::Skip;
+
 		return true;
 	}
 
@@ -464,18 +482,8 @@ namespace app
 	bool Odiin::OnRebootToDfu()
 	{
 		NRF_LOG_WARNING("Device rebooting to DFU!");
-		// #todo: This code should be in a HAL.
-		// magic values from UF2 bootloader (see bootloader's main.c)
-		enum DfuMagic {
-			OtaReset = 0xA8,
-			SerialOnlyReset = 0x4E,
-			Uf2Reset = 0x57,
-		};
 
-		// GPREGRET and GPREGRET2 are general
-		// purpose retention registers. They are
-		// 1 byte each, and their value persists
-		// through wakeups from SYSOFF.
+		// tell the bootloader to boot into uf2 dfu mode
 		NRF_POWER->GPREGRET = DfuMagic::Uf2Reset;
 
 		return true;
@@ -484,6 +492,9 @@ namespace app
 	bool Odiin::OnReboot()
 	{
 		NRF_LOG_WARNING("Device rebooting!");
+
+		// tell the bootloader that we want to come right back to the app.
+		NRF_POWER->GPREGRET = DfuMagic::Skip;
 		return true;
 	}
 

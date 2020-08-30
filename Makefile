@@ -429,7 +429,12 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
 LIB_FILES += -lc -lnosys -lm -lstdc++
 
 # Check to see if the bootloader already is built and is ready to be used
-BOOTLOADER_EXISTS := $(or $(and $(wildcard $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)),1),0)
+# Assume it's not if the bootloader is explicitly asked to be built.
+ifneq ($(MAKECMDGOALS),bootloader)
+  BOOTLOADER_EXISTS := $(or $(and $(wildcard $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)),1),0)
+else
+  BOOTLOADER_EXISTS := 0
+endif
 
 .PHONY: default
 
