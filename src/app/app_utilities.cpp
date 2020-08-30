@@ -13,6 +13,11 @@ void __PANIC()
 	NRF_LOG_FINAL_FLUSH();
 	nrf_log_panic();
 
+#if !defined(DEBUG)
+	// don't block forever if we're not in debug, don't want a hard lock for users.
+	NVIC_SystemReset();
+#endif // DEBUG
+
 	while (true)
 	{
 		for (int i = 0; i < LEDS_NUMBER; i++)
