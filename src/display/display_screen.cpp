@@ -143,6 +143,11 @@ namespace display
 		// todo
 	}
 
+	void Screen::SetBatteryStatus(uint8_t stateOfCharge, bool isCharging)
+	{
+		ui_status_widget_set_percentage(stateOfCharge, isCharging);
+	}
+
 	void Screen::DisplaySleep()
 	{
 		if (initialized)

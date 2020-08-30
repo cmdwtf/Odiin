@@ -257,6 +257,8 @@ namespace app
 		power.initialize();
 
 		battery.initialize();
+		// battery is initialized, we want to update at first chance
+		forceUpdateBattery = true;
 	}
 
 	void Odiin::InitializeFlash()
@@ -353,19 +355,32 @@ namespace app
 		static uint32_t sample = 0;
 		static uint8_t numSamples = 0;
 
-		if (updateBattery)
+		if (updateBattery || forceUpdateBattery)
 		{
+			updateBattery = false;
+
 			battery.update();
 			uint8_t percent = battery.get_battery_state_of_charge();
 			sample += percent;
 			numSamples++;
 
-			if (numSamples >= SAMPLE_COUNT)
+			platform_battery_state_t batteryState = battery.get_battery_state();
+			bool newIsCharging = batteryState == PLATFORM_BATTERY_STATE_CHARGING;
+
+			// did our charging status change? if so, force update!
+			if (batteryIsCharging != newIsCharging)
 			{
-				// calc average
-				batteryStateOfCharge = (sample / SAMPLE_COUNT);
-				platform_battery_state_t batteryState = battery.get_battery_state();
-				batteryIsCharging = batteryState == PLATFORM_BATTERY_STATE_CHARGING;
+				forceUpdateBattery = true;
+			}
+
+			batteryIsCharging = newIsCharging;
+
+			if (numSamples >= SAMPLE_COUNT || forceUpdateBattery)
+			{
+				forceUpdateBattery = false;
+
+				// calculate the average by the number of samples we've taken.
+				batteryStateOfCharge = (sample / numSamples);
 
 #if defined(ODIIN_VERBOSE_LOGGING) && ODIIN_VERBOSE_LOGGING == 1
 				uint16_t currentMilliVolts = battery.get_battery_voltage();
@@ -393,9 +408,10 @@ namespace app
 				// reset samples
 				numSamples = 0;
 				sample = 0;
-			}
 
-			updateBattery = false;
+				// update ui
+				screen->SetBatteryStatus(batteryStateOfCharge, batteryIsCharging);
+			}
 		}
 	}
 

@@ -88,6 +88,7 @@ namespace app
 
 		uint32_t ticksPrevious = 0;
 		bool updateBattery = false;
+		bool forceUpdateBattery = false;
 
 		// #todo: this is not where this should live.
 		// but it will do as a kludge for now.

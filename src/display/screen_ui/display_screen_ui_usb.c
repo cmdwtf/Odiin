@@ -32,4 +32,7 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(screen);
 	// this screen has no intractable parts, no groups to set.
+
+	// add status widget
+	ui_status_widget_get(screen);
 }

@@ -48,6 +48,9 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 {
 	lv_scr_load(screen);
 	// this screen has no intractable parts, no groups to set.
+
+	// add status widget
+	ui_status_widget_get(screen);
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_timeout)(lv_task_cb_t callback, uint32_t period)

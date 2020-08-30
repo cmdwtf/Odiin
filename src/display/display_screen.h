@@ -22,6 +22,8 @@ namespace display
 		void BacklightOff();
 		void SetBacklightBrightness(uint8_t brightness);
 
+		void SetBatteryStatus(uint8_t stateOfCharge, bool isCharging);
+
 		void DisplaySleep();
 		void DisplayWake();
 

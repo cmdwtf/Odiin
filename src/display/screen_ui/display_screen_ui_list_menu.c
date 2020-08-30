@@ -1,11 +1,13 @@
 #include "display_screen_ui.h"
 
+#include <stdio.h>
+
 #define UI_NAME list_menu
 
 static lv_obj_t* screen = NULL;
 static lv_obj_t* window = NULL;
 static lv_obj_t* options = NULL;
-lv_event_cb_t option_clicked = NULL;
+static lv_event_cb_t option_clicked = NULL;
 static menu_option_desc_t* menuOptions = NULL;
 static size_t menuOptionsCount = 0;
 static char menuTitle[LV_FS_MAX_PATH_LENGTH] = "<Untitled Menu>";
@@ -41,6 +43,9 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 	lv_scr_load(screen);
 	lv_group_remove_all_objs(group);
 	lv_group_add_obj(group, options);
+
+	// add status widget
+	ui_status_widget_get(screen);
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_options)(menu_option_desc_t options[], size_t numOptions)

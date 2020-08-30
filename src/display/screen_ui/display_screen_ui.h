@@ -6,6 +6,7 @@ extern "C" {
 
 #include "lvgl.h"
 #include "display_screen_ui_common.h"
+#include "display_screen_ui_status_widget.h"
 
 #define UI_CREATE(uiName) UI_FUNCTION(uiName, create)()
 #define UI_ACTIVATE(uiName, group) UI_FUNCTION(uiName, activate)(group)

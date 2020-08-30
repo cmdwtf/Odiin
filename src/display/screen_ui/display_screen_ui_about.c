@@ -67,6 +67,9 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 	lv_group_remove_all_objs(group);
 	lv_group_add_obj(group, cancel_button);
 	lv_group_focus_obj(cancel_button);
+
+	// add status widget
+	ui_status_widget_get(screen);
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_cancel_callback)(lv_event_cb_t callback)
