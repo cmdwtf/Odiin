@@ -36,7 +36,7 @@ UI_DECLARE_CREATE(UI_NAME)
 {
 	if (screen != NULL)
 	{
-		// #todo #refresh screen
+		cancel_callback = NULL;
 		return screen;
 	}
 

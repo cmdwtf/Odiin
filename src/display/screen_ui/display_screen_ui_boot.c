@@ -6,19 +6,22 @@
 #define UI_NAME boot
 
 static lv_obj_t* screen = NULL;
+static lv_obj_t* container = NULL;
+static lv_obj_t* label_product = NULL;
+static lv_obj_t* label_reason = NULL;
 
 UI_DECLARE_CREATE(UI_NAME)
 {
 	if (screen != NULL)
 	{
-		// #todo #refresh screen
+		// pick a new random loading reason
+		lv_label_set_text(label_reason, global_strings_loading_reason_random());
 		return screen;
 	}
 
 	screen = lv_obj_create(NULL, NULL);
 
-	lv_obj_t* container = lv_cont_create(screen, NULL);
-
+	container = lv_cont_create(screen, NULL);
 	lv_obj_set_auto_realign(container, true);
 	lv_obj_align_origo(container, NULL, LV_ALIGN_CENTER, 0, 0);
 	lv_cont_set_fit(container, LV_FIT_NONE);
@@ -27,19 +30,19 @@ UI_DECLARE_CREATE(UI_NAME)
 	lv_obj_set_y(container, (lv_obj_get_height(screen) / 3) * 2);
 
 	// main content
-	lv_obj_t* labelProduct = lv_label_create(container, NULL);
-	lv_label_set_long_mode(labelProduct, LV_LABEL_LONG_EXPAND);
-	lv_label_set_text(labelProduct, PRODUCT_NAME_LONG);
+	label_product = lv_label_create(container, NULL);
+	lv_label_set_long_mode(label_product, LV_LABEL_LONG_EXPAND);
+	lv_label_set_text(label_product, PRODUCT_NAME_LONG);
 
 	// pick a random loading reason
-	lv_obj_t* labelReason = lv_label_create(screen, NULL);
-	ui_common_set_label_font_theme_small(labelReason);
-	lv_obj_refresh_style(labelReason, LV_LABEL_PART_MAIN);
-	lv_label_set_long_mode(labelReason, LV_LABEL_LONG_SROLL);
-	lv_label_set_align(labelReason, LV_LABEL_ALIGN_LEFT);
-	lv_obj_align(labelReason, screen, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
-	lv_label_set_text(labelReason, global_strings_loading_reason_random());
-	lv_obj_set_width_fit(labelReason, lv_obj_get_width(screen));
+	label_reason = lv_label_create(screen, NULL);
+	ui_common_set_label_font_theme_small(label_reason);
+	lv_obj_refresh_style(label_reason, LV_LABEL_PART_MAIN);
+	lv_label_set_long_mode(label_reason, LV_LABEL_LONG_SROLL);
+	lv_label_set_align(label_reason, LV_LABEL_ALIGN_LEFT);
+	lv_obj_align(label_reason, screen, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
+	lv_label_set_text(label_reason, global_strings_loading_reason_random());
+	lv_obj_set_width_fit(label_reason, lv_obj_get_width(screen));
 
 	return screen;
 }

@@ -31,7 +31,8 @@ UI_DECLARE_CREATE(UI_NAME)
 {
 	if (ui.screen != NULL)
 	{
-		// #todo #refresh screen
+		done_cb = NULL;
+		brightness_cb = NULL;
 		return ui.screen;
 	}
 

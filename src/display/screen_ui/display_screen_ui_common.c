@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Static Helpers
 
-static void display_screen_ui_list_menu_button_click(lv_obj_t* obj, lv_event_t e)
+static void display_screen_ui_list_menu_option_button_event(lv_obj_t* obj, lv_event_t e)
 {
 	(void)obj;
 	(void)e;
@@ -83,7 +83,7 @@ lv_obj_t* display_screen_ui_create_splash_window_screen(splash_window_desc_t* de
 		}
 		else
 		{
-			lv_obj_set_event_cb(btn, display_screen_ui_list_menu_button_click);
+			lv_obj_set_event_cb(btn, display_screen_ui_list_menu_option_button_event);
 		}
 
 		desc->return_header_button_obj = btn;
