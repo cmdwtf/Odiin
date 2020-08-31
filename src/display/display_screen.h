@@ -36,10 +36,12 @@ namespace display
 		static constexpr float BacklightAnimationDurationSlow = 0.5f;
 		static constexpr float BacklightAnimationDurationFast = 0.1f;
 	private:
-		static bool initialized;
 		static void Tick(void* context);
+		void InitializeBacklight(float initialBrightness);
+
+		bool initialized;
 		input::Keypad* keypad;
 		float lastBacklightBrightness = 1.0f;
-		led::Pwm backlight;
+		led::RgbLeds backlight;
 	};
 } // namespace display

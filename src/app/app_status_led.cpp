@@ -18,10 +18,10 @@ namespace app
 		colors = &colorBuffer;
 		colors->Brightness = BRIGHTNESS;
 
-		static RgbLeds status_pixel_apa102(colors, &display_led_apa102);
+		static RgbLeds status_pixel_apa102(colors, &display_led_apa102, nullptr);
 		rgbLed = &status_pixel_apa102;
 #else
-		static RgbLeds null_led(nullptr, nullptr);
+		static RgbLeds null_led(nullptr, nullptr, nullptr);
 		rgbLed = &null_led;
 		colors = nullptr;
 #endif // DISPLAY_LED_APA102_ENABLED
@@ -37,7 +37,6 @@ namespace app
 		eff->Reset();
 		colors->Brightness = BRIGHTNESS;
 		rgbLed->SetEffect(eff);
-		rgbLed->Update(0.0f);
 	}
 
 	void StatusLed::SetModeBoot()
@@ -47,9 +46,12 @@ namespace app
 			return;
 		}
 
-		static effect::Static solid;
-		(*colors)[0] = effect::Color(SOLID_STATUS_VAL, 0, 0);
-		SetEffect(&solid);
+		static effect::Static red(
+			effect::Color(SOLID_STATUS_VAL, 0, 0)
+		);
+		red.Reset();
+
+		SetEffect(&red);
 	}
 
 	void StatusLed::SetModeMenu()
@@ -59,9 +61,11 @@ namespace app
 			return;
 		}
 
-		static effect::Static solid;
-		(*colors)[0] = effect::Color(0, SOLID_STATUS_VAL, 0);
-		SetEffect(&solid);
+		static effect::Static green(
+			effect::Color(0, SOLID_STATUS_VAL, 0)
+		);
+		green.Reset();
+		SetEffect(&green);
 	}
 
 	void StatusLed::SetModeNfct()
@@ -71,9 +75,11 @@ namespace app
 			return;
 		}
 
-		static effect::Static solid;
-		(*colors)[0] = effect::Color(0, 0, SOLID_STATUS_VAL);
-		SetEffect(&solid);
+		static effect::Static blue(
+			effect::Color(0, 0, SOLID_STATUS_VAL)
+		);
+		blue.Reset();
+		SetEffect(&blue);
 	}
 
 	void StatusLed::SetModeFun()
@@ -94,9 +100,11 @@ namespace app
 			return;
 		}
 
-		static effect::Static solid;
-		(*colors)[0] = effect::Color(0, 0, 0);
-		SetEffect(&solid);
+		static effect::Static off(
+			effect::Color(0)
+		);
+		off.Reset();
+		SetEffect(&off);
 	}
 
 }

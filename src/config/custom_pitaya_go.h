@@ -31,6 +31,8 @@
 /** UART configurations, used for logging */
 #define NRF_LOG_BACKEND_UART_TX_PIN		26
 
+#define DISPLAY_LED_LOW_POWER_PWM_ENABLED	1
+
 /** APA102 RGB LED*/
 #define DISPLAY_LED_APA102_ENABLED			1
 #define DISPLAY_LED_APA102_SPIM_INSTANCE	2

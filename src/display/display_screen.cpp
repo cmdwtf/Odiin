@@ -7,6 +7,7 @@
 #include "nrf_gfx.h"
 
 #include "screen_ui/display_screen_ui.h"
+#include "led/display_led_low_power_pwm.h"
 
 #include "display_log_module.ii"
 
@@ -31,12 +32,28 @@ namespace display
 		void lvFlushCallback(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
 
 		extern const nrf_lcd_t nrf_lcd_ili9341;
+
+		//////////////////////////////////////////////////////////////////////////
+		// Backlight driver
+
+		static led::RgbLedColorBufferDescriptor* GetBacklightBufferDescriptor()
+		{
+			static led::RgbLedColorBuffer<1> data;
+			return &data;
+		}
+
+		static const display_rgb_led_driver_t* BacklightDriver = & display_led_low_power_pwm;
+
+		static const display_rgb_led_driver_config_t* GetBacklightPwmDriverConfig()
+		{
+			DISPLAY_RGB_LED_DRIVER_CONFIG_DEFINE(pwm_cfg, 1);
+			pwm_cfg.pins[0].pin = ILI9341_BACKLIGHT_CONTROL_PIN;
+			return &pwm_cfg;
+		}
 	}
 
-	bool Screen::initialized = false;
-
 	Screen::Screen(input::Keypad* _keypad, float initialBacklight /*= 1.0f*/) :
-		backlight(ILI9341_BACKLIGHT_CONTROL_PIN)
+		backlight(GetBacklightBufferDescriptor(), BacklightDriver, GetBacklightPwmDriverConfig())
 	{
 		if (initialized)
 		{
@@ -57,9 +74,7 @@ namespace display
 		}
 
 		// and init the backlight, too.
-		NRF_LOG_VERBOSE("Starting backlight...");
-		lastBacklightBrightness = initialBacklight;
-		BacklightOn();
+		InitializeBacklight(initialBacklight);
 
 		NRF_LOG_VERBOSE("Initializing gfx lvgl...");
 		lv_init();
@@ -113,6 +128,13 @@ namespace display
 		}
 	}
 
+	void Screen::InitializeBacklight(float initialBrightness)
+	{
+		NRF_LOG_VERBOSE("Starting backlight PWM...");
+		lastBacklightBrightness = initialBrightness;
+		BacklightOn();
+	}
+
 	void Screen::Update(float timeDelta)
 	{
 		if (initialized)
@@ -124,7 +146,8 @@ namespace display
 
 	void Screen::Tick(void* context)
 	{
-		if (initialized)
+		Screen* that = (Screen*)context;
+		if (that->initialized)
 		{
 			lv_tick_inc(GraphicsTickMs);
 		}
@@ -132,24 +155,54 @@ namespace display
 
 	void Screen::BacklightOn()
 	{
-		backlight.AnimateDutyCycle(lastBacklightBrightness, BacklightAnimationDurationSlow);
+		static led::effect::Interpolate animateOn(
+			led::effect::Color(0),
+			led::effect::ColorFromFloat(lastBacklightBrightness),
+			BacklightAnimationDurationSlow
+		);
+		animateOn.Reset();
+		backlight.SetEffect(&animateOn);
 	}
 
 	void Screen::BacklightOff()
 	{
-		backlight.AnimateDutyCycle(0, BacklightAnimationDurationSlow);
+		static led::effect::Interpolate animateOff(
+			led::effect::ColorFromFloat(lastBacklightBrightness),
+			led::effect::Color(0),
+			BacklightAnimationDurationSlow
+		);
+		animateOff.Reset();
+		backlight.SetEffect(&animateOff);
 	}
 
 	void Screen::BacklightOffImmediate()
 	{
 		// no animation, just turn it off.
-		backlight.SetDutyCycle(0);
+		static led::effect::Static off(
+			led::effect::Color(0)
+		);
+		off.Reset();
+		backlight.SetEffect(&off);
 	}
 
 	void Screen::SetBacklightBrightness(float brightnessPercent)
 	{
+		static led::effect::Interpolate animate(
+			led::effect::ColorFromFloat(lastBacklightBrightness),
+			led::effect::ColorFromFloat(brightnessPercent),
+			BacklightAnimationDurationFast
+		);
+
+		// our colors may change, so since the static constructor only rusn once, set them.
+		animate.SetStartColor(led::effect::ColorFromFloat(lastBacklightBrightness));
+		animate.SetEndColor(led::effect::ColorFromFloat(brightnessPercent));
+
+		animate.Reset();
+
+		backlight.SetEffect(&animate);
+
+		// store new 'last' brightness.
 		lastBacklightBrightness = brightnessPercent;
-		backlight.AnimateDutyCycle(lastBacklightBrightness, BacklightAnimationDurationFast);
 	}
 
 	void Screen::SetBatteryStatus(uint8_t stateOfCharge, bool isCharging)

@@ -24,7 +24,7 @@ extern "C" {
 #define DISPLAY_LED_APA102_BRIGHTNESS_MAX (0b00011111)
 #define DISPLAY_LED_APA102_BRIGHTNESS_DEFAULT DISPLAY_LED_APA102_BRIGHTNESS_MAX
 
-extern const display_led_rgb_driver_t display_led_apa102;
+extern const display_rgb_led_driver_t display_led_apa102;
 
 #ifdef __cplusplus
 }

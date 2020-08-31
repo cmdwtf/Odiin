@@ -48,7 +48,7 @@ static inline void spi_write(const uint8_t* data, size_t data_length)
 	APP_ERROR_CHECK(err);
 }
 
-static ret_code_t display_led_apa102_initialize()
+static ret_code_t display_led_apa102_initialize(const display_rgb_led_driver_config_t* config)
 {
 	if (display_led_apa102_initialized)
 	{
@@ -133,12 +133,13 @@ static void display_led_apa102_set_leds(const display_led_rgb_color_t* led_color
 	spi_write(end_frame, DISPLAY_LED_APA102_FRAME_SIZE);
 }
 
-const display_led_rgb_driver_t display_led_apa102 = {
+const display_rgb_led_driver_t display_led_apa102 = {
 	.initialize = display_led_apa102_initialize,
 	.uninitialize = display_led_apa102_uninitialize,
 	.set_leds = display_led_apa102_set_leds,
 	.default_brightness = DISPLAY_LED_APA102_BRIGHTNESS_DEFAULT,
 	.name = "APA102",
+	.instance_data = NULL,
 };
 
 #endif // DISPLAY_LED_APA102_ENABLED

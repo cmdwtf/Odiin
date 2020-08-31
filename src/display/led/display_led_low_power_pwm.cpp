@@ -1,130 +1,115 @@
+#include "sdk_common.h"
+
+#if defined(DISPLAY_LED_LOW_POWER_PWM_ENABLED) && DISPLAY_LED_LOW_POWER_PWM_ENABLED == 1
+
 #include "display_led_low_power_pwm.h"
 
-#include "boards.h"
+#include <stdbool.h>
+
 #include "app_error.h"
+#include "boards.h"
+#include "low_power_pwm.h"
 
-namespace display::led
+#include "../display_log_module.ii"
+
+static bool display_led_low_power_pwm_initialized = false;
+
+static struct {
+	low_power_pwm_t lp_pwm;
+} instance_data;
+
+static void display_led_low_power_pwm_set_duty_cycle(uint8_t dc)
 {
-	namespace
-	{
-		constexpr Cie1931 cie1931;
+	ret_code_t err_code = low_power_pwm_duty_set(&instance_data.lp_pwm, dc);
+	APP_ERROR_CHECK(err_code);
 
-		// Linear interpolation
-		constexpr float Lerp(float a, float b, float t)
-		{
-			return ((1.0f - t) * a) + (b * t);
-		}
+	// check to see if we set the duty cycle to off,
+	// and if so, immediately clear the bit. the reason
+	// for this is, when shutting down, this will
+	// be called to turn the backlight off, but the timers will
+	// not tick again before the device goes into PWROFF state,
+	// and we want to make sure the LED is off before it does so!
+	if (dc == 0)
+	{
+		nrf_gpio_port_out_clear(instance_data.lp_pwm.p_port, instance_data.lp_pwm.bit_mask_toggle);
+	}
+}
+
+static void display_led_low_power_pwm_handler(void* context)
+{
+	// noop is fine for now.
+}
+
+static ret_code_t display_led_low_power_pwm_initialize(const display_rgb_led_driver_config_t* config)
+{
+	if (display_led_low_power_pwm_initialized)
+	{
+		NRF_LOG_WARNING("display_led_low_power_pwm already initialized.");
+		return NRF_ERROR_MODULE_ALREADY_INITIALIZED;
 	}
 
-	Pwm::Pwm(uint8_t pin) :
-		Pin(pin)
+	if (config->pin_count == 0)
 	{
-		APP_TIMER_DEF(lowPowerPwmTimer);
-		low_power_pwm_config_t config;
-		config.active_high    = true;
-		config.period         = DutyCycleMax;
-		config.bit_mask       = PIN_MASK(Pin);
-		config.p_timer_id     = &lowPowerPwmTimer;
-		config.p_port         = NRF_GPIO;
-
-		ret_code_t err_code = low_power_pwm_init((&lpPwm), &config, Pwm::PwmHandler);
-		APP_ERROR_CHECK(err_code);
-
-		// default to a zero DC.
-		constexpr uint8_t defaultDutyCycle = 0;
-		SetRawDutyCycle(defaultDutyCycle);
-
-		// start the pwm!
-		err_code = low_power_pwm_start((&lpPwm), lpPwm.bit_mask);
-		APP_ERROR_CHECK(err_code);
+		NRF_LOG_WARNING("display_led_low_power_pwm requires at least a single pin definition.");
+		return NRF_ERROR_INVALID_LENGTH;
 	}
 
-	void Pwm::SetDutyCycle(float dutyCyclePercent)
+	uint32_t pin_mask = 0;
+
+	for (size_t scan = 0; scan < config->pin_count; ++scan)
 	{
-		startDutyCyclePercent = dutyCyclePercent;
-		targetDutyCyclePercent = dutyCyclePercent;
-
-		currentDutyCyclePercent = dutyCyclePercent;
-
-		animating = false;
-
-		uint8_t raw = (uint8_t)(currentDutyCyclePercent * DutyCycleMax);
-		SetRawDutyCycle(raw);
+		pin_mask |= PIN_MASK(config->pins[scan].pin);
 	}
 
-	void Pwm::AnimateDutyCycle(float toDutyCyclePercent, float animationTime)
+	APP_TIMER_DEF(lowPowerPwmTimer);
+	low_power_pwm_config_t lppwm_config;
+	lppwm_config.active_high    = true;
+	lppwm_config.period         = DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_MAX;
+	lppwm_config.bit_mask       = pin_mask;
+	lppwm_config.p_timer_id     = &lowPowerPwmTimer;
+	lppwm_config.p_port         = NRF_GPIO;
+
+	ret_code_t err_code = low_power_pwm_init((&instance_data.lp_pwm), &lppwm_config, display_led_low_power_pwm_handler);
+	APP_ERROR_CHECK(err_code);
+
+	display_led_low_power_pwm_set_duty_cycle(DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_DEFAULT);
+
+	// start the pwm timer!
+	err_code = low_power_pwm_start((&instance_data.lp_pwm), instance_data.lp_pwm.bit_mask);
+	APP_ERROR_CHECK(err_code);
+
+	display_led_low_power_pwm_initialized = true;
+
+	return err_code;
+}
+
+static void display_led_low_power_pwm_uninitialize()
+{
+	low_power_pwm_stop(&instance_data.lp_pwm);
+	display_led_low_power_pwm_initialized = false;
+}
+
+static void display_led_low_power_pwm_set_leds(const display_led_rgb_color_t* led_colors, size_t led_count, uint8_t brightness)
+{
+	if (led_count == 0)
 	{
-		AnimateDutyCycle(-1, toDutyCyclePercent, animationTime);
+		return;
 	}
 
-	void Pwm::AnimateDutyCycle(float fromDutyCyclePercent, float toDutyCyclePercent, float animationTime)
-	{
-		if (fromDutyCyclePercent < 0)
-		{
-			fromDutyCyclePercent = currentDutyCyclePercent;
-		}
+	// we can only handle one color, so we're just going to use the average
+	// of the rgb of the first color to determine our D/C
+	const display_led_rgb_color_t* color = &led_colors[0];
+	uint8_t dc = (color->red + color->green + color->blue) / 3;
+	display_led_low_power_pwm_set_duty_cycle(dc);
+}
 
-		elapsedTime = 0.0f;
-		targetTime = animationTime;
+const display_rgb_led_driver_t display_led_low_power_pwm = {
+	.initialize = display_led_low_power_pwm_initialize,
+	.uninitialize = display_led_low_power_pwm_uninitialize,
+	.set_leds = display_led_low_power_pwm_set_leds,
+	.default_brightness = DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_DEFAULT,
+	.name = "Low Power PWM",
+	.instance_data = &instance_data,
+};
 
-		startDutyCyclePercent = fromDutyCyclePercent;
-		targetDutyCyclePercent = toDutyCyclePercent;
-
-		currentDutyCyclePercent = fromDutyCyclePercent;
-
-		animating = true;
-		Update(0);
-	}
-
-	void Pwm::Update(float timeDelta)
-	{
-		if (animating)
-		{
-			// update!
-			elapsedTime += timeDelta;
-			float timePercent = elapsedTime / targetTime;
-
-			// check to see if we've reached the target,
-			// cap and stop animating if we have.
-			if (timePercent >= 1.0f)
-			{
-				animating = false;
-				timePercent = 1.0f;
-			}
-
-			// calculate the new DC percent.
-			currentDutyCyclePercent = Lerp(startDutyCyclePercent, targetDutyCyclePercent, timePercent);
-
-			// calculate the new raw dc
-			// todo: other easing functions besides lerp?
-			uint8_t dc = (uint8_t)Lerp(DutyCycleMin, DutyCycleMax, currentDutyCyclePercent);
-
-			// and set it!
-			SetRawDutyCycle(dc);
-		}
-	}
-
-	void Pwm::PwmHandler(void* context)
-	{
-		// noop is fine for now.
-	}
-
-	void Pwm::SetRawDutyCycle(uint8_t _rawDutyCycle)
-	{
-		rawDutyCycle = _rawDutyCycle;
-		ret_code_t err_code = low_power_pwm_duty_set(&lpPwm, rawDutyCycle);
-		APP_ERROR_CHECK(err_code);
-
-		// check to see if we set the duty cycle to off,
-		// and if so, immediately clear the bit. the reason
-		// for this is, when shutting down, SetRawDutyCycle will
-		// be called to turn the backlight off, but the timers will
-		// not tick again before the device goes into POWER_OFF state,
-		// and we want to make sure the LED is off before it does so!
-		if (rawDutyCycle == 0)
-		{
-        	nrf_gpio_port_out_clear(lpPwm.p_port, lpPwm.bit_mask_toggle);
-		}
-	}
-
-} // namespace display::led
+#endif // DISPLAY_LED_LOW_POWER_PWM_ENABLED

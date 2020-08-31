@@ -6,7 +6,7 @@
 
 namespace display::led
 {
-	RgbLeds::RgbLeds(RgbLedColorBufferDescriptor* colorBuffer, const RgbLedDriver* driver) :
+	RgbLeds::RgbLeds(RgbLedColorBufferDescriptor* colorBuffer, const RgbLedDriver* driver, const RgbLedDriverConfig* config) :
 		ledDriver(driver), colors(colorBuffer)
 	{
 		if (colors == nullptr)
@@ -23,7 +23,7 @@ namespace display::led
 		}
 
 		NRF_LOG_INFO("Initializing %d LED%s with driver %s.", colors->Size, colors->Size == 1 ? "" : "s", ledDriver->name);
-		ledDriver->initialize();
+		ledDriver->initialize(config);
 		colors->ShouldUpdate = true;
 	}
 
@@ -55,6 +55,8 @@ namespace display::led
 		{
 			colors->ShouldUpdate = true;
 		}
+
+		Update(0.0f);
 	}
 
 } // namespace display::led

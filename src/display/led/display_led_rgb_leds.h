@@ -13,9 +13,11 @@ namespace display::led
 	{
 	public:
 		using RgbColor = display_led_rgb_color_t;
-		using RgbLedDriver = display_led_rgb_driver_t;
+		using RgbLedDriver = display_rgb_led_driver_t;
+		using RgbLedDriverConfig = display_rgb_led_driver_config_t;
 
-		RgbLeds(RgbLedColorBufferDescriptor* colorBuffer, const RgbLedDriver* driver);
+		RgbLeds(RgbLedColorBufferDescriptor* colorBuffer,
+			const RgbLedDriver* driver,	const RgbLedDriverConfig* config);
 		virtual ~RgbLeds() = default;
 
 		void Update(float timeDelta);

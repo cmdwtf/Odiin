@@ -7,10 +7,9 @@ namespace display::led::effect
 	class Rainbow : public Effect
 	{
 	public:
-		Rainbow()
-		{
-			effectDuration = 3.0f;
-		}
+		Rainbow() :
+			Effect(3.0f)
+		{ }
 
 		virtual void Update(float timeDelta, RgbLedColorBufferDescriptor &colors) override;
 	private:

@@ -6,8 +6,20 @@ namespace display::led::effect
 {
 	void Static::Update(float timeDelta, RgbLedColorBufferDescriptor &colors)
 	{
-		// nothing to do, just let the leds update.
-		colors.ShouldUpdate = true;
+		if (Effect::AddDeltaTime(timeDelta))
+		{
+			colors.ShouldUpdate = true;
+			for (size_t scan = 0; scan < colors.Size; ++scan)
+			{
+				colors[scan] = color;
+			}
+		}
+	}
+
+	void Static::Reset()
+	{
+		Effect::Reset();
+		allowUpdate = true;
 	}
 
 } // namespace display::led::effect

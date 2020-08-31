@@ -32,15 +32,34 @@ typedef struct display_rgb_led_color_s
 	};
 } display_led_rgb_color_t;
 
+typedef struct display_rgb_led_driver_config_pin_s {
+	uint32_t pin;
+} display_rgb_led_driver_config_pin_t;
+
+typedef struct display_rgb_led_driver_config_s {
+	size_t pin_count;
+	display_rgb_led_driver_config_pin_t* pins;
+} display_rgb_led_driver_config_t;
+
+#define DISPLAY_RGB_LED_DRIVER_CONFIG_DEFINE(name, pinCount)	\
+static struct {													\
+	display_rgb_led_driver_config_pin_t pinsData[pinCount];		\
+} name ## pinDataDefs ;											\
+static display_rgb_led_driver_config_t name = {					\
+	.pin_count = pinCount,										\
+	.pins = (name ## pinDataDefs).pinsData,						\
+}
+
 // a struct describing a rgb led driver
 typedef struct display_rgb_led_driver_s
 {
-	ret_code_t (*initialize)();
+	ret_code_t (*initialize)(const display_rgb_led_driver_config_t* config);
 	void (*uninitialize)();
 	void (*set_leds)(const display_led_rgb_color_t* led_colors, size_t led_count, uint8_t brightness);
 	uint8_t default_brightness;
 	const char* name;
-} display_led_rgb_driver_t;
+	void* instance_data;
+} display_rgb_led_driver_t;
 
 #ifdef __cplusplus
 }

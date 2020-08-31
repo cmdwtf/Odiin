@@ -1,45 +1,19 @@
 #pragma once
 
-#include <cstdint>
+#include "display_led_rgb_leds.h"
 
-#include "cie1931.hpp"
-#include "low_power_pwm.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace display::led
-{
-	class Pwm
-	{
-	public:
-		Pwm(uint8_t pin);
-		virtual ~Pwm() = default;
-		Pwm(const Pwm&) = delete;
-		Pwm& operator=(const Pwm&) = delete;
+#define DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_OFF		(0x00)
+#define DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_MIN		(0x01)
+#define DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_MID		(0xFF >> 1)
+#define DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_MAX		(0xFF)
+#define DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_DEFAULT	DISPLAY_LED_LOW_POWER_PWM_BRIGHTNESS_OFF
 
-		void SetDutyCycle(float dutyCyclePercentage);
-		void AnimateDutyCycle(float toDutyCyclePercent, float animationTime);
-		void AnimateDutyCycle(float fromDutyCyclePercent, float toDutyCyclePercent, float animationTime);
+extern const display_rgb_led_driver_t display_led_low_power_pwm;
 
-		void Update(float timeDelta);
-
-		const uint8_t Pin;
-
-		static constexpr uint8_t DutyCycleMin = 0;
-		static constexpr uint8_t DutyCycleMax = UINT8_MAX;
-
-	private:
-		static void PwmHandler(void* context);
-		void SetRawDutyCycle(uint8_t rawDutyCycle);
-
-		bool animating = false;
-		float elapsedTime = 0.0f;
-		float currentDutyCyclePercent = 0.0f;
-
-		float targetTime = 0.0f;
-		float startDutyCyclePercent = 0.0f;
-		float targetDutyCyclePercent = 0.0f;
-
-		uint8_t rawDutyCycle = 0;
-
-		low_power_pwm_t lpPwm;
-	};
-} // namespace display::led
+#ifdef __cplusplus
+}
+#endif
