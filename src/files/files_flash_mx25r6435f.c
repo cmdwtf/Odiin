@@ -43,8 +43,8 @@ int32_t files_flash_mx25r6435f_configure_qspi(void)
 
 // [ref: 1.General]
 static const int32_t bytes_in_kb = 1024;
-static const int32_t kb_in_mb = 1024;
-static const int32_t files_flash_mx25r6435f_size_bytes = 64 * kb_in_mb * bytes_in_kb;
+static const int32_t files_flash_mx25r6435f_size_bits = 67108864;
+static const int32_t files_flash_mx25r6435f_size_bytes = files_flash_mx25r6435f_size_bits / 8;
 static const int32_t files_flash_mx25r6435f_sector_size =  4 * bytes_in_kb;
 //static const int32_t files_flash_mx25r6435f_block_size_sm = 32 * bytes_in_kb;
 static const int32_t files_flash_mx25r6435f_block_size_lg = 64 * bytes_in_kb;
