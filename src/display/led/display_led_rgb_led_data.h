@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "sdk_errors.h"
 
@@ -39,6 +40,7 @@ typedef struct display_rgb_led_driver_config_pin_s {
 typedef struct display_rgb_led_driver_config_s {
 	size_t pin_count;
 	display_rgb_led_driver_config_pin_t* pins;
+	bool invert_polarity;
 } display_rgb_led_driver_config_t;
 
 #define DISPLAY_RGB_LED_DRIVER_CONFIG_DEFINE(name, pinCount)	\
