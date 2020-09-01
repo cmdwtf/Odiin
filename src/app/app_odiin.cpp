@@ -2,7 +2,6 @@
 
 #include "app_error.h"
 #include "app_timer.h"
-#include "bsp.h"
 #include "nrf_drv_clock.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
@@ -12,7 +11,6 @@
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "platform/platform_battery.h"
-#include "platform/platform_power.h"
 #include "timer/timer.h"
 #include "usb/usb.h"
 
@@ -194,13 +192,6 @@ namespace app
 	//////////////////////////////////////////////////////////////////////////
 	// Private interface
 
-	// forward declarations of file-local functions
-	namespace
-	{
-		void BspEventHandler(bsp_event_t event);
-		bool ShutdownHandler(platform_power_event_t event);
-	}
-
 	//////////////////////////////////////////////////////////////////////////
 	// Application component initilization
 
@@ -276,13 +267,13 @@ namespace app
 
 		const uint32_t bspFlags = BSP_INIT_LEDS | BSP_INIT_BUTTONS;
 
-		err_code = bsp_init(bspFlags, BspEventHandler);
+		err_code = bsp_init(bspFlags, Odiin::BspEventHandler);
 		APP_ERROR_CHECK(err_code);
 	}
 
 	void Odiin::InitializePower()
 	{
-		power.event_handler = ShutdownHandler;
+		power.event_handler = Odiin::ShutdownHandler;
 		power.initialize();
 
 		battery.initialize();
@@ -510,48 +501,44 @@ namespace app
 		return true;
 	}
 
-	namespace
+	void Odiin::BspEventHandler(bsp_event_t event)
 	{
-		void BspEventHandler(bsp_event_t event)
+		switch (event)
 		{
-			switch (event)
-			{
-				// any key events (button presses) from
-				// our regular buttons, we will feed
-				// the power management. this resets
-				// the sleep timer, and keeps the device active.
-				case BSP_EVENT_KEY_0:
-				case BSP_EVENT_KEY_1:
-				case BSP_EVENT_KEY_2:
-				case BSP_EVENT_KEY_3:
-				case BSP_EVENT_KEY_4:
-				case BSP_EVENT_KEY_5:
-				case BSP_EVENT_KEY_6:
-					power.feed();
-					break;
-				default:
-					NRF_LOG_DEBUG("[BSP] Unhandled event: %d", event);
-					break;
-			}
-		}
-
-		bool ShutdownHandler(platform_power_event_t event)
-		{
-			switch (event)
-			{
-				case PLATFORM_POWER_EVENT_PREPARE_WAKEUP:
-					return Odiin::GetInstance()->OnSleep();
-				case PLATFORM_POWER_EVENT_PREPARE_OFF:
-					return Odiin::GetInstance()->OnPowerOff();
-				case PLATFORM_POWER_EVENT_PREPARE_DFU:
-					return Odiin::GetInstance()->OnRebootToDfu();
-				case PLATFORM_POWER_EVENT_PREPARE_RESET:
-					return Odiin::GetInstance()->OnReboot();
-				default:
-					NRF_LOG_WARNING("Unhandled shutdown event: %d", event);
-					return true;
-			}
+			// any key events (button presses) from
+			// our regular buttons, we will feed
+			// the power management. this resets
+			// the sleep timer, and keeps the device active.
+			case BSP_EVENT_KEY_0:
+			case BSP_EVENT_KEY_1:
+			case BSP_EVENT_KEY_2:
+			case BSP_EVENT_KEY_3:
+			case BSP_EVENT_KEY_4:
+			case BSP_EVENT_KEY_5:
+			case BSP_EVENT_KEY_6:
+				power.feed();
+				break;
+			default:
+				NRF_LOG_DEBUG("[BSP] Unhandled event: %d", event);
+				break;
 		}
 	}
 
+	bool Odiin::ShutdownHandler(platform_power_event_t event)
+	{
+		switch (event)
+		{
+			case PLATFORM_POWER_EVENT_PREPARE_WAKEUP:
+				return Odiin::GetInstance()->OnSleep();
+			case PLATFORM_POWER_EVENT_PREPARE_OFF:
+				return Odiin::GetInstance()->OnPowerOff();
+			case PLATFORM_POWER_EVENT_PREPARE_DFU:
+				return Odiin::GetInstance()->OnRebootToDfu();
+			case PLATFORM_POWER_EVENT_PREPARE_RESET:
+				return Odiin::GetInstance()->OnReboot();
+			default:
+				NRF_LOG_WARNING("Unhandled shutdown event: %d", event);
+				return true;
+		}
+	}
 } // namespace app

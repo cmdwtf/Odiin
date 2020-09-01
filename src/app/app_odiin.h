@@ -1,12 +1,15 @@
 #pragma once
 #include <cstdint>
 
+#include "bsp.h"
+
 #include "app/app_status_led.h"
 #include "display/display_screen.h"
 #include "files/files_fat32.h"
 #include "files/files_littlefs.h"
 #include "fsm/app_odiin_fsm.h"
 #include "input/input_keypad.h"
+#include "platform/platform_power.h"
 #include "nfc/nxp/ntag21x/nxp_ntag21x_emulator.h"
 #include "usb/usb_msc.h"
 
@@ -40,11 +43,6 @@ namespace app
 		void RebootToDfu();
 		void Reboot();
 
-		bool OnSleep();
-		bool OnPowerOff();
-		bool OnRebootToDfu();
-		bool OnReboot();
-
 		void LoadSettings();
 		void SaveSettings();
 
@@ -76,6 +74,14 @@ namespace app
 
 		void TimerTick1Sec();
 		void UpdateBattery();
+
+		bool OnSleep();
+		bool OnPowerOff();
+		bool OnRebootToDfu();
+		bool OnReboot();
+
+		static void BspEventHandler(bsp_event_t event);
+		static bool ShutdownHandler(platform_power_event_t event);
 
 		usb::MassStorageClass* usbMassStorageClass;
 		files::Fat32* sdCard;
