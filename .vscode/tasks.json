@@ -30,15 +30,15 @@
 	},
     "tasks": [
         {
-            "label": "Make",
-            "command": "make"
+            "label": "Build (Debug)",
+            "command": "make DEBUG=1"
         },
         {
             "label": "Clean",
             "command": "make clean"
 		},
 		{
-			"label": "Make Bootloader",
+			"label": "Build Bootloader",
 			"command": "make bootloader"
 		},
         {
@@ -46,11 +46,11 @@
             "command": "make clean_bootloader"
         },
         {
-            "label": "Make & Flash",
+            "label": "Build Release & Flash",
             "command": "make flash_all"
         },
         {
-            "label": "Release",
+            "label": "Build (Release UF2)",
             "command": "make release",
             "group": {
                 "kind": "build",
@@ -58,7 +58,11 @@
             }
         },
         {
-            "label": "Erase Target",
+            "label": "Build (Release UF2 with Debugging)",
+            "command": "make release DEBUG=1",
+        },
+        {
+            "label": "Erase Target Controller",
             "command": "make erase"
 		},
 		{

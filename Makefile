@@ -1,7 +1,7 @@
 PROJECT				:= odiin
 TARGETS				:= nrf52840_xxaa
 OUTPUT_DIRECTORY 	:= _build
-
+DEBUG				?= 0
 VENDOR_ROOT ?= vendor
 SOURCE_DIR := src
 
@@ -345,15 +345,25 @@ LIB_FILES += \
 ## Compiler Flags
 ########################################################
 
-# Debug flags
-MAX_DEBUG_INFO = -g3
-DEBUG_DEFINES = -DDEBUG -DDEBUG_NRF
-#DEBUG_DEFINES =
-
 # Optimization flags
-OPT = -O3 $(MAX_DEBUG_INFO)
-# Uncomment the line below to enable link time optimization
-#OPT += -flto
+OPT_FLAGS = -O3
+
+# Flags dependant on build configuration.
+ifeq ($(DEBUG),1)
+  # Debug flags
+  APP_FLAGS = -ggdb3 # -g3 -- use for non-gdb debugging.
+  APP_DEFINES = -DDEBUG -DDEBUG_NRF
+  # Ask linker to produce cross references to investigate later.
+  APP_LDFLAGS = -Wl,--cref
+else
+  APP_FLAGS = -Wduplicated-cond
+  APP_DEFINES = -DRELEASE
+  # strip symbol table and reloc information
+  APP_LDFLAGS = -Wl,-s -Wl,-z,defs
+  # Add full link time optimization as a last resort.
+  # See: https://interrupt.memfault.com/blog/best-and-worst-gcc-clang-compiler-flags#-flto
+  #OPT_FLAGS += -flto
+endif
 
 # Board Flags for dev platform,
 # Defaulting to pitayago if we don't have one set.
@@ -368,37 +378,45 @@ else
 endif
 
 # C flags common to all targets
-CFLAGS += $(OPT)
+CFLAGS += $(APP_FLAGS)
+CFLAGS += $(OPT_FLAGS)
+CFLAGS += $(APP_DEFINES)
 CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
-CFLAGS += $(DEBUG_DEFINES)
 CFLAGS += $(DEV_PLATFORM_FLAGS)
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
 CFLAGS += -DNRF52840_XXAA
+# Enable lots of warnings to catch common mistakes.
+CFLAGS += -Wall -Werror -Wshadow
+# Warnings I can't use because of nRF5/other libs:
+# -Wundef, -Wdouble-promotion
+# Prevent common global variable names
+CFLAGS += -fno-common
+# Emit stack usage info
+CFLAGS += -fstack-usage
 CFLAGS += -mcpu=cortex-m4
 CFLAGS += -mthumb -mabi=aapcs
-CFLAGS += -Wall -Werror
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 # keep every function in a separate section, this allows linker to discard unused ones
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
 
 # C++ flags common to all targets
-CXXFLAGS += $(OPT)
+CXXFLAGS += $(OPT_FLAGS)
 
 # We are using C++, but no RTTI is needed (and doesn't work anyways!)
 CXXFLAGS += -fno-rtti -std=c++17
 
 # Assembler flags common to all targets
-ASMFLAGS += $(MAX_DEBUG_INFO)
+ASMFLAGS += $(APP_FLAGS)
 ASMFLAGS += -DAPP_TIMER_V2
 ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 ASMFLAGS += -DBOARD_CUSTOM
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
-ASMFLAGS += $(DEBUG_DEFINES)
+ASMFLAGS += $(APP_DEFINES)
 ASMFLAGS += $(DEV_PLATFORM_FLAGS)
 ASMFLAGS += -DFLOAT_ABI_HARD
 ASMFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
@@ -408,7 +426,7 @@ ASMFLAGS += -mthumb -mabi=aapcs
 ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 # Linker flags
-LDFLAGS += $(OPT)
+LDFLAGS += $(OPT_FLAGS)
 LDFLAGS += -mthumb -mabi=aapcs -L$(SDK_ROOT)/modules/nrfx/mdk -T$(LINKER_SCRIPT)
 LDFLAGS += -mcpu=cortex-m4
 LDFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
@@ -416,8 +434,7 @@ LDFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 LDFLAGS += -Wl,--gc-sections
 # use newlib in nano version
 LDFLAGS += --specs=nano.specs
-# Ask linker to produce cross references to investigate later.
-LDFLAGS += -Xlinker --cref
+LDFLAGS += $(APP_LDFLAGS)
 
 nrf52840_xxaa: CFLAGS += -D__HEAP_SIZE=$(HEAP_SIZE_BYTES)
 nrf52840_xxaa: CFLAGS += -D__STACK_SIZE=$(STACK_SIZE_BYTES)
@@ -498,13 +515,12 @@ flash_all: merge
 erase:
 	pyocd erase -t nrf52840 --chip
 
-# Create the UF2 release file that doesn't contain the default MBR.
+# Create the UF2 deployable.
 release: merge
 	@echo Creating UF2 format file from produced hex...
 	@python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
 	@echo.
-	@echo Use $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2) to flash via UF2 like standard keeping the bootloader,
-	@echo or $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX) to use basic MBR (removes custom bootloader!)
+	@echo Generated UF2 firmware file: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2)
 
 SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
