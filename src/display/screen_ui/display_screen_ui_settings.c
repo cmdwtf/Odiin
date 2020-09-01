@@ -141,6 +141,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	ui.bootloader_button = lv_btn_create(ui.bootloader, NULL);
 	lv_obj_set_event_cb(ui.bootloader_button, settings_enter_dfu_pressed);
 	lv_obj_set_width_fit(ui.bootloader_button, fit_w);
+	lv_obj_set_style_local_border_color(ui.bootloader_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_PURPLE);
 	lv_obj_set_style_local_outline_color(ui.bootloader_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_RED);
     lv_obj_t* bootloader_button_label = lv_label_create(ui.bootloader_button, NULL);
     lv_label_set_text(bootloader_button_label, "Reboot to DFU Mode");
