@@ -18,7 +18,7 @@ extern "C" {
 	void UI_DECLARE_FUNCTION(boot, set_timeout)(lv_task_cb_t callback, uint32_t period);
 
 	UI_DECLARE(list_menu);
-	void UI_DECLARE_FUNCTION(list_menu, set_options)(menu_option_desc_t options[], size_t numOptions);
+	void UI_DECLARE_FUNCTION(list_menu, set_options)(menu_option_desc_t new_options[], size_t num_options);
 	void UI_DECLARE_FUNCTION(list_menu, set_title)(const char* title);
 	void UI_DECLARE_FUNCTION(list_menu, set_back_clicked_cb)(ui_common_simple_cb callback);
 	void UI_DECLARE_FUNCTION(list_menu, set_option_selected_cb)(lv_event_cb_t callback);

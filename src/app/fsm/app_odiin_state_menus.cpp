@@ -252,14 +252,14 @@ class MenuFiles
 		return count;
 	}
 
-	size_t AppendDirectoryTopper(bool isRoot, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
+	size_t AppendDirectoryTopper(bool dirIsRoot, menu_option_desc_t* output, size_t outputLength, char** stringBuffers, size_t stringBufferLength)
 	{
 		const size_t maxUpperPagecount = 3;
 		ASSERT(outputLength >= maxUpperPagecount);
 
 		size_t index = 0;
 
-		if (isRoot == false)
+		if (dirIsRoot == false)
 		{
 			output[index].option = sdCard->GetRelativeParentDirectory();
 			output[index].prefix = LV_SYMBOL_NEW_LINE;

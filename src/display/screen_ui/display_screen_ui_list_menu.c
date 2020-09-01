@@ -83,10 +83,10 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 	ui_status_widget_get(screen);
 }
 
-void UI_DECLARE_FUNCTION(UI_NAME, set_options)(menu_option_desc_t options[], size_t numOptions)
+void UI_DECLARE_FUNCTION(UI_NAME, set_options)(menu_option_desc_t new_options[], size_t num_options)
 {
-	menuOptions = options;
-	menuOptionsCount = numOptions;
+	menuOptions = new_options;
+	menuOptionsCount = num_options;
 	display_screen_ui_list_menu_refresh_options();
 }
 
