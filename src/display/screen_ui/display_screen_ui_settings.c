@@ -15,6 +15,9 @@ static struct {
 	lv_obj_t* nfc_nyi;
 	lv_obj_t* cryptography;
 	lv_obj_t* cryptography_nyi;
+	lv_obj_t* bootloader;
+	lv_obj_t* bootloader_text;
+	lv_obj_t* bootloader_button;
 	lv_group_t* active_group;
 } ui;
 
@@ -22,10 +25,12 @@ static lv_style_t style_box;
 
 static ui_common_simple_cb done_cb = NULL;
 static ui_common_float_cb brightness_cb = NULL;
+static ui_common_simple_cb enter_dfu_cb = NULL;
 
 static void settings_done_pressed(lv_obj_t* obj, lv_event_t e);
 static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e);
 static void settings_focus_cb(lv_group_t* group);
+static void settings_enter_dfu_pressed(lv_obj_t* button, lv_event_t e);
 
 UI_DECLARE_CREATE(UI_NAME)
 {
@@ -100,10 +105,7 @@ UI_DECLARE_CREATE(UI_NAME)
 	lv_obj_set_event_cb(ui.nfc, ui_common_up_down_focus_cb);
 
 	// nfc coming soon
-	ui.nfc_nyi = lv_label_create(ui.nfc, NULL);
-	ui_common_set_label_font_theme_small(ui.nfc_nyi);
-	lv_label_set_align(ui.nfc_nyi, LV_LABEL_ALIGN_LEFT);
-	lv_obj_set_width_margin(ui.nfc_nyi, fit_w);
+	ui.nfc_nyi = lv_label_create(ui.nfc, ui.brightness_label);
 	lv_label_set_text(ui.nfc_nyi, "NFC settings are not yet implemented.\n"
 		"They will come in a future update.");
 
@@ -113,9 +115,35 @@ UI_DECLARE_CREATE(UI_NAME)
 	lv_obj_set_event_cb(ui.cryptography, ui_common_up_down_focus_cb);
 
 	// cryptography coming soon
-	ui.cryptography_nyi = lv_label_create(ui.cryptography, ui.nfc_nyi);
+	ui.cryptography_nyi = lv_label_create(ui.cryptography, ui.brightness_label);
 	lv_label_set_text(ui.cryptography_nyi, "Cryptography settings are not yet implemented.\n"
 		"They will come in a future update.");
+
+	// bootloader container
+	ui.bootloader = lv_cont_create(content, ui.general);
+    lv_obj_set_style_local_value_str(ui.bootloader, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, "Firmware Update");
+	lv_obj_set_event_cb(ui.bootloader, ui_common_up_down_focus_cb);
+
+	// cryptography coming soon
+	ui.bootloader_text = lv_label_create(ui.bootloader, ui.brightness_label);
+	lv_label_set_text(ui.bootloader_text,
+		"Press the button below to restart " PRODUCT_NAME_SHORT "\n"
+		"in firmware (DFU) update mode. After the screen\n"
+		"goes off, attach " PRODUCT_NAME_SHORT " to your PC, and look\n"
+		"for a USB Disk named " PRODUCT_NAME_SHORT "BOOT. Drag the\n"
+		"UF2 file to it to flash new firmware. If\n"
+		"this process isn't completed in 5 minutes, \n"
+		PRODUCT_NAME_SHORT " will reboot.\n"
+		"\n"
+		"Current version:\n"
+		PRODUCT_NAME_FULL_BUILD);
+
+	ui.bootloader_button = lv_btn_create(ui.bootloader, NULL);
+	lv_obj_set_event_cb(ui.bootloader_button, settings_enter_dfu_pressed);
+	lv_obj_set_width_fit(ui.bootloader_button, fit_w);
+	lv_obj_set_style_local_outline_color(ui.bootloader_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_RED);
+    lv_obj_t* bootloader_button_label = lv_label_create(ui.bootloader_button, NULL);
+    lv_label_set_text(bootloader_button_label, "Reboot to DFU Mode");
 
 	return ui.screen;
 }
@@ -133,6 +161,9 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 	lv_group_add_obj(group, ui.nfc);
 
 	lv_group_add_obj(group, ui.cryptography);
+
+	lv_group_add_obj(group, ui.bootloader);
+	lv_group_add_obj(group, ui.bootloader_button);
 
 	lv_group_focus_obj(ui.brightness);
 
@@ -152,6 +183,11 @@ void UI_DECLARE_FUNCTION(UI_NAME, set_done_callback)(ui_common_simple_cb cb)
 void UI_DECLARE_FUNCTION(UI_NAME, set_brightness_callback)(ui_common_float_cb cb)
 {
 	brightness_cb = cb;
+}
+
+void UI_DECLARE_FUNCTION(UI_NAME, set_enter_dfu_callback)(ui_common_simple_cb cb)
+{
+	enter_dfu_cb = cb;
 }
 
 static void settings_done_pressed(lv_obj_t* obj, lv_event_t e)
@@ -204,4 +240,19 @@ static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e)
 static void settings_focus_cb(lv_group_t* group)
 {
 	lv_win_focus(ui.window, *group->obj_focus, LV_ANIM_ON);
+}
+
+static void settings_enter_dfu_pressed(lv_obj_t* button, lv_event_t e)
+{
+	if (e == LV_EVENT_PRESSED)
+	{
+		if (enter_dfu_cb != NULL)
+		{
+			enter_dfu_cb();
+		}
+	}
+	else
+	{
+		ui_common_up_down_focus_cb(button, e);
+	}
 }

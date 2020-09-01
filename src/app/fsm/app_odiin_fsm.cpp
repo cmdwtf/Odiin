@@ -156,6 +156,9 @@ namespace app::fsm
 			UI_FUNCTION(settings, set_brightness_callback)([](float level) {
 				Odiin->SetBacklightBrightness(level);
 			});
+			UI_FUNCTION(settings, set_enter_dfu_callback)([]() {
+				Odiin->RebootToDfu();
+			});
 		}
 
 		void exit() override
