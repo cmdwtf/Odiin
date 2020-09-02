@@ -46,6 +46,10 @@
             "command": "make clean_bootloader"
         },
         {
+            "label": "Flash Bootloader",
+            "command": "make flash_bootloader"
+        },
+        {
             "label": "Build & Flash (Release)",
             "command": "make flash_all"
         },
