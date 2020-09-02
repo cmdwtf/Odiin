@@ -25,10 +25,10 @@ namespace app
 		static Odiin* GetInstance();
 		static files::Fat32* GetSdCard();
 
-		~Odiin();
+		virtual ~Odiin();
 		void Update();
 
-    	template<typename E>
+		template<typename E>
 		inline void SendEvent(E const& ev) { StateMachine::dispatch(ev); }
 
 		void SetNfcTagPayload(const char* filename);

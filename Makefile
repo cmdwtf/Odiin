@@ -407,6 +407,12 @@ CFLAGS += -fno-builtin -fshort-enums
 # C++ flags common to all targets
 CXXFLAGS += $(OPT_FLAGS)
 
+# C++ specific warning enables to help control dialect
+CXXFLAGS += -Wclass-memaccess
+CXXFLAGS += -Wstrict-null-sentinel
+CXXFLAGS += -Wzero-as-null-pointer-constant
+CXXFLAGS += -Wsuggest-override
+
 # We are using C++, but no RTTI is needed (and doesn't work anyways!)
 CXXFLAGS += -fno-rtti -std=c++17
 

@@ -42,6 +42,8 @@ namespace app::fsm
 		: public ::tinyfsm::Fsm<OdiinState>
 	{
 	public:
+		virtual ~OdiinState() = default;
+
 		// unhandled event reaction
 		void react(::tinyfsm::Event const &);
 

@@ -15,7 +15,7 @@ namespace nfc::nxp::ntag21x
 			bool authState = false;
 			virtual void OnFieldLost() override;
 			virtual void OnTagSelected() override;
-			virtual void OnRxCommand(NfcCmdType commandByte, const uint8_t* data, size_t dataLength);
+			virtual void OnRxCommand(NfcCmdType commandByte, const uint8_t* data, size_t dataLength) override;
 		private:
 			Payload versionPayload{version::Ntag215.Data, version::ResponseLength};
 			ContainedPayload<password::ResponseLength> passwordAuthenticationAck{password::GenericPasswordAck, password::ResponseLength};

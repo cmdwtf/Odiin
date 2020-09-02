@@ -7,6 +7,7 @@ namespace usb
 	class Listener
 	{
 	public:
+		virtual ~Listener() = default;
 		virtual void UsbWillEnable(app_usbd_event_type_t event) { }
 		virtual void UsbDidDisable(app_usbd_event_type_t event) { }
 	}; // class Listener
