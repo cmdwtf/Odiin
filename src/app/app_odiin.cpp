@@ -11,6 +11,7 @@
 #include "global/global_data.h"
 #include "fsm/app_odiin_fsm.h"
 #include "platform/platform_battery.h"
+#include "platform/platform_watchdog.h"
 #include "timer/timer.h"
 #include "usb/usb.h"
 
@@ -24,6 +25,7 @@ namespace app
 	{
 		platform_power_driver_t& power = platform_power_nrf52;
 		platform_battery_driver_t& battery = platform_battery_makerdiary;
+		platform_watchdog_driver_t& watchdog = platform_watchdog_nrf52;
 
 		// #todo: This code should be in a HAL.
 		// magic values from UF2 bootloader (see bootloader's main.c)
@@ -74,6 +76,8 @@ namespace app
 		UpdateBattery();
 
 		ticksPrevious = ticksCurrent;
+
+		watchdog.feed();
 
 		// power update will handle our WFE/SEV
 		power.update();
@@ -259,6 +263,11 @@ namespace app
 		constexpr uint32_t ticks1SecMs = 1000;
 		constexpr uint32_t ticks1Sec = APP_TIMER_TICKS(ticks1SecMs);
 		app_timer_start(app_odiin_1sec, ticks1Sec, this);
+
+		// initialize the watchdog timer
+		platform_watchdog_driver_config_t wdt_config;
+		watchdog.initialize(&wdt_config);
+		watchdog.enable();
 	}
 
 	void Odiin::InitializeBsp()
