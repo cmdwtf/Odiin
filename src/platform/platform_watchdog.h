@@ -9,14 +9,14 @@ extern "C" {
 #include "sdk_errors.h"
 
 typedef struct platform_watchdog_driver_config_s {
-	uint32_t watchdog_channel_handle;
+	// nothing for now.
 } platform_watchdog_driver_config_t;
 
 typedef struct platform_watchdog_driver_s {
 	ret_code_t (*initialize)(platform_watchdog_driver_config_t* config);
 	void (*enable)(void);
 	void (*disable)(void);
-	void (*feed)(uint32_t channel_handle);
+	void (*feed)();
 } platform_watchdog_driver_t;
 
 #ifdef NRF52840_XXAA

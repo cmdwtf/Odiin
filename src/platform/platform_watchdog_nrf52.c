@@ -19,9 +19,8 @@ static ret_code_t platform_watchdog_nrf52_initialize(platform_watchdog_driver_co
 	nrfx_err_t err_code = nrfx_wdt_init(&driver_config, wdt_event_handler);
 	APP_ERROR_CHECK(err_code);
 
-	_Static_assert(sizeof(config->watchdog_channel_handle) >= sizeof(nrfx_wdt_channel_id), "watchdog_channel_handle too small!");
-
-	err_code = nrfx_wdt_channel_alloc((nrfx_wdt_channel_id*)&config->watchdog_channel_handle);
+	nrfx_wdt_channel_id channel;
+	err_code = nrfx_wdt_channel_alloc(&channel);
 	APP_ERROR_CHECK(err_code);
 
 	return NRFX_SUCCESS;
@@ -37,9 +36,9 @@ static void platform_watchdog_nrf52_disable(void)
 	// not supported on this platform.
 }
 
-static void platform_watchdog_nrf52_feed(uint32_t channel_handle)
+static void platform_watchdog_nrf52_feed()
 {
-	nrfx_wdt_channel_feed(channel_handle);
+	nrfx_wdt_feed();
 }
 
 platform_watchdog_driver_t platform_watchdog_nrf52 = {
