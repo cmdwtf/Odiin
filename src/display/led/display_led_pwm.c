@@ -34,7 +34,7 @@ static void display_led_pwm_set_duty_cycle(size_t index, uint8_t duty_cycle)
 	nrf_pwm_task_trigger(data.pwm, NRF_PWM_TASK_SEQSTART0);
 }
 
-static ret_code_t display_led_pwm_initialize(const display_rgb_led_driver_config_t* config)
+static ret_code_t display_led_pwm_initialize(const display_led_rgb_driver_config_t* config)
 {
 	if (display_led_pwm_initialized)
 	{
@@ -127,7 +127,7 @@ static void display_led_pwm_set_leds(const display_led_rgb_color_t* led_colors, 
 	display_led_pwm_set_duty_cycle(3, color->alpha);
 }
 
-const display_rgb_led_driver_t display_led_pwm = {
+const display_led_rgb_driver_t display_led_pwm = {
 	.initialize = display_led_pwm_initialize,
 	.uninitialize = display_led_pwm_uninitialize,
 	.set_leds = display_led_pwm_set_leds,

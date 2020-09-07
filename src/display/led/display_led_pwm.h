@@ -12,7 +12,7 @@ extern "C" {
 #define DISPLAY_LED_PWM_BRIGHTNESS_MAX		(0xFF)
 #define DISPLAY_LED_PWM_BRIGHTNESS_DEFAULT	DISPLAY_LED_PWM_BRIGHTNESS_OFF
 
-extern const display_rgb_led_driver_t display_led_pwm;
+extern const display_led_rgb_driver_t display_led_pwm;
 
 #ifdef __cplusplus
 }

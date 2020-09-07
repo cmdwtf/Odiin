@@ -42,11 +42,11 @@ namespace display
 			return &data;
 		}
 
-		static const display_rgb_led_driver_t* BacklightDriver = &display_led_pwm;
+		static const display_led_rgb_driver_t* BacklightDriver = &display_led_pwm;
 
-		static const display_rgb_led_driver_config_t* GetBacklightPwmDriverConfig()
+		static const display_led_rgb_driver_config_t* GetBacklightPwmDriverConfig()
 		{
-			DISPLAY_RGB_LED_DRIVER_CONFIG_DEFINE(pwm_cfg, 1);
+			DISPLAY_LED_RGB_DRIVER_CONFIG_DEFINE(pwm_cfg, 1);
 			pwm_cfg.pins[0].pin = ILI9341_BACKLIGHT_CONTROL_PIN;
 			pwm_cfg.invert_polarity = false;
 			return &pwm_cfg;

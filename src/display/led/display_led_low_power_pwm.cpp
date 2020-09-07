@@ -40,7 +40,7 @@ static void display_led_low_power_pwm_handler(void* context)
 	// noop is fine for now.
 }
 
-static ret_code_t display_led_low_power_pwm_initialize(const display_rgb_led_driver_config_t* config)
+static ret_code_t display_led_low_power_pwm_initialize(const display_led_rgb_driver_config_t* config)
 {
 	if (display_led_low_power_pwm_initialized)
 	{
@@ -103,7 +103,7 @@ static void display_led_low_power_pwm_set_leds(const display_led_rgb_color_t* le
 	display_led_low_power_pwm_set_duty_cycle(dc);
 }
 
-const display_rgb_led_driver_t display_led_low_power_pwm = {
+const display_led_rgb_driver_t display_led_low_power_pwm = {
 	.initialize = display_led_low_power_pwm_initialize,
 	.uninitialize = display_led_low_power_pwm_uninitialize,
 	.set_leds = display_led_low_power_pwm_set_leds,

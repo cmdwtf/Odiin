@@ -13,8 +13,8 @@ namespace display::led
 	{
 	public:
 		using RgbColor = display_led_rgb_color_t;
-		using RgbLedDriver = display_rgb_led_driver_t;
-		using RgbLedDriverConfig = display_rgb_led_driver_config_t;
+		using RgbLedDriver = display_led_rgb_driver_t;
+		using RgbLedDriverConfig = display_led_rgb_driver_config_t;
 
 		RgbLeds(RgbLedColorBufferDescriptor* colorBuffer,
 			const RgbLedDriver* driver,	const RgbLedDriverConfig* config);
