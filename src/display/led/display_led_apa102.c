@@ -131,6 +131,14 @@ static void display_led_apa102_set_leds(const display_led_rgb_color_t* led_color
 	// this will only work for up to 64 leds (see cpldcpu post),
 	// but that's enough for my purposes, so it can be future me's problem to fix.
 	spi_write(end_frame, DISPLAY_LED_APA102_FRAME_SIZE);
+
+	// according to a product I found on Tindie,
+	// here: https://www.tindie.com/products/clokworkgremlin/8x8-led-matrix-improved/
+	// APA102 and HD107S:
+	// Note that despite the datasheet, an "end frame" is not necessary, and serves
+	// only to push data to additional LEDs if you have more than one board connected.
+	// Additional "start frames" are actually recommended for this action, as they will
+	// prevent LEDs from lighting unexpectedly.
 }
 
 const display_led_rgb_driver_t display_led_apa102 = {
