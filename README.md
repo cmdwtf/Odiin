@@ -13,21 +13,26 @@ The order in which I'm adding features is going to be mostly random depending on
 |Feature|Status|Notes|
 |:-|:-:|:-|
 |NFC Forum Type 2 Tag Emulation|✔*Partial*|Implementing a happy path as I go. Lots of functions left to handle.|
-|NTag21X Emulation|✔*Partial*|As above, just working on "making it work" first.|
+|NTAG215 Emulation|✔*Partial*|As above, just working on "making it work" first.|
+|NTAG213 Emulation|✔*Partial*||
+|NTAG216 Emulation|✔*Partial*||
+|MIFARE Classic Emulation|❌ (Planned)||
+|MIFARE Ultralight C Emulation|❌ (Planned)||
+|Bootloader for easy USB Firmware Updates|✔|UF2 Style Bootloader|
 |USB Mass Storage Emulation|✔|Connect via USB, and edit files on the SD Card!|
 |Tag File loading/saving|✔*Partial*\*|~~Soon™!~~ See note below.|
 |NDEF Payload Format|❌ (Planned)|Less Soon™!|
 |NFC Forum Type 1/3/4/5 Tag Emulation|🎄|*Maybe!*|
-|Bootloader for easy USB Firmware Updates|✔|UF2 Style Bootloader|
 
 🎄 *Magic Christmas Land Wishlist* - I hope to take a look at them one day, if it's possible with the hardware.
 \* Right now it just loads up tags of a specific size. There will be issues if the file isn't the expected size, or the expected format. It's on the list to handle this a little better, there's just a few laundry list items that are above it.
 
 ## What's it look like in action?
 
-Okay, this project is still in the very early stages, but if you want to get a quick look of it working, check out this [video I put on YouTube](https://youtu.be/bRNZewXajJM)!
+If you want to get a quick look of Odiin working, check out this [video on YouTube](https://youtu.be/yT7FT1VdZQo)!
 
-[![Sometimes it takes a little lightning to make magic.](http://img.youtube.com/vi/bRNZewXajJM/0.jpg)](http://www.youtube.com/watch?v=bRNZewXajJM "Odiin in very rough action!")
+[![Sometimes it takes a little lightning to make magic.](http://img.youtube.com/vi/yT7FT1VdZQo/0.jpg)](http://www.youtube.com/watch?v=yT7FT1VdZQo "Odiin in very rough action!")
+If you were curious, here was the much earlier [proof of concept](https://youtu.be/bRNZewXajJM) video!
 
 ## Current Hardware
 
@@ -35,13 +40,15 @@ Currently Odiin is being developed on a [Pitaya Go](https://makerdiary.com/produ
 
 To flash, I'm using a makerdiary's [Pitaya-Link](https://makerdiary.com/products/pitaya-link). It's a CMSIS-DAP/DAPLink based flash/debug probe, and is pretty wonderful given the feature set and price point. Ideally I won't need to keep using it as I finish fleshing out the bootloader, but it's definitely needed while I'm debugging.
 
-Debugging and logging: I'm still ocasionally using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work. As well, as I'm using the Pitaya-Link, I'm able to use the VCP it presents as well. Though, it doesn't seem to like higher baud rates for now.
+Debugging and logging: I'm still occasionally using a [USB to TTL](https://amzn.to/2OSYcJb) cable for now, so I can maintain the connection through device reboots. This is really entirely optional, and any 3.3v TTL adapter would work. As well, as I'm using the Pitaya-Link, I'm able to use the VCP it presents as well. Though, it doesn't seem to like higher baud rates for now.
 
 Display: I'm using a 320x240 pixel LCD, driven by an ILI9341. Particularly, I'm using this [HiLetgo 2.2" Display](https://amzn.to/343kaSs). The display code is decently abstracted (not perfect, mind you), that I should be able to swap in another display or driver and get going with only a little effort. It also provides an SD card slot for storage!
 
 Storage: Since the display has an SD Card slot, I'm using [these Kootion Micro SDHC Cards](https://amzn.to/3iMW0Qm) and [these low profile adapters](https://amzn.to/3kR3EuU) to slot them in. I'd like a lower profile adapter, or something I could more permanently affix to it, but these will do.
 
 I/O: My input is all going to be mounted on the Biifröst Bridge PCB. I'm currently using the E-Switch JS1400 as a 5-way navigation switch (Digi-Key EG5857-ND), and a pair of E-Switch TL9100 (Digi-Key EG5501CT-ND). I've also got a spot for an ARGB LED (APA102) on the board (Digi-Key 1528-1436-ND). If you're building this yourself, you can probably get away just fine with one of the breakout switches I talk about in the older hardware section below!
+
+I've tried to put together a BoM for everything I've used in the [.hardware/Prototype](https://github.com/nitz/Odiin/tree/main/.hardware/Prototype) folder. If you want to build your own like mine, that's where you should start!
 
 ### Biifröst Bridge
 
@@ -94,7 +101,7 @@ If you'd like license this project or a part of it's code for a specific purpose
 
 This is software that I didn't use directly, but was able to glean information from for my implementations of things.
 - [Zephyr](https://github.com/zephyrproject-rtos/zephyr): Apache-2.0 - Various authors/copyrights. When I'm not in a "do it from scratch" mood next time, I'm going for Zephyr.
-- [AdaFruit](https://www.adafruit.com/): No project in particular. Just their endless wealth of tutorials and community.
+- [AdaFruit](https://www.adafruit.com/): No project in particular. Just their endless wealth of tutorials (especially on NFC!) and community.
 
 *If you've noticed I'm using a piece of code that isn't mentioned here, please make a PR/issue to add it. I want everyone to get the credit they deserve!*
 
