@@ -32,6 +32,7 @@ The order in which I'm adding features is going to be mostly random depending on
 If you want to get a quick look of Odiin working, check out this [video on YouTube](https://youtu.be/yT7FT1VdZQo)!
 
 [![Sometimes it takes a little lightning to make magic.](http://img.youtube.com/vi/yT7FT1VdZQo/0.jpg)](http://www.youtube.com/watch?v=yT7FT1VdZQo "Odiin in very rough action!")
+
 If you were curious, here was the much earlier [proof of concept](https://youtu.be/bRNZewXajJM) video!
 
 ## Current Hardware
