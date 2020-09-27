@@ -49,13 +49,13 @@ Storage: Since the display has an SD Card slot, I'm using [these Kootion Micro S
 
 I/O: My input is all going to be mounted on the Biifröst Bridge PCB. I'm currently using the E-Switch JS1400 as a 5-way navigation switch (Digi-Key EG5857-ND), and a pair of E-Switch TL9100 (Digi-Key EG5501CT-ND). I've also got a spot for an ARGB LED (APA102) on the board (Digi-Key 1528-1436-ND). If you're building this yourself, you can probably get away just fine with one of the breakout switches I talk about in the older hardware section below!
 
-I've tried to put together a BoM for everything I've used in the [.hardware/Prototype](https://github.com/nitz/Odiin/tree/main/.hardware/Prototype) folder. If you want to build your own like mine, that's where you should start!
+I've tried to put together a BoM for everything I've used in the [.hardware/Prototype](https://github.com/cmdwtf/Odiin/tree/main/.hardware/Prototype) folder. If you want to build your own like mine, that's where you should start!
 
 ### Biifröst Bridge
 
 The Biifröst is my current solution to binding the dev kit to the screen and input. Ideally I'll design a real PCB incorporating more of the base elements, but for the time being it was a cheap and effective way to create something that should fit compactly into a case.
 
-The PCB design is incorporated into this project as a submodule in the `hardware` folder, or you can take a look at it's repository here: [BiiFrost](https://github.com/nitz/Biifrost).
+The PCB design is incorporated into this project as a submodule in the `hardware` folder, or you can take a look at it's repository here: [BiiFrost](https://github.com/cmdwtf/Biifrost).
 
 ## Previous Hardware
 

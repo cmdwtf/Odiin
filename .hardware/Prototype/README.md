@@ -8,7 +8,7 @@ The information that follows here is information about building one of your own,
 
 ## Image
 
-<img src="https://raw.githubusercontent.com/nitz/Odiin/main/.hardware/Prototype/prototype.jpg" alt="Odiin Prototype without case" width="300" />
+<img src="https://raw.githubusercontent.com/cmdwtf/Odiin/main/.hardware/Prototype/prototype.jpg" alt="Odiin Prototype without case" width="300" />
 * Odiin Prototype, sans case. *
 
 ## Bill of Materials
