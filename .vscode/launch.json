@@ -18,7 +18,7 @@
             "serverLaunchTimeout": 20000,
             "filterStderr": true,
             "filterStdout": false,
-            "preLaunchTask": "Make",
+            "preLaunchTask": "Build (Debug)",
 			"MIMode": "gdb",
             "setupCommands": [
                 {
