@@ -105,9 +105,20 @@ namespace nfc::nxp::ntag21x
 		} Descriptor;
 
 		// [ref:NTAG 10.5]
-		const Descriptor Ntag215 =
+		const Descriptor Ntag213 =
 			{
-				(FieldType)Header::FixedDefault,
+            	(FieldType)Header::FixedDefault,
+				(FieldType)Vendor::NxpSemiconductors,
+				(FieldType)Type::Ntag,
+				(FieldType)Subtype::Subtype50pF,
+				(FieldType)Major::Major1,
+				(FieldType)Minor::Minior0,
+				(FieldType)Storage::Size144Bytes,
+				(FieldType)Protcol::Iso14443,
+		};
+                const Descriptor Ntag215 =
+			{
+            	(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
 				(FieldType)Type::Ntag,
 				(FieldType)Subtype::Subtype50pF,
@@ -116,7 +127,21 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Storage::Size504Bytes,
 				(FieldType)Protcol::Iso14443,
 		};
-	} // namespace version
+                const Descriptor Ntag216 =
+			{
+                (FieldType)Header::FixedDefault,
+				(FieldType)Vendor::NxpSemiconductors,
+				(FieldType)Type::Ntag,
+				(FieldType)Subtype::Subtype50pF,
+				(FieldType)Major::Major1,
+				(FieldType)Minor::Minior0,
+				(FieldType)Storage::Size888Bytes,
+				(FieldType)Protcol::Iso14443,
+		};
+
+        static Descriptor descriptors[] = { Ntag213, Ntag215, Ntag216 };
+		
+ 	} // namespace version
 
 	namespace signature
 	{
