@@ -107,7 +107,7 @@ namespace nfc::nxp::ntag21x
 		// [ref:NTAG 10.5]
 		const Descriptor Ntag213 =
 			{
-            	(FieldType)Header::FixedDefault,
+				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
 				(FieldType)Type::Ntag,
 				(FieldType)Subtype::Subtype50pF,
@@ -116,9 +116,9 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Storage::Size144Bytes,
 				(FieldType)Protcol::Iso14443,
 		};
-                const Descriptor Ntag215 =
+		const Descriptor Ntag215 =
 			{
-            	(FieldType)Header::FixedDefault,
+				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
 				(FieldType)Type::Ntag,
 				(FieldType)Subtype::Subtype50pF,
@@ -127,9 +127,9 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Storage::Size504Bytes,
 				(FieldType)Protcol::Iso14443,
 		};
-                const Descriptor Ntag216 =
+		const Descriptor Ntag216 =
 			{
-                (FieldType)Header::FixedDefault,
+				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
 				(FieldType)Type::Ntag,
 				(FieldType)Subtype::Subtype50pF,
@@ -139,9 +139,9 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Protcol::Iso14443,
 		};
 
-        static Descriptor descriptors[] = { Ntag213, Ntag215, Ntag216 };
-		
- 	} // namespace version
+		static Descriptor Descriptors[] = {Ntag213, Ntag215, Ntag216};
+
+	} // namespace version
 
 	namespace signature
 	{
@@ -149,13 +149,15 @@ namespace nfc::nxp::ntag21x
 		constexpr size_t ResponseLength = 32;
 
 		// #crypto: generate a nice looking signature, I guess.
+		// clang-format off
 		constexpr uint8_t DeviceSignature[ResponseLength] =
-			{
+		{
 				0xD3, 0xC0, 0xD3, 0x00, 0xC0, 0x01, 0xBA, 0xBE,
 				0xD3, 0xC0, 0xD3, 0x00, 0xC0, 0x01, 0xBA, 0xBE,
 				0xD3, 0xC0, 0xD3, 0x00, 0xC0, 0x01, 0xBA, 0xBE,
 				0xD3, 0xC0, 0xD3, 0x00, 0xC0, 0x01, 0xBA, 0xBE,
 		};
+		// clang-format on
 
 	} // namespace signature
 
@@ -165,9 +167,10 @@ namespace nfc::nxp::ntag21x
 		constexpr size_t ResponseLength = 2;
 
 		constexpr uint8_t GenericPasswordAck[ResponseLength] = {
-			0x00, 0x00,
+			0x00,
+			0x00,
 		};
-	}
+	} // namespace password
 
 	// [ref:NTAG 2.1]
 	// #cleanup: this could probably be organized better/elsewhere
@@ -178,22 +181,22 @@ namespace nfc::nxp::ntag21x
 			constexpr size_t TotalCapacity = 180;
 			constexpr size_t AvailableMemory = 144;
 			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
-		}
+		} // namespace ntag213
 
 		namespace ntag215
 		{
 			constexpr size_t TotalCapacity = 540;
 			constexpr size_t AvailableMemory = 504;
 			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
-		}
+		} // namespace ntag215
 
 		namespace ntag216
 		{
 			constexpr size_t TotalCapacity = 924;
 			constexpr size_t AvailableMemory = 888;
 			constexpr size_t TotalPages = type_2_tag::GetBlockCountFromByteLength(TotalCapacity);
-		}
-	} // namespace capacities
+		} // namespace ntag216
+	}     // namespace capacities
 
 	// [ref:NTAG 1.3, 8.5.1]
 	constexpr size_t UniqueIdLength = 7;
@@ -201,8 +204,14 @@ namespace nfc::nxp::ntag21x
 	// [ref:NTAG 2.1]
 	// NTAGs refer to blocks as pages, so these are provided as aliases for the block names in nfc_type_2_tag.
 	constexpr size_t BytesPerPage = type_2_tag::BytesPerBlock;
-	inline constexpr size_t GetPageCountFromByteLength(size_t len) { return type_2_tag::GetBlockCountFromByteLength(len); }
-	inline constexpr size_t GetMemoryAddressFromPageNumber(size_t page) { return type_2_tag::GetMemoryAddressFromBlockNumber(page); }
+	inline constexpr size_t GetPageCountFromByteLength(size_t len)
+	{
+		return type_2_tag::GetBlockCountFromByteLength(len);
+	}
+	inline constexpr size_t GetMemoryAddressFromPageNumber(size_t page)
+	{
+		return type_2_tag::GetMemoryAddressFromBlockNumber(page);
+	}
 } // namespace nfc::nxp::ntag21x
 
 #include "nxp_ntag21x_payloads.hpp"

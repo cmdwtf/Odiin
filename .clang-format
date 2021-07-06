@@ -1,7 +1,13 @@
 ---
-BasedOnStyle: Microsoft
 AlignEscapedNewlines: Left
 AlignTrailingComments: 'true'
-PointerAlignment: Left
+BasedOnStyle: Microsoft
+BreakBeforeBraces: Allman
 ColumnLimit: 0
+Cpp11BracedListStyle: 'true'
+FixNamespaceComments: 'true'
+NamespaceIndentation: All
+PointerAlignment: Left
+SpaceBeforeCpp11BracedList: 'true'
+SpacesInContainerLiterals: 'true'
 UseTab: ForContinuationAndIndentation
