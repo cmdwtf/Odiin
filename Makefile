@@ -12,8 +12,10 @@ HEAP_SIZE_BYTES := 32768
 STACK_SIZE_BYTES := 32768
 
 # File names
+GIT_COMMIT_HASH != git rev-parse HEAD | head -c8
 GIT_VERSION_RAW != git describe --dirty --always --tags
 GIT_VERSION = $(subst -,+,$(GIT_VERSION_RAW))
+GIT_COMMIT_COUNT != git rev-list HEAD --count
 FILENAME_OUTPUT_MERGED_HEX := $(PROJECT)-$(GIT_VERSION).hex
 FILENAME_OUTPUT_UF2 := $(PROJECT)-$(GIT_VERSION).uf2
 
@@ -238,6 +240,21 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/mdk \
 
 ########################################################
+## Vendor: amiitool
+########################################################
+
+AMIITOOL_DIR := $(VENDOR_ROOT)/amiitool
+AMIITOOL_SRC_DIR := $(AMIITOOL_DIR)/src
+
+# No source files, header only library.
+
+INC_FOLDERS += \
+  $(AMIITOOL_DIR)/include \
+
+SRC_FILES += \
+  $(wildcard $(AMIITOOL_SRC_DIR)/*.c) \
+
+########################################################
 ## Vendor: Cie1931
 ########################################################
 
@@ -388,7 +405,9 @@ CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += $(DEV_PLATFORM_FLAGS)
 CFLAGS += -DFLOAT_ABI_HARD
-CFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
+CFLAGS += -DGIT_HASH=$(GIT_VERSION)
+CFLAGS += -DGIT_HASH_INT=0x$(GIT_COMMIT_HASH)
+CFLAGS += -DGIT_COMMIT_COUNT=$(GIT_COMMIT_COUNT)
 CFLAGS += -DNRF52840_XXAA
 # Enable lots of warnings to catch common mistakes.
 CFLAGS += -Wall -Werror -Wshadow
@@ -426,7 +445,9 @@ ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 ASMFLAGS += $(APP_DEFINES)
 ASMFLAGS += $(DEV_PLATFORM_FLAGS)
 ASMFLAGS += -DFLOAT_ABI_HARD
-ASMFLAGS += -DPRODUCT_GIT_HASH=$(GIT_VERSION)
+ASMFLAGS += -DGIT_HASH=$(GIT_VERSION)
+ASMFLAGS += -DGIT_HASH_INT=0x$(GIT_COMMIT_HASH)
+ASMFLAGS += -DGIT_COMMIT_COUNT=$(GIT_COMMIT_COUNT)
 ASMFLAGS += -DNRF52840_XXAA
 ASMFLAGS += -mcpu=cortex-m4
 ASMFLAGS += -mthumb -mabi=aapcs
