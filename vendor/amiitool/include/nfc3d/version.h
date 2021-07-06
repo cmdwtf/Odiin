@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-const char * nfc3d_version_fork();
+const char* nfc3d_version_fork();
 uint32_t nfc3d_version_build();
 uint32_t nfc3d_version_commit();
 

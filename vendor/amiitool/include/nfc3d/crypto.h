@@ -8,9 +8,9 @@
 #define HAVE_NFC3D_CRYPTO_H
 
 #include "app_error.h"
-#include "nrf_log.h"
 #include "nrf_crypto.h"
 #include "nrf_crypto_error.h"
+#include "nrf_log.h"
 
 #define AES_ERROR_CHECK(error)                                    \
 	do                                                            \

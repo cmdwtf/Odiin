@@ -9,9 +9,9 @@
 #ifndef HAVE_NFC3D_AMIIBO_H
 #define HAVE_NFC3D_AMIIBO_H
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "keygen.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #define NFC3D_AMIIBO_SIZE 520
 
@@ -23,9 +23,9 @@ typedef struct
 } nfc3d_amiibo_keys;
 #pragma pack()
 
-bool nfc3d_amiibo_unpack(const nfc3d_amiibo_keys *amiiboKeys, const uint8_t *tag, uint8_t *plain);
-void nfc3d_amiibo_pack(const nfc3d_amiibo_keys *amiiboKeys, const uint8_t *plain, uint8_t *tag);
-bool nfc3d_amiibo_load_keys(nfc3d_amiibo_keys *amiiboKeys, const uint8_t *data);
-void nfc3d_amiibo_copy_app_data(const uint8_t *src, uint8_t *dst);
+bool nfc3d_amiibo_unpack(const nfc3d_amiibo_keys* amiiboKeys, const uint8_t* tag, uint8_t* plain);
+void nfc3d_amiibo_pack(const nfc3d_amiibo_keys* amiiboKeys, const uint8_t* plain, uint8_t* tag);
+bool nfc3d_amiibo_load_keys(nfc3d_amiibo_keys* amiiboKeys, const uint8_t* data);
+void nfc3d_amiibo_copy_app_data(const uint8_t* src, uint8_t* dst);
 
 #endif

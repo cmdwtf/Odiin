@@ -1,0 +1,7 @@
+---
+BasedOnStyle: Microsoft
+AlignEscapedNewlines: Left
+AlignTrailingComments: 'true'
+PointerAlignment: Left
+ColumnLimit: 0
+UseTab: ForContinuationAndIndentation

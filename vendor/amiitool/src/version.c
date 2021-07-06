@@ -8,7 +8,7 @@
 #include <nfc3d/version.h>
 #include <stdio.h>
 
-const char *nfc3d_version_fork()
+const char* nfc3d_version_fork()
 {
 	return "cmdwtf/Odiin";
 }

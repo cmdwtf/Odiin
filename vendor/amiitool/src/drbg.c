@@ -9,7 +9,7 @@
 #include <assert.h>
 #include <string.h>
 
-void nfc3d_drbg_init(nfc3d_drbg_ctx *ctx, const uint8_t *hmacKey, size_t hmacKeySize, const uint8_t *seed, size_t seedSize)
+void nfc3d_drbg_init(nfc3d_drbg_ctx* ctx, const uint8_t* hmacKey, size_t hmacKeySize, const uint8_t* seed, size_t seedSize)
 {
 	ret_code_t ret_val = NRF_SUCCESS;
 
@@ -38,7 +38,7 @@ void nfc3d_drbg_init(nfc3d_drbg_ctx *ctx, const uint8_t *hmacKey, size_t hmacKey
 	APP_ERROR_CHECK(ret_val);
 }
 
-void nfc3d_drbg_step(nfc3d_drbg_ctx *ctx, uint8_t *output)
+void nfc3d_drbg_step(nfc3d_drbg_ctx* ctx, uint8_t* output)
 {
 	ret_code_t ret_val = NRF_SUCCESS;
 	size_t digest_size = NFC3D_DRBG_OUTPUT_SIZE;
@@ -70,12 +70,12 @@ void nfc3d_drbg_step(nfc3d_drbg_ctx *ctx, uint8_t *output)
 	nrf_crypto_hmac_finalize(&ctx->hmacCtx, output, &digest_size);
 }
 
-void nfc3d_drbg_cleanup(nfc3d_drbg_ctx *ctx)
+void nfc3d_drbg_cleanup(nfc3d_drbg_ctx* ctx)
 {
 	assert(ctx != NULL);
 }
 
-void nfc3d_drbg_generate_bytes(const uint8_t *hmacKey, size_t hmacKeySize, const uint8_t *seed, size_t seedSize, uint8_t *output, size_t outputSize)
+void nfc3d_drbg_generate_bytes(const uint8_t* hmacKey, size_t hmacKeySize, const uint8_t* seed, size_t seedSize, uint8_t* output, size_t outputSize)
 {
 	uint8_t temp[NFC3D_DRBG_OUTPUT_SIZE];
 

@@ -5,25 +5,25 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "nfc3d/drbg.h"
 #include "nfc3d/keygen.h"
+#include "nfc3d/drbg.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
 #if defined(NRF52840_XXAA)
 // string.h doesn't want to give memccpy to me on this platform.
-void *memccpy(void *__restrict, const void *__restrict, int, size_t);
+void* memccpy(void* __restrict, const void* __restrict, int, size_t);
 #endif // NRF52840_XXAA
 
-void nfc3d_keygen_prepare_seed(const nfc3d_keygen_masterkeys *baseKeys, const uint8_t *baseSeed, uint8_t *output, size_t *outputSize)
+void nfc3d_keygen_prepare_seed(const nfc3d_keygen_masterkeys* baseKeys, const uint8_t* baseSeed, uint8_t* output, size_t* outputSize)
 {
 	assert(baseKeys != NULL);
 	assert(baseSeed != NULL);
 	assert(output != NULL);
 	assert(outputSize != NULL);
 
-	uint8_t *start = output;
+	uint8_t* start = output;
 
 	// 1: Copy whole type string
 	output = memccpy(output, baseKeys->typeString, '\0', sizeof(baseKeys->typeString));
@@ -52,11 +52,11 @@ void nfc3d_keygen_prepare_seed(const nfc3d_keygen_masterkeys *baseKeys, const ui
 	*outputSize = output - start;
 }
 
-void nfc3d_keygen(const nfc3d_keygen_masterkeys *baseKeys, const uint8_t *baseSeed, nfc3d_keygen_derivedkeys *derivedKeys)
+void nfc3d_keygen(const nfc3d_keygen_masterkeys* baseKeys, const uint8_t* baseSeed, nfc3d_keygen_derivedkeys* derivedKeys)
 {
 	uint8_t preparedSeed[NFC3D_DRBG_MAX_SEED_SIZE];
 	size_t preparedSeedSize;
 
 	nfc3d_keygen_prepare_seed(baseKeys, baseSeed, preparedSeed, &preparedSeedSize);
-	nfc3d_drbg_generate_bytes(baseKeys->hmacKey, sizeof(baseKeys->hmacKey), preparedSeed, preparedSeedSize, (uint8_t *)derivedKeys, sizeof(*derivedKeys));
+	nfc3d_drbg_generate_bytes(baseKeys->hmacKey, sizeof(baseKeys->hmacKey), preparedSeed, preparedSeedSize, (uint8_t*)derivedKeys, sizeof(*derivedKeys));
 }

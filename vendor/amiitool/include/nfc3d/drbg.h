@@ -8,12 +8,12 @@
 #ifndef HAVE_NFC3D_DRBG_H
 #define HAVE_NFC3D_DRBG_H
 
+#include "nfc3d/crypto.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include "nfc3d/crypto.h"
 
 #define NFC3D_DRBG_MAX_SEED_SIZE 480 /* Hardcoded max size in 3DS NFC module */
-#define NFC3D_DRBG_OUTPUT_SIZE 32	 /* Every iteration generates 32 bytes */
+#define NFC3D_DRBG_OUTPUT_SIZE 32    /* Every iteration generates 32 bytes */
 
 typedef struct
 {
@@ -28,9 +28,9 @@ typedef struct
 	size_t hmacKeySize;
 } nfc3d_drbg_ctx;
 
-void nfc3d_drbg_init(nfc3d_drbg_ctx *ctx, const uint8_t *hmacKey, size_t hmacKeySize, const uint8_t *seed, size_t seedSize);
-void nfc3d_drbg_step(nfc3d_drbg_ctx *ctx, uint8_t *output);
-void nfc3d_drbg_cleanup(nfc3d_drbg_ctx *ctx);
-void nfc3d_drbg_generate_bytes(const uint8_t *hmacKey, size_t hmacKeySize, const uint8_t *seed, size_t seedSize, uint8_t *output, size_t outputSize);
+void nfc3d_drbg_init(nfc3d_drbg_ctx* ctx, const uint8_t* hmacKey, size_t hmacKeySize, const uint8_t* seed, size_t seedSize);
+void nfc3d_drbg_step(nfc3d_drbg_ctx* ctx, uint8_t* output);
+void nfc3d_drbg_cleanup(nfc3d_drbg_ctx* ctx);
+void nfc3d_drbg_generate_bytes(const uint8_t* hmacKey, size_t hmacKeySize, const uint8_t* seed, size_t seedSize, uint8_t* output, size_t outputSize);
 
 #endif
