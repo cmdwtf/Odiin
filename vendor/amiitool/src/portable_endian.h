@@ -58,9 +58,11 @@
 #       define be64toh(x) betoh64(x)
 #       define le64toh(x) letoh64(x)
 
-#elif defined(__WINDOWS__)
+#elif defined(NRF52840_XXAA) || defined(__WINDOWS__)
 
-#       include <windows.h>
+#       if defined(__WINDOWS__)
+#           include <windows.h>
+#       endif // __WINDOWS__
 
 #       if BYTE_ORDER == LITTLE_ENDIAN
 

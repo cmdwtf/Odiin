@@ -1,22 +1,25 @@
 /*
+ * (c) 2020-2021 nitz — chris marc dailey https://cmd.wtf
  * (c) 2015-2017 Marcos Del Sol Vives
  * (c) 2016      javiMaD
  *
  * SPDX-License-Identifier: MIT
  */
 
-#include "nfc3d/amiibo.h"
-#include "util.h"
-#include "mbedtls/md.h"
-#include "mbedtls/aes.h"
 #include <errno.h>
-#include "portable_endian.h"
 
+#include "nfc3d/amiibo.h"
+#include "nfc3d/crypto.h"
+#include "portable_endian.h"
 
 #define HMAC_POS_DATA 0x008
 #define HMAC_POS_TAG 0x1B4
+#define HMAC_BUFFER_LENGTH 0x20
 
-void nfc3d_amiibo_calc_seed(const uint8_t * dump, uint8_t * key) {
+#define AMIIBO_CIPHER_LENGTH 0x188
+
+void nfc3d_amiibo_calc_seed(const uint8_t *dump, uint8_t *key)
+{
 	memcpy(key + 0x00, dump + 0x029, 0x02);
 	memset(key + 0x02, 0x00, 0x0E);
 	memcpy(key + 0x10, dump + 0x1D4, 0x08);
@@ -24,24 +27,29 @@ void nfc3d_amiibo_calc_seed(const uint8_t * dump, uint8_t * key) {
 	memcpy(key + 0x20, dump + 0x1E8, 0x20);
 }
 
-void nfc3d_amiibo_keygen(const nfc3d_keygen_masterkeys * masterKeys, const uint8_t * dump, nfc3d_keygen_derivedkeys * derivedKeys) {
+void nfc3d_amiibo_keygen(const nfc3d_keygen_masterkeys *masterKeys, const uint8_t *dump, nfc3d_keygen_derivedkeys *derivedKeys)
+{
 	uint8_t seed[NFC3D_KEYGEN_SEED_SIZE];
 
 	nfc3d_amiibo_calc_seed(dump, seed);
 	nfc3d_keygen(masterKeys, seed, derivedKeys);
 }
 
-void nfc3d_amiibo_cipher(const nfc3d_keygen_derivedkeys * keys, const uint8_t * in, uint8_t * out) {
-	mbedtls_aes_context aes;
-	size_t nc_off = 0;
-	unsigned char nonce_counter[16];
-	unsigned char stream_block[16];
+void nfc3d_amiibo_cipher(const nfc3d_keygen_derivedkeys *keys, const uint8_t *in, uint8_t *out, nrf_crypto_operation_t operation)
+{
+	ret_code_t ret_val = NRF_SUCCESS;
+	nrf_crypto_aes_context_t aes;
+	size_t data_size = AMIIBO_CIPHER_LENGTH;
 
-	mbedtls_aes_setkey_enc( &aes, keys->aesKey, 128 );
-	memset(nonce_counter, 0, sizeof(nonce_counter));
-	memset(stream_block, 0, sizeof(stream_block));
-	memcpy(nonce_counter, keys->aesIV, sizeof(nonce_counter));
-	mbedtls_aes_crypt_ctr( &aes, 0x188, &nc_off, nonce_counter, stream_block, in + 0x02C, out + 0x02C );
+	ret_val = nrf_crypto_aes_init(&aes, &g_nrf_crypto_aes_ctr_128_info, operation);
+	AES_ERROR_CHECK(ret_val);
+	ret_val = nrf_crypto_aes_key_set(&aes, (uint8_t *)keys->aesKey);
+	AES_ERROR_CHECK(ret_val);
+	ret_val = nrf_crypto_aes_iv_set(&aes, (uint8_t *)keys->aesIV);
+	AES_ERROR_CHECK(ret_val);
+	ret_val = nrf_crypto_aes_finalize(&aes, (uint8_t *)(in + 0x02C), AMIIBO_CIPHER_LENGTH,
+									  out + 0x02C, &data_size);
+	AES_ERROR_CHECK(ret_val);
 
 	memcpy(out + 0x000, in + 0x000, 0x008);
 	// Data signature NOT copied
@@ -50,7 +58,8 @@ void nfc3d_amiibo_cipher(const nfc3d_keygen_derivedkeys * keys, const uint8_t * 
 	memcpy(out + 0x1D4, in + 0x1D4, 0x034);
 }
 
-void nfc3d_amiibo_tag_to_internal(const uint8_t * tag, uint8_t * intl) {
+void nfc3d_amiibo_tag_to_internal(const uint8_t *tag, uint8_t *intl)
+{
 	memcpy(intl + 0x000, tag + 0x008, 0x008);
 	memcpy(intl + 0x008, tag + 0x080, 0x020);
 	memcpy(intl + 0x028, tag + 0x010, 0x024);
@@ -60,7 +69,8 @@ void nfc3d_amiibo_tag_to_internal(const uint8_t * tag, uint8_t * intl) {
 	memcpy(intl + 0x1DC, tag + 0x054, 0x02C);
 }
 
-void nfc3d_amiibo_internal_to_tag(const uint8_t * intl, uint8_t * tag) {
+void nfc3d_amiibo_internal_to_tag(const uint8_t *intl, uint8_t *tag)
+{
 	memcpy(tag + 0x008, intl + 0x000, 0x008);
 	memcpy(tag + 0x080, intl + 0x008, 0x020);
 	memcpy(tag + 0x010, intl + 0x028, 0x024);
@@ -70,10 +80,14 @@ void nfc3d_amiibo_internal_to_tag(const uint8_t * intl, uint8_t * tag) {
 	memcpy(tag + 0x054, intl + 0x1DC, 0x02C);
 }
 
-bool nfc3d_amiibo_unpack(const nfc3d_amiibo_keys * amiiboKeys, const uint8_t * tag, uint8_t * plain) {
+bool nfc3d_amiibo_unpack(const nfc3d_amiibo_keys *amiiboKeys, const uint8_t *tag, uint8_t *plain)
+{
+	ret_code_t ret_val = NRF_SUCCESS;
 	uint8_t internal[NFC3D_AMIIBO_SIZE];
 	nfc3d_keygen_derivedkeys dataKeys;
 	nfc3d_keygen_derivedkeys tagKeys;
+	nrf_crypto_hmac_context_t ctx;
+	size_t digest_length = HMAC_BUFFER_LENGTH;
 
 	// Convert format
 	nfc3d_amiibo_tag_to_internal(tag, internal);
@@ -83,73 +97,94 @@ bool nfc3d_amiibo_unpack(const nfc3d_amiibo_keys * amiiboKeys, const uint8_t * t
 	nfc3d_amiibo_keygen(&amiiboKeys->tag, internal, &tagKeys);
 
 	// Decrypt
-	nfc3d_amiibo_cipher(&dataKeys, internal, plain);
+	nfc3d_amiibo_cipher(&dataKeys, internal, plain, NRF_CRYPTO_DECRYPT);
 
 	// Regenerate tag HMAC. Note: order matters, data HMAC depends on tag HMAC!
-	mbedtls_md_hmac( mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), tagKeys.hmacKey, sizeof(tagKeys.hmacKey),	
-			 plain + 0x1D4, 0x34, plain + HMAC_POS_TAG );
+	digest_length = HMAC_BUFFER_LENGTH;
+	ret_val = nrf_crypto_hmac_calculate(&ctx,
+										&g_nrf_crypto_hmac_sha256_info,
+										plain + HMAC_POS_TAG,
+										&digest_length,
+										tagKeys.hmacKey,
+										sizeof(tagKeys.hmacKey),
+										plain + 0x1D4, 0x34);
+	APP_ERROR_CHECK(ret_val);
 
 	// Regenerate data HMAC
-	mbedtls_md_hmac( mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), dataKeys.hmacKey, sizeof(dataKeys.hmacKey),	
-			 plain + 0x029, 0x1DF, plain + HMAC_POS_DATA );
+	digest_length = HMAC_BUFFER_LENGTH;
+	ret_val = nrf_crypto_hmac_calculate(&ctx,
+										&g_nrf_crypto_hmac_sha256_info,
+										plain + HMAC_POS_DATA,
+										&digest_length,
+										dataKeys.hmacKey,
+										sizeof(dataKeys.hmacKey),
+										plain + 0x029, 0x1DF);
+	APP_ERROR_CHECK(ret_val);
 
-	return
-			memcmp(plain + HMAC_POS_DATA, internal + HMAC_POS_DATA, 32) == 0 &&
-			memcmp(plain + HMAC_POS_TAG, internal + HMAC_POS_TAG, 32) == 0;
+	return memcmp(plain + HMAC_POS_DATA, internal + HMAC_POS_DATA, 32) == 0 &&
+		   memcmp(plain + HMAC_POS_TAG, internal + HMAC_POS_TAG, 32) == 0;
 }
 
-void nfc3d_amiibo_pack(const nfc3d_amiibo_keys * amiiboKeys, const uint8_t * plain, uint8_t * tag) {
+void nfc3d_amiibo_pack(const nfc3d_amiibo_keys *amiiboKeys, const uint8_t *plain, uint8_t *tag)
+{
+	ret_code_t ret_val = NRF_SUCCESS;
 	uint8_t cipher[NFC3D_AMIIBO_SIZE];
 	nfc3d_keygen_derivedkeys tagKeys;
 	nfc3d_keygen_derivedkeys dataKeys;
+	nrf_crypto_hmac_context_t ctx;
+	size_t digest_length = HMAC_BUFFER_LENGTH;
 
 	// Generate keys
 	nfc3d_amiibo_keygen(&amiiboKeys->tag, plain, &tagKeys);
 	nfc3d_amiibo_keygen(&amiiboKeys->data, plain, &dataKeys);
 
 	// Generate tag HMAC
-	mbedtls_md_hmac( mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), tagKeys.hmacKey, sizeof(tagKeys.hmacKey),	
-			 plain + 0x1D4, 0x34, cipher + HMAC_POS_TAG );
+	digest_length = HMAC_BUFFER_LENGTH;
+	ret_val = nrf_crypto_hmac_calculate(&ctx,
+										&g_nrf_crypto_hmac_sha256_info,
+										cipher + HMAC_POS_TAG,
+										&digest_length,
+										tagKeys.hmacKey,
+										sizeof(tagKeys.hmacKey),
+										plain + 0x1D4, 0x34);
+	APP_ERROR_CHECK(ret_val);
 
-	// Init mbedtls HMAC context
-	mbedtls_md_context_t ctx;
-	mbedtls_md_init( &ctx );
-	mbedtls_md_setup( &ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1 );
+	// Init a new nrf5 HMAC context
+	ret_val = nrf_crypto_hmac_init(&ctx, &g_nrf_crypto_hmac_sha256_info, dataKeys.hmacKey, sizeof(dataKeys.hmacKey));
+	APP_ERROR_CHECK(ret_val);
 
 	// Generate data HMAC
-	mbedtls_md_hmac_starts( &ctx, dataKeys.hmacKey, sizeof(dataKeys.hmacKey) );
-	mbedtls_md_hmac_update( &ctx, plain + 0x029, 0x18B ); // Data
-	mbedtls_md_hmac_update( &ctx, cipher + HMAC_POS_TAG, 0x20 ); // Tag HMAC
-	mbedtls_md_hmac_update( &ctx, plain + 0x1D4, 0x34 ); // Here be dragons
+	ret_val = nrf_crypto_hmac_update(&ctx, plain + 0x029, 0x18B); // Data
+	APP_ERROR_CHECK(ret_val);
+	ret_val = nrf_crypto_hmac_update(&ctx, cipher + HMAC_POS_TAG, 0x20); // Tag HMAC
+	APP_ERROR_CHECK(ret_val);
+	ret_val = nrf_crypto_hmac_update(&ctx, plain + 0x1D4, 0x34); // Here be dragons
+	APP_ERROR_CHECK(ret_val);
 
-	mbedtls_md_hmac_finish( &ctx, cipher + HMAC_POS_DATA );
-
-	// HMAC cleanup
-	mbedtls_md_free( &ctx );
+	digest_length = HMAC_BUFFER_LENGTH;
+	ret_val = nrf_crypto_hmac_finalize(&ctx, cipher + HMAC_POS_DATA, &digest_length);
+	APP_ERROR_CHECK(ret_val);
 
 	// Encrypt
-	nfc3d_amiibo_cipher(&dataKeys, plain, cipher);
+	nfc3d_amiibo_cipher(&dataKeys, plain, cipher, NRF_CRYPTO_ENCRYPT);
 
 	// Convert back to hardware
 	nfc3d_amiibo_internal_to_tag(cipher, tag);
 }
 
-bool nfc3d_amiibo_load_keys(nfc3d_amiibo_keys * amiiboKeys, const char * path) {
-	FILE * f = fopen(path, "rb");
-	if (!f) {
+bool nfc3d_amiibo_load_keys(nfc3d_amiibo_keys *amiiboKeys, const uint8_t *data)
+{
+	if (!data)
+	{
 		return false;
 	}
 
-	if (!fread(amiiboKeys, sizeof(*amiiboKeys), 1, f)) {
-		fclose(f);
-		return false;
-	}
-	fclose(f);
+	memcpy(amiiboKeys, data, sizeof(*amiiboKeys));
 
 	if (
 		(amiiboKeys->data.magicBytesSize > 16) ||
-		(amiiboKeys->tag.magicBytesSize > 16)
-	) {
+		(amiiboKeys->tag.magicBytesSize > 16))
+	{
 		errno = EILSEQ;
 		return false;
 	}
@@ -157,11 +192,11 @@ bool nfc3d_amiibo_load_keys(nfc3d_amiibo_keys * amiiboKeys, const char * path) {
 	return true;
 }
 
+void nfc3d_amiibo_copy_app_data(const uint8_t *src, uint8_t *dst)
+{
 
-void nfc3d_amiibo_copy_app_data(const uint8_t * src, uint8_t * dst) {
-
-	uint16_t *ami_nb_wr = (uint16_t*)(dst + 0x29);
-	uint16_t *cfg_nb_wr = (uint16_t*)(dst + 0xB4);
+	uint16_t *ami_nb_wr = (uint16_t *)(dst + 0x29);
+	uint16_t *cfg_nb_wr = (uint16_t *)(dst + 0xB4);
 
 	/* increment write counters */
 	*ami_nb_wr = htobe16(be16toh(*ami_nb_wr) + 1);
@@ -176,4 +211,3 @@ void nfc3d_amiibo_copy_app_data(const uint8_t * src, uint8_t * dst) {
 	/* copy AppData */
 	memcpy(dst + 0xDC, src + 0xDC, 216);
 }
-
