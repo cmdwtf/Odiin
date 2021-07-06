@@ -29,9 +29,9 @@ namespace nfc::nxp::ntag21x
 			return false;
 		}
 
-        Payload newPayload(version::descriptors[payload->GetDataLength() / 450].Data, version::ResponseLength);  //450 arbitrary number to make array index work
-        memcpy(&versionPayload, &newPayload, version::ResponseLength);
-                
+		Payload newPayload(version::Descriptors[payload->GetDataLength() / 450].Data, version::ResponseLength); //450 arbitrary number to make array index work
+		memcpy(&versionPayload, &newPayload, version::ResponseLength);
+
 		return true;
 	}
 

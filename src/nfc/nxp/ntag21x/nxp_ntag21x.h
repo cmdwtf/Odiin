@@ -105,7 +105,7 @@ namespace nfc::nxp::ntag21x
 		} Descriptor;
 
 		// [ref:NTAG 10.5]
-		const Descriptor Ntag213 =
+		constexpr Descriptor Ntag213 =
 			{
 				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
@@ -116,7 +116,7 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Storage::Size144Bytes,
 				(FieldType)Protcol::Iso14443,
 		};
-		const Descriptor Ntag215 =
+		constexpr Descriptor Ntag215 =
 			{
 				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
@@ -127,7 +127,7 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Storage::Size504Bytes,
 				(FieldType)Protcol::Iso14443,
 		};
-		const Descriptor Ntag216 =
+		constexpr Descriptor Ntag216 =
 			{
 				(FieldType)Header::FixedDefault,
 				(FieldType)Vendor::NxpSemiconductors,
@@ -139,7 +139,7 @@ namespace nfc::nxp::ntag21x
 				(FieldType)Protcol::Iso14443,
 		};
 
-		static Descriptor Descriptors[] = {Ntag213, Ntag215, Ntag216};
+		static constexpr Descriptor Descriptors[] = {Ntag213, Ntag215, Ntag216};
 
 	} // namespace version
 
