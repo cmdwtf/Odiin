@@ -29,8 +29,25 @@ namespace nfc::nxp::ntag21x
 			return false;
 		}
 
-		Payload newPayload(version::Descriptors[payload->GetDataLength() / 450].Data, version::ResponseLength); //450 arbitrary number to make array index work
-		memcpy(&versionPayload, &newPayload, version::ResponseLength);
+		const version::Descriptor* payloadVersionDescriptor = nullptr;
+
+		switch (payload->GetDataLength())
+		{
+		case capacities::ntag213::TotalCapacity:
+			payloadVersionDescriptor = &version::Ntag213;
+			break;
+		case capacities::ntag215::TotalCapacity:
+			payloadVersionDescriptor = &version::Ntag215;
+			break;
+		case capacities::ntag216::TotalCapacity:
+			payloadVersionDescriptor = &version::Ntag216;
+			break;
+		default:
+			NRF_LOG_ERROR("Unsupported NTAG data length: %d", payload->GetDataLength())
+			return false;
+		}
+
+		versionPayload.SetData(payloadVersionDescriptor->Data, version::ResponseLength);
 
 		return true;
 	}
