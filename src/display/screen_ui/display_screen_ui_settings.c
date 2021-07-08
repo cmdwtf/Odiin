@@ -14,7 +14,9 @@ static struct {
 	lv_obj_t* nfc;
 	lv_obj_t* nfc_nyi;
 	lv_obj_t* cryptography;
-	lv_obj_t* cryptography_nyi;
+	lv_obj_t* cryptography_key_status_label;
+	lv_obj_t* cryptography_select_keys_button;
+	lv_obj_t* cryptography_clear_keys_button;
 	lv_obj_t* bootloader;
 	lv_obj_t* bootloader_text;
 	lv_obj_t* bootloader_button;
@@ -25,12 +27,19 @@ static lv_style_t style_box;
 
 static ui_common_simple_cb done_cb = NULL;
 static ui_common_float_cb brightness_cb = NULL;
+static ui_common_simple_cb select_crypto_keys_cb = NULL;
+static ui_common_simple_cb clear_crypto_keys_cb = NULL;
 static ui_common_simple_cb enter_dfu_cb = NULL;
 
 static void settings_done_pressed(lv_obj_t* obj, lv_event_t e);
 static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e);
 static void settings_focus_cb(lv_group_t* group);
-static void settings_enter_dfu_pressed(lv_obj_t* button, lv_event_t e);
+
+UI_DEFINE_SIMPLE_BUTTON_PRESS_CALLBACK_HANDLER(settings_select_cryptography_keys_pressed, select_crypto_keys_cb)
+UI_DEFINE_SIMPLE_BUTTON_PRESS_CALLBACK_HANDLER(settings_clear_cryptography_keys_pressed, select_crypto_keys_cb)
+UI_DEFINE_SIMPLE_BUTTON_PRESS_CALLBACK_HANDLER(settings_enter_dfu_pressed, enter_dfu_cb)
+
+static const char* cryptography_key_status_prefix = "Key status: ";
 
 UI_DECLARE_CREATE(UI_NAME)
 {
@@ -114,17 +123,34 @@ UI_DECLARE_CREATE(UI_NAME)
     lv_obj_set_style_local_value_str(ui.cryptography, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, "Cryptography");
 	lv_obj_set_event_cb(ui.cryptography, ui_common_up_down_focus_cb);
 
-	// cryptography coming soon
-	ui.cryptography_nyi = lv_label_create(ui.cryptography, ui.brightness_label);
-	lv_label_set_text(ui.cryptography_nyi, "Cryptography settings are not yet implemented.\n"
-		"They will come in a future update.");
+	// aes key status label
+	ui.cryptography_key_status_label = lv_label_create(ui.cryptography, ui.brightness_label);
+	lv_label_set_text(ui.cryptography_key_status_label, cryptography_key_status_prefix);
+
+	// select aes key(s) button
+	ui.cryptography_select_keys_button = lv_btn_create(ui.cryptography, NULL);
+	lv_obj_set_event_cb(ui.cryptography_select_keys_button, settings_select_cryptography_keys_pressed);
+	lv_obj_set_width_fit(ui.cryptography_select_keys_button, fit_w / 2);
+	lv_obj_set_style_local_border_color(ui.cryptography_select_keys_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_PURPLE);
+	lv_obj_set_style_local_outline_color(ui.cryptography_select_keys_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_RED);
+	lv_obj_t* cryptography_select_keys_button_label = lv_label_create(ui.cryptography_select_keys_button, NULL);
+	lv_label_set_text(cryptography_select_keys_button_label, "Select Key(s)");
+
+	// clear aes key(s) button
+	ui.cryptography_clear_keys_button = lv_btn_create(ui.cryptography, NULL);
+	lv_obj_set_event_cb(ui.cryptography_clear_keys_button, settings_clear_cryptography_keys_pressed);
+	lv_obj_set_width_fit(ui.cryptography_clear_keys_button, fit_w / 2);
+	lv_obj_set_style_local_border_color(ui.cryptography_clear_keys_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_PURPLE);
+	lv_obj_set_style_local_outline_color(ui.cryptography_clear_keys_button, LV_BTN_PART_MAIN, LV_STATE_FOCUSED, LV_COLOR_RED);
+	lv_obj_t* cryptography_clear_keys_button_label = lv_label_create(ui.cryptography_clear_keys_button, NULL);
+	lv_label_set_text(cryptography_clear_keys_button_label, "Clear Key(s)");
 
 	// bootloader container
 	ui.bootloader = lv_cont_create(content, ui.general);
     lv_obj_set_style_local_value_str(ui.bootloader, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, "Firmware Update");
 	lv_obj_set_event_cb(ui.bootloader, ui_common_up_down_focus_cb);
 
-	// cryptography coming soon
+	// bootloader help text
 	ui.bootloader_text = lv_label_create(ui.bootloader, ui.brightness_label);
 	lv_label_set_text(ui.bootloader_text,
 		"Press the button below to restart " PRODUCT_NAME_SHORT "\n"
@@ -159,9 +185,11 @@ UI_DECLARE_ACTIVATE(UI_NAME)
 
 	lv_group_add_obj(group, ui.brightness);
 
-	lv_group_add_obj(group, ui.nfc);
-
 	lv_group_add_obj(group, ui.cryptography);
+	lv_group_add_obj(group, ui.cryptography_select_keys_button);
+	lv_group_add_obj(group, ui.cryptography_clear_keys_button);
+
+	lv_group_add_obj(group, ui.nfc);
 
 	lv_group_add_obj(group, ui.bootloader);
 	lv_group_add_obj(group, ui.bootloader_button);
@@ -184,6 +212,16 @@ void UI_DECLARE_FUNCTION(UI_NAME, set_done_callback)(ui_common_simple_cb cb)
 void UI_DECLARE_FUNCTION(UI_NAME, set_brightness_callback)(ui_common_float_cb cb)
 {
 	brightness_cb = cb;
+}
+
+void UI_DECLARE_FUNCTION(UI_NAME, set_select_crypto_keys_callback)(ui_common_simple_cb cb)
+{
+	select_crypto_keys_cb = cb;
+}
+
+void UI_DECLARE_FUNCTION(UI_NAME, set_clear_crypto_keys_callback)(ui_common_simple_cb cb)
+{
+	clear_crypto_keys_cb = cb;
 }
 
 void UI_DECLARE_FUNCTION(UI_NAME, set_enter_dfu_callback)(ui_common_simple_cb cb)
@@ -241,19 +279,4 @@ static void brightness_slider_event_cb(lv_obj_t* slider, lv_event_t e)
 static void settings_focus_cb(lv_group_t* group)
 {
 	lv_win_focus(ui.window, *group->obj_focus, LV_ANIM_ON);
-}
-
-static void settings_enter_dfu_pressed(lv_obj_t* button, lv_event_t e)
-{
-	if (e == LV_EVENT_PRESSED)
-	{
-		if (enter_dfu_cb != NULL)
-		{
-			enter_dfu_cb();
-		}
-	}
-	else
-	{
-		ui_common_up_down_focus_cb(button, e);
-	}
 }

@@ -79,6 +79,18 @@ extern "C" {
 #define UI_DECLARE_FUNCTION(uiName, func) UI_FUNCTION(uiName, func)
 #define UI_DECLARE(uiName) UI_DECLARE_CREATE(uiName); UI_DECLARE_ACTIVATE(uiName)
 
+#define UI_DEFINE_SIMPLE_BUTTON_PRESS_CALLBACK_HANDLER(handlerName, callbackName) \
+	static void handlerName(lv_obj_t* button, lv_event_t e)                       \
+	{                                                                             \
+		if (e == LV_EVENT_PRESSED && callbackName != NULL)                        \
+		{                                                                         \
+			callbackName();                                                       \
+		}                                                                         \
+		else                                                                      \
+		{                                                                         \
+			ui_common_up_down_focus_cb(button, e);                                \
+		}                                                                         \
+	}
 
 	LV_FONT_CUSTOM_DECLARE;
 

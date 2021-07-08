@@ -356,7 +356,7 @@ namespace app
 
 		nfcTagEmulator->Initialize();
 		nfcTagEmulator->SetPasswordAuthenticationAckResponse(
-			SETTINGS.ntag_215_default_password_authentication_acknowledgement);
+			SETTINGS.ntag_default_password_authentication_acknowledgement);
 	}
 
 	void Odiin::StartApplication()

@@ -24,6 +24,8 @@ namespace
 
 		ui_common_msgbox_show(&desc);
 	};
+
+	void SetMenuFilesFileSelectedCallback(void (*callback)(const char*));
 }
 
 template<size_t OPT_COUNT_MAX, size_t OPTION_STR_LEN>
@@ -122,6 +124,11 @@ class MenuMain
 		switch (event.Option->user_flags)
 		{
 			case NEXT_STATE_FILES:
+				SetMenuFilesFileSelectedCallback([](const char* path)
+												 {
+													 // set the payload
+													 Odiin->SetNfcTagPayload(path);
+												 });
 				transit<MenuFiles>();
 				break;
 			case NEXT_STATE_SETTINGS:
@@ -143,12 +150,18 @@ class MenuMain
 class MenuFiles
 	: public MenuBase<32, 64>
 {
+public:
+	typedef void (*FileSelectedCallback)(const char*);
+
+private:
 	static const uint8_t FLAG_DEFAULT_SELECT_FILE = 0;
 	static const uint8_t FLAG_DEFAULT_SELECT_DIR = 1;
 	static const uint8_t FLAG_DIR_UP = 2;
 	static const uint8_t FLAG_PAGE_NEXT = 3;
 	static const uint8_t FLAG_PAGE_PREV = 4;
 	static const uint8_t FLAG_BACK = 5;
+
+	FileSelectedCallback fileSelectedCallback = nullptr;
 
 	size_t paginationOffset = 0;
 
@@ -320,8 +333,14 @@ class MenuFiles
 		// build our full path to the file
 		UNUSED_RETURN_VALUE(cwk_path_get_absolute(activePath, filename, fullPathBuffer, PATH_SIZE_MAX));
 
-		// set the payload
-		Odiin->SetNfcTagPayload(fullPathBuffer);
+		if (fileSelectedCallback != nullptr)
+		{
+			fileSelectedCallback(fullPathBuffer);
+		}
+		else
+		{
+			NRF_LOG_WARNING("File selected but no callback was set. File: %s", fullPathBuffer);
+		}
 	}
 
 	void PushDirectory(const char* directoryName)
@@ -397,6 +416,8 @@ class MenuFiles
 
 	void exit() override
 	{
+		// clear callbacks as we leave this state.
+		fileSelectedCallback = nullptr;
 		LOG_STATE_EXIT(MenuFiles);
 	}
 
@@ -436,6 +457,20 @@ class MenuFiles
 				break;
 		}
 	}
+
+public:
+	inline void SetFileSelectedCallback(FileSelectedCallback callback)
+	{
+		fileSelectedCallback = callback;
+	}
 };
+
+namespace
+{
+	void SetMenuFilesFileSelectedCallback(void (*callback)(const char*))
+	{
+		MenuFiles::state<MenuFiles>().SetFileSelectedCallback(callback);
+	}
+} // namespace
 
 #endif // INCLUDING_FROM_FSM_CPP

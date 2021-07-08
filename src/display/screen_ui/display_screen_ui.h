@@ -30,6 +30,8 @@ extern "C" {
 	UI_DECLARE(settings);
 	void UI_DECLARE_FUNCTION(settings, set_done_callback)(ui_common_simple_cb cb);
 	void UI_DECLARE_FUNCTION(settings, set_brightness_callback)(ui_common_float_cb cb);
+	void UI_DECLARE_FUNCTION(settings, set_select_crypto_keys_callback)(ui_common_simple_cb cb);
+	void UI_DECLARE_FUNCTION(settings, set_clear_crypto_keys_callback)(ui_common_simple_cb cb);
 	void UI_DECLARE_FUNCTION(settings, set_enter_dfu_callback)(ui_common_simple_cb cb);
 
 	UI_DECLARE(usb);

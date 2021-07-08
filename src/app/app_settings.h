@@ -10,14 +10,14 @@ extern "C" {
 
 #define CURRENT_SETTINGS_VERSION	0
 
-#define NTAG_215_P_ACK_SIZE			2
+#define NTAG_P_ACK_SIZE 2
 #define CRYPTO_KEY_SIZE				80
 
 typedef struct app_settings_s {
 	uint32_t version;
 	uint32_t boot_screen_timeout_ms;
 	uint8_t backlight_brightness;
-	uint8_t ntag_215_default_password_authentication_acknowledgement[NTAG_215_P_ACK_SIZE];
+	uint8_t ntag_default_password_authentication_acknowledgement[NTAG_P_ACK_SIZE];
 	struct crypto_expected_values_s
 	{
 		uint8_t combined_keys[NRF_CRYPTO_HASH_SIZE_SHA256];

@@ -150,15 +150,23 @@ namespace app::fsm
 
 			UI_CREATE(settings);
 			UI_ACTIVATE(settings, Keypad->GetInputGroup());
-			UI_FUNCTION(settings, set_done_callback)([]() {
-				dispatch(GoHomeEvent());
-			});
-			UI_FUNCTION(settings, set_brightness_callback)([](float level) {
-				Odiin->SetBacklightBrightness(level);
-			});
-			UI_FUNCTION(settings, set_enter_dfu_callback)([]() {
-				Odiin->RebootToDfu();
-			});
+			UI_FUNCTION(settings, set_done_callback)
+			([]()
+			 { dispatch(GoHomeEvent()); });
+
+			UI_FUNCTION(settings, set_brightness_callback)
+			([](float level)
+			 { Odiin->SetBacklightBrightness(level); });
+
+			UI_FUNCTION(settings, set_select_crypto_keys_callback)
+			([]() { /*#todo*/ });
+
+			UI_FUNCTION(settings, set_clear_crypto_keys_callback)
+			([]() { /*#todo*/ });
+
+			UI_FUNCTION(settings, set_enter_dfu_callback)
+			([]()
+			 { Odiin->RebootToDfu(); });
 		}
 
 		void exit() override
