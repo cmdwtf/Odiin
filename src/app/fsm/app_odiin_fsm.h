@@ -2,6 +2,8 @@
 
 #include "tinyfsm.hpp"
 
+#include "../app_log_module.ii"
+
 namespace app
 {
 	class Odiin;

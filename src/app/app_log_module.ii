@@ -17,3 +17,6 @@
 #define NRF_LOG_VERBOSE(...)
 #define NRF_HEXDUMP_VERBOSE(p_data, len) do { UNUSED_VARIABLE(p_data); UNUSED_VARIABLE(len); } while(0)
 #endif // ODIIN_VERBOSE_LOGGING
+
+#define LOG_STATE_ENTER(state) NRF_LOG_INFO("[State] => Enter: %s", #state)
+#define LOG_STATE_EXIT(state) NRF_LOG_INFO("[State] Exit: %s =>", #state)
