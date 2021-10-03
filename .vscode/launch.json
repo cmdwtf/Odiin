@@ -34,6 +34,12 @@
                 "programOutput": true,
                 "exceptions": true
             },
+            "linux": {
+                "MIMode": "gdb",
+                "MIDebuggerPath": "/usr/bin/gdb-multiarch",
+                "debugServerPath": "pyocd-gdbserver",
+                "debugServerArgs": "-t nrf52840"
+            },
             "windows": {
                 "MIDebuggerPath": "arm-none-eabi-gdb",
 				"debugServerPath": "pyocd",
