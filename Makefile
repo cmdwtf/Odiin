@@ -567,7 +567,7 @@ merge: bootloader default
 flash_all: merge
 	@echo Flashing: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
 	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
-	pyocd cmd -t nrf52840 --command w32 $(BOOTLOADER_BOOT_SETTING_ADDR) $(BOOTLOADER_BOOT_APP_VALID_VALUE) --command reset
+	pyocd cmd -t nrf52840 --command write32 $(BOOTLOADER_BOOT_SETTING_ADDR) $(BOOTLOADER_BOOT_APP_VALID_VALUE) --command reset
 
 # Erase the chip
 erase:
@@ -580,7 +580,7 @@ release: merge
 	@echo ""
 	@echo Generated UF2 firmware file: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2)
 
-SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
+SDK_CONFIG_FILE := $(SOURCE_DIR)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
 sdk_config:
 	java -jar $(CMSIS_CONFIG_TOOL) $(SDK_CONFIG_FILE)
