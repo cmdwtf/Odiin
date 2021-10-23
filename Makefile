@@ -386,6 +386,7 @@ OPT_FLAGS = -O3
 
 # Flags dependant on build configuration.
 ifeq ($(DEBUG),1)
+  OPT_FLAGS = -O0
   # Debug flags
   APP_FLAGS = -ggdb3 # -g3 -- use for non-gdb debugging.
   APP_DEFINES = -DDEBUG -DDEBUG_NRF

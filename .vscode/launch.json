@@ -38,7 +38,7 @@
                 "MIMode": "gdb",
                 "MIDebuggerPath": "/usr/bin/gdb-multiarch",
                 "debugServerPath": "pyocd-gdbserver",
-                "debugServerArgs": "-t nrf52840",
+                "debugServerArgs": "-S -t nrf52840",
                 "setupCommands": [
                     { "text": "-environment-cd ${workspaceRoot}/_build" },
                     { "text": "-target-select remote localhost:3333", "description": "connect to target", "ignoreFailures": false },
@@ -46,8 +46,7 @@
                     { "text": "-interpreter-exec console \"monitor endian little\"", "ignoreFailures": false },
                     { "text": "-interpreter-exec console \"monitor reset\"", "ignoreFailures": false },
                     { "text": "-interpreter-exec console \"monitor halt\"", "ignoreFailures": false },
-                    { "text": "-interpreter-exec console \"monitor arm semihosting enable\"", "ignoreFailures": false },
-                    { "text": "-target-download", "description": "flash target", "ignoreFailures": false }
+                    { "text": "-interpreter-exec console \"monitor arm semihosting enable\"", "ignoreFailures": false }
                 ],
             },
             "windows": {
@@ -65,6 +64,26 @@
                     { "text": "-target-download", "description": "flash target", "ignoreFailures": false }
                 ]
             }
+        },
+        {
+            "name": "Debug by Cortex-Debug plugin",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/_build/nrf52840_xxaa.out",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "pyocd",
+            "interface": "swd",
+            "device": "nrf52840",
+            "targetId": "nrf52840",
+            "runToMain": true,
+            "preRestartCommands": [
+                "file ${workspaceFolder}/_build/nrf52840_xxaa.out",
+                "load",
+                "add-symbol-file ${workspaceFolder}/_build/nrf52840_xxaa.out",
+                "enable breakpoint",
+                "monitor reset"
+            ],
+            "armToolchainPath": "C:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2021.07\\bin"
         }
     ]
 }
