@@ -23,6 +23,8 @@ typedef struct platform_watchdog_driver_s {
 extern platform_watchdog_driver_t platform_watchdog_nrf52;
 #endif //DNRF52840_XXAA
 
+extern platform_watchdog_driver_t platform_watchdog_noop;
+
 #ifdef __cplusplus
 }
 #endif
