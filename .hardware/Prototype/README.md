@@ -11,6 +11,10 @@ The information that follows here is information about building one of your own,
 <img src="https://raw.githubusercontent.com/cmdwtf/Odiin/main/.hardware/Prototype/prototype.jpg" alt="Odiin Prototype without case" width="300" />
 * Odiin Prototype, sans case. *
 
+## Case
+
+The 3D Printed case files are in this folder as well. They are in 3 parts: [top.stl](top.stl), [bottom.stl](bottom.stl), and [cap.stl](cap.stl). The top and bottom are as named, and `cap.stl` refers to the tiny mushroom cap that is placed over the directional switch.
+
 ## Bill of Materials
 
 The BoM is in a bit of flux as I tinker and add/remove/change things, but the things here will definitely get you going. Some of these are slightly different from what I ordered (as I ordered a few things in bulk, like SD cards), but this list should get you close enough.
