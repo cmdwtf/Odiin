@@ -25,7 +25,12 @@ namespace app
 	{
 		platform_power_driver_t& power = platform_power_nrf52;
 		platform_battery_driver_t& battery = platform_battery_makerdiary;
-		platform_watchdog_driver_t& watchdog = platform_watchdog_nrf52;
+
+		#if !defined(DEBUG)
+        	platform_watchdog_driver_t& watchdog = platform_watchdog_nrf52;
+		#else
+        	platform_watchdog_driver_t& watchdog = platform_watchdog_noop;
+		#endif // !DEBUG
 
 		// #todo: This code should be in a HAL.
 		// magic values from UF2 bootloader (see bootloader's main.c)

@@ -5,3 +5,7 @@ _build/
 _firmware/
 .todo/
 compile_commands.json
+
+# Cortex-Debug Visual Studio Addon
+.vscode/.cortex-debug.peripherals.state.json
+.vscode/.cortex-debug.registers.state.json

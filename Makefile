@@ -5,6 +5,24 @@ DEBUG				?= 0
 VENDOR_ROOT ?= vendor
 SOURCE_DIR := src
 
+# OS detection
+# Detect operating system in Makefile.
+# Author: He Tao
+# Date: 2015-05-30
+# Src: https://gist.github.com/sighingnow/deee806603ec9274fd47
+OSFLAG			:=
+ifeq ($(OS),Windows_NT)
+	OSFLAG :=WINDOWS
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		OSFLAG :=LINUX
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		OSFLAG :=OSX
+	endif
+endif
+
 # Amount of RAM to dedicate to the heap.
 # lvgl suggets at least 16K, and examples
 # for nRF52 have shipped with 8K.
@@ -258,7 +276,7 @@ SRC_FILES += \
 ## Vendor: Cie1931
 ########################################################
 
-CIE1931_DIR := $(VENDOR_ROOT)/cie1931
+CIE1931_DIR := $(VENDOR_ROOT)/Cie1931
 
 # No source files, header only library.
 
@@ -368,6 +386,7 @@ OPT_FLAGS = -O3
 
 # Flags dependant on build configuration.
 ifeq ($(DEBUG),1)
+  OPT_FLAGS = -O0
   # Debug flags
   APP_FLAGS = -ggdb3 # -g3 -- use for non-gdb debugging.
   APP_DEFINES = -DDEBUG -DDEBUG_NRF
@@ -502,8 +521,20 @@ bootloader:
 ifeq ($(BOOTLOADER_EXISTS),0)
 	@echo Building UF2 bootloader...
 	$(MAKE) -C $(BOOTLOADER_DIR) BOARD=$(BOOTLOADER_BOARD) all
+ifeq ($(OSFLAG),WINDOWS)
 	@xcopy $(BOOTLOADER_DIR)\_build\build-$(BOOTLOADER_BOARD)\$(BOOTLOADER_BOARD)_bootloader*nosd.hex $(OUTPUT_DIRECTORY)\ /R /Y
 	@move /y $(OUTPUT_DIRECTORY)\$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)\$(BOOTLOADER_OUTFILE)
+else ifeq ($(OSFLAG),OSX)
+  # OSX
+	@mkdir -p $(OUTPUT_DIRECTORY)/
+	@cp -Rf $(BOOTLOADER_DIR)/_build/build-$(BOOTLOADER_BOARD)/$(BOOTLOADER_BOARD)_bootloader*nosd.hex $(OUTPUT_DIRECTORY)/
+	@mv -f $(OUTPUT_DIRECTORY)/$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)/$(BOOTLOADER_OUTFILE)
+else
+  # Linux
+	@mkdir -p $(OUTPUT_DIRECTORY)/
+	@cp -Rf $(BOOTLOADER_DIR)/_build/build-$(BOOTLOADER_BOARD)/$(BOOTLOADER_BOARD)_bootloader*nosd.hex $(OUTPUT_DIRECTORY)/
+	@mv -f $(OUTPUT_DIRECTORY)/$(BOOTLOADER_BOARD)_bootloader-*nosd.hex $(OUTPUT_DIRECTORY)/$(BOOTLOADER_OUTFILE)
+endif
 endif
 
 # Clean bootloader subproject
@@ -537,7 +568,7 @@ merge: bootloader default
 flash_all: merge
 	@echo Flashing: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
 	pyocd flash -t nrf52840 $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_MERGED_HEX)
-	pyocd cmd -t nrf52840 --command w32 $(BOOTLOADER_BOOT_SETTING_ADDR) $(BOOTLOADER_BOOT_APP_VALID_VALUE) --command reset
+	pyocd cmd -t nrf52840 --command write32 $(BOOTLOADER_BOOT_SETTING_ADDR) $(BOOTLOADER_BOOT_APP_VALID_VALUE) --command reset
 
 # Erase the chip
 erase:
@@ -547,10 +578,10 @@ erase:
 release: merge
 	@echo Creating UF2 format file from produced hex...
 	@python $(BOARD_SDK_ROOT)/tools/uf2conv.py -c -f 0xada52840 -o $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2) $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex
-	@echo.
+	@echo ""
 	@echo Generated UF2 firmware file: $(OUTPUT_DIRECTORY)/$(FILENAME_OUTPUT_UF2)
 
-SDK_CONFIG_FILE := $(PROJECT)/config/sdk_config.h
+SDK_CONFIG_FILE := $(SOURCE_DIR)/config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
 sdk_config:
 	java -jar $(CMSIS_CONFIG_TOOL) $(SDK_CONFIG_FILE)
