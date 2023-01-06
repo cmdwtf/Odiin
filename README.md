@@ -71,7 +71,7 @@ A vast majority of the code in this repository is designed to be cross compiled 
 
 I'm using Visual Studio Code as my primary editor, and have provided a .vscode folder with tasks I'm performing often to build/flash/etc. There's also a `.code-workspace` file, though that's just more for continence than anything.
 
-The vscode tasks (and building in general) use the GNU `make` to run. You'll need `make` on your path (I'm using the latest from [chocolatey](https://chocolatey.org/packages/make)). As well, you'll need the [nRF5x-Command-Line-Tools for Win32](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
+The vscode tasks (and building in general) use the GNU `make` to run. You'll need `make` on your path (I'm using the latest from [chocolatey](https://chocolatey.org/packages/make), but the installer from [GnuWin32](https://gnuwin32.sourceforge.net/packages/make.htm) should work too.) As well, you'll need the [nRF5x-Command-Line-Tools for Win32](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
 
 You'll need `python` 3, and a few tools to finish building and flash. Where you install Python from is not important as long as it's on your path (and probably your Scripts directory, too.) In either user space or in a venv, you'll want to `pip install` at least `pyocd`, `intelhex`, and `adafruit-nrfutil` for building the bootloader.
 
