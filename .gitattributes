@@ -1,0 +1,5 @@
+/bootloader/** linguist-vendored
+/vendor/** linguist-vendored
+/vendor/amiitool/** -linguist-vendored
+/vendor/Cie1931/** -linguist-vendored
+/vendor/display/** -linguist-vendored
