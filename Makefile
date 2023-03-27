@@ -306,6 +306,7 @@ SRC_FILES += \
   $(wildcard $(FATFS_DIR)/port/*.c) \
   $(wildcard $(FATFS_DIR)/source/ff.c) \
   $(wildcard $(FATFS_DIR)/source/ffunicode.c) \
+  $(wildcard $(FATFS_DIR)/source/ffsystem.c) \
 
 INC_FOLDERS += \
   $(FATFS_DIR)/port \

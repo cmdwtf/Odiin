@@ -21,6 +21,11 @@ FRESULT f_mount (
   BYTE         <span class="arg">opt</span>    <span class="c">/* [IN] Initialization option */</span>
 );
 </pre>
+<pre>
+FRESULT f_unmount (
+  const TCHAR* <span class="arg">path</span>   <span class="c">/* [IN] Logical drive number */</span>
+);
+</pre>
 </div>
 
 <div class="para arg">
@@ -58,7 +63,7 @@ FRESULT f_mount (
 <li>Clears and registers the new work area to the volume if <tt class="arg">fs</tt> is not NULL.</li>
 <li>Performs volume mount process to the volume if forced mounting is specified.</li>
 </ol>
-<p>If there is any open object of file or directory on the logical drive, the object will be invalidated by this function.<p>
+<p>If there is any open object of file or directory on the logical drive, the object will be invalidated by this function.</p>
 <p>If forced mounting is not specified (<tt>opt = 0</tt>), this function always succeeds regardless of the physical drive status. It only clears (de-initializes) the given work area and registers its address to the internal table and no activity of the physical drive in this function. The volume mount process will be attempted on subsequent file/directroy function if the filesystem object is not initialized. (delayed mounting) The volume mount processes, initialize the corresponding physical drive, find the FAT volume in it and then initialize the work area, is performed in the subsequent file/directory functions when either of following conditions is true.</p>
 <ul>
 <li>Filesystem object has not been initialized. It is de-initialized by <tt>f_mount</tt> function.</li>
@@ -66,7 +71,10 @@ FRESULT f_mount (
 </ul>
 <p>If the function with forced mounting (<tt>opt = 1</tt>) failed with <tt>FR_NOT_READY</tt>, it means that the filesystem object has been registered successfully but the volume is currently not ready to work. The volume mount process will be attempted on subsequent file/directroy function.</p>
 <p>If implementation of the disk I/O layer lacks asynchronous media change detection, application program needs to perform <tt>f_mount</tt> function after each media change to force cleared the filesystem object.</p>
-<p>To unregister the work area, specify a NULL to the <tt class="arg">fs</tt>, and then the work area can be discarded.</p>
+<p>To unregister the work area, specify a NULL to the <tt class="arg">fs</tt>, and then the work area can be discarded. <tt>f_unmount</tt> function is implemented as a macro.</p>
+<pre>
+#define <em>f_unmount</em>(path) f_mount(0, path, 0)
+</pre>
 </div>
 
 

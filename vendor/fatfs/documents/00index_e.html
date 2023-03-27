@@ -21,18 +21,18 @@
 
 <h4>Features</h4>
 <ul>
- <li>DOS/Windows compatible FAT/exFAT filesystem.</li>
- <li>Platform independent. Easy to port.</li>
- <li>Very small footprint for program code and work area.</li>
- <li>Various <a href="doc/config.html">configuration options</a> to support for:
+ <li>DOS/Windows Compatible FAT/exFAT Filesystem.</li>
+ <li>Platform Independent. <a href="doc/appnote.html#port">Easy to port</a>.</li>
+ <li>Very Small <a href="doc/appnote.html#memory">Footprint</a> for Program Code and Work Area.</li>
+ <li>Various <a href="doc/config.html">Configuration Options</a> to Support for:
   <ul>
-   <li>Long file name in ANSI/OEM or Unicode.</li>
-   <li>exFAT filesystem, 64-bit LBA and GPT for huge storeges.</li>
-   <li>Thread safe for RTOS.</li>
-   <li>Multiple volumes (physical drives and partitions).</li>
-   <li>Variable sector size.</li>
-   <li>Multiple code pages including DBCS.</li>
-   <li>Read-only, optional API, I/O buffer and etc...</li>
+   <li>Long File Name in ANSI/OEM or Unicode.</li>
+   <li>exFAT Filesystem, 64-bit LBA and GPT for Huge Storages.</li>
+   <li>Thread Safe for RTOS.</li>
+   <li>Multiple Volumes. (Physical Drives and Partitions)</li>
+   <li>Variable Sector Size.</li>
+   <li>Multiple Code Pages Including DBCS.</li>
+   <li>Read-only, Optional APIs, I/O Buffer and etc...</li>
   </ul>
  </li>
 </ul>
@@ -105,9 +105,9 @@
 <div class="para">
 <h3>Media Access Interface</h3>
 <img src="res/layers2.png" class="rset" width="245" height="220" alt="layer">
-<p>Since FatFs module is the <em>filesystem layer</em> independent of platforms and storage media, it is completely separated from the physical devices, such as memory card, harddisk and any type of storage device. The low level device control module is <em>not any part of FatFs module</em> and it needs to be provided by implementer. FatFs accesses the storage devices via a simple media access interface shown below. Also sample implementations for some platforms are available in the downloads. A function checker for low level disk I/O module is available <a href="res/app4.c">here</a>.</p>
+<p>Since FatFs module is the <em>Filesystem Layer</em> independent of platforms and storage media, it is completely separated from the physical devices, such as memory card, harddisk and any type of storage device. The storage device control module is <em>not any part of FatFs module</em> and it needs to be provided by implementer. FatFs controls the storage devices via a simple media access interface shown below. Also sample implementations for some platforms are available in the downloads. A function checker for storage device control module is available <a href="res/app4.c">here</a>.</p>
 <ul>
- <li>Disk Controls
+ <li>Storage Device Controls
  <ul>
   <li><a href="doc/dstat.html">disk_status</a> - Get device status</li>
   <li><a href="doc/dinit.html">disk_initialize</a> - Initialize device</li>
@@ -127,14 +127,13 @@
 
 <div class="para">
 <h3>Resources</h3>
-<p>The FatFs module is a free software opened for education, research and development. You can use, modify and/or redistribute it for personal projects or commercial products without any restriction under your responsibility. For further information, refer to the application note.</p>
+<p>The FatFs module is a free software opened for education, research and development. You can use, modify and/or redistribute it for any purpose without any restriction under your responsibility. For further information, refer to the application note.</p>
 <ul>
- <li><em>Read First: <a href="doc/appnote.html">FatFs module application note</a></em></li>
- <li>Download: <a href="http://elm-chan.org/fsw/ff/archives.html">Archives</a></li>
+ <li><em>Getting Started: <a href="doc/appnote.html">FatFs Application Note</a></em></li>
  <li>Community: <a href="http://elm-chan.org/fsw/ff/bd/">FatFs User Forum</a></li>
  <li><a href="https://msdn.microsoft.com/en-us/windows/hardware/gg463080.aspx">FAT32 Specification by Microsoft</a>↗ (The authorized document on FAT filesystem)</li>
- <li><a href="http://elm-chan.org/docs/fat_e.html">The basics of FAT filesystem</a></li>
- <li><a href="http://elm-chan.org/docs/exfat_e.html">The basics of exFAT filesystem</a></li>
+ <li><a href="http://elm-chan.org/docs/fat_e.html">The basics of FAT filesystem</a> (FatFs is written based on this documentation)</li>
+ <li><a href="http://elm-chan.org/docs/exfat_e.html">The basics of exFAT filesystem</a> (FatFs is written based on this documentation)</li>
  <li><a href="http://elm-chan.org/docs/mmc/mmc_e.html">How to use MMC/SDC</a></li>
  <li><a href="http://elm-chan.org/junk/fa/faff.html">Playing with FlashAir and FatFs</a></li>
  <li><a href="http://nemuisan.blog.bai.ne.jp/">Nemuisan's Blog</a>↗ (Well written implementations for STM32F/SPI &amp; SDIO and LPC4088/SDMMC)</li>
@@ -143,5 +142,8 @@
  <li><a href="res/rwtest2.png">Benchmark 2</a> (LPC2368/72MHz with MMC via MCI)</li>
 </div>
 
+
+<hr>
+<p class="foot"><a href="../../fsw_e.html">Return</a></p>
 </body>
 </html>
