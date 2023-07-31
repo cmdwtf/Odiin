@@ -30,7 +30,7 @@ HEAP_SIZE_BYTES := 32768
 STACK_SIZE_BYTES := 32768
 
 # File names
-GIT_COMMIT_HASH != git rev-parse HEAD | head -c8
+GIT_COMMIT_HASH != git rev-parse --short=8 HEAD
 GIT_VERSION_RAW != git describe --dirty --always --tags
 GIT_VERSION = $(subst -,+,$(GIT_VERSION_RAW))
 GIT_COMMIT_COUNT != git rev-list HEAD --count
